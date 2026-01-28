@@ -1,0 +1,58 @@
+import type { PageServerLoad } from './$types';
+import type { Video, PaginatedResponse, Category } from '$lib/types';
+import { PUBLIC_VITE_API_URL } from '$env/static/public';
+
+export const load: PageServerLoad = async ({ url, fetch, params }) => {
+    const apiUrl = PUBLIC_VITE_API_URL;
+    const { slug } = params;
+
+    const page = Math.max(1, Math.min(100, Number(url.searchParams.get('page')) || 1));
+
+    // Build query params
+    const queryParams = new URLSearchParams();
+    queryParams.set('page', page.toString());
+    queryParams.set('limit', '25');
+    queryParams.set('category', slug);
+
+    const defaultResponse = {
+        videos: null as PaginatedResponse<Video> | null,
+        category: null as Category | null,
+        error: null as string | null,
+        currentPage: page,
+        slug,
+    };
+
+    try {
+        // Fetch videos and category info in parallel
+        const [videosResponse, categoryResponse] = await Promise.all([
+            fetch(`${apiUrl}/api/videos?${queryParams.toString()}`),
+            fetch(`${apiUrl}/api/categories/${slug}`),
+        ]);
+
+        if (!videosResponse.ok) {
+            return {
+                ...defaultResponse,
+                error: 'Failed to load videos',
+            };
+        }
+
+        const videosData: PaginatedResponse<Video> = await videosResponse.json();
+
+        let categoryData: Category | null = null;
+        if (categoryResponse.ok) {
+            categoryData = await categoryResponse.json();
+        }
+
+        return {
+            ...defaultResponse,
+            videos: videosData,
+            category: categoryData,
+        };
+    } catch (error) {
+        console.error('Failed to fetch category videos:', error);
+        return {
+            ...defaultResponse,
+            error: 'Failed to load videos',
+        };
+    }
+};
