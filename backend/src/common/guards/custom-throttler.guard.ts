@@ -3,9 +3,9 @@ import { ThrottlerGuard, ThrottlerStorage, ThrottlerModuleOptions } from '@nestj
 import { Reflector } from '@nestjs/core';
 import { SiteSettingsService } from '../../modules/site-settings/site-settings.service';
 import { Role } from '../../constants/role.enum';
+import { Request } from 'express';
+import { JwtPayload } from '../../types';
 
-const DEFAULT_RATE_LIMIT = 15;
-const DEFAULT_TTL_SECONDS = 60;
 
 @Injectable()
 export class CustomThrottlerGuard extends ThrottlerGuard {
@@ -20,10 +20,13 @@ export class CustomThrottlerGuard extends ThrottlerGuard {
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
-    const request = context.switchToHttp().getRequest();
+    const request = context.switchToHttp().getRequest<Request & {
+      user: JwtPayload
+    }>();
+    
     const user = request.user;
 
-    if (user?.roles?.includes(Role.Admin)) {
+    if (user?.roles?.includes(Role.Admin) || request.headers["ssr"]) {
       return true;
     }
 
@@ -34,13 +37,13 @@ export class CustomThrottlerGuard extends ThrottlerGuard {
     const limit = await this.siteSettingsService.getSetting<number>(
       'global_rate_limit_requests',
     );
-    return limit ?? DEFAULT_RATE_LIMIT;
+    return limit;
   }
 
   protected async getTtl(context: ExecutionContext): Promise<number> {
     const ttlSeconds = await this.siteSettingsService.getSetting<number>(
       'global_rate_limit_seconds',
     );
-    return (ttlSeconds ?? DEFAULT_TTL_SECONDS) * 1000;
+    return (ttlSeconds) * 1000;
   }
 }

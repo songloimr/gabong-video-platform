@@ -150,7 +150,7 @@
                 </div>
               {:else}
                 <img
-                  src="{getAvatarUrl(auth.user?.avatar_url)}?v={avatarKey}"
+                  src="{getAvatarUrl(auth.user?.avatar_url!)}"
                   alt="Avatar"
                   class="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl object-cover ring-4 ring-surface-900 shadow-xl"
                 />
