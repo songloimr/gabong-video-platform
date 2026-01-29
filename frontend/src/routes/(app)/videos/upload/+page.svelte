@@ -24,9 +24,14 @@
     X,
   } from "@lucide/svelte";
   import { Switch, Progress } from "@skeletonlabs/skeleton-svelte";
-    import type { PageProps } from "./$types";
+  import type { PageProps } from "./$types";
+  import { auth } from "$lib/stores/auth.svelte";
+  import { errorDialog } from "$lib/stores/errorDialog.svelte";
 
   let { data }: PageProps = $props();
+
+  // Check if user is admin
+  const isAdmin = $derived(auth.user?.role === 'admin');
 
 
   // Form state
@@ -39,7 +44,7 @@
   let thumbnailFile = $state<File | null>(null);
 
   // UI state
-  let activeTab = $state<"embed" | "upload">("embed");
+  let activeTab = $state<"embed" | "upload">("upload");
   let useCustomThumbnail = $state(false);
   let thumbnailType = $state<"url" | "file">("url");
   let isSubmitting = $state(false);
@@ -229,7 +234,8 @@
       success = true;
 
     } catch (err: any) {
-      error = err.response?.data?.message || "Có lỗi xảy ra khi upload video";
+      const message = err.response?.data?.message || "Có lỗi xảy ra khi upload video";
+      errorDialog.show("Upload Failed", message);
     } finally {
       isSubmitting = false;
     }
@@ -288,17 +294,19 @@
         <form onsubmit={handleSubmit} class="space-y-6">
           <!-- Source Type Tabs -->
           <div class="flex gap-2 p-1 bg-surface-900 rounded-xl">
-            <button
-              type="button"
-              onclick={() => (activeTab = "embed")}
-              class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg font-bold text-sm transition-all {activeTab ===
-              'embed'
-                ? 'bg-primary-600 text-white shadow-lg'
-                : 'text-surface-400 hover:text-surface-200'}"
-            >
-              <Link size={16} />
-              Embed URL
-            </button>
+            {#if isAdmin}
+              <button
+                type="button"
+                onclick={() => (activeTab = "embed")}
+                class="flex-1 flex items-center justify-center gap-2 py-3 px-4 rounded-lg font-bold text-sm transition-all {activeTab ===
+                'embed'
+                  ? 'bg-primary-600 text-white shadow-lg'
+                  : 'text-surface-400 hover:text-surface-200'}"
+              >
+                <Link size={16} />
+                Embed URL
+              </button>
+            {/if}
             <button
               type="button"
               onclick={() => (activeTab = "upload")}

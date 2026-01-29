@@ -5,16 +5,15 @@
   import { auth } from "$lib/stores/auth.svelte";
   import { page } from "$app/state";
   import { goto } from "$app/navigation";
+  import { errorDialog } from "$lib/stores/errorDialog.svelte";
 
   const loginMutation = useLogin();
   let username = $state("");
   let password = $state("");
   let rememberMe = $state(false);
-  let error = $state("");
 
   async function handleSubmit(e: SubmitEvent) {
     e.preventDefault();
-    error = "";
 
     try {
       const result = await loginMutation.mutateAsync({
@@ -35,9 +34,10 @@
       // Perform full page refresh as requested by user
       window.location.href = redirectPath;
     } catch (e: any) {
-      error =
+      const message =
         e.response?.data?.message ||
         "Login failed. Please check your credentials.";
+      errorDialog.show("Login Failed", message);
     }
   }
 </script>
@@ -79,14 +79,6 @@
             </a>
           </p>
         </div>
-
-        {#if error}
-          <div
-            class="p-2.5 text-[11px] font-bold text-red-500 bg-red-950/20 rounded-lg border border-red-900/30 animate-shake"
-          >
-            {error}
-          </div>
-        {/if}
 
         <form onsubmit={handleSubmit} class="space-y-4">
           <div class="space-y-4">

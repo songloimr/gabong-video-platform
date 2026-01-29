@@ -9,11 +9,13 @@ import { DrizzleModule } from '../../database/drizzle.module';
 import { JwtStrategy } from './strategies/jwt.strategy';
 import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from '../../common/guards';
+import { StorageModule } from '../storage/storage.module';
 
 @Module({
   imports: [
     DrizzleModule,
     UsersModule,
+    StorageModule,
     PassportModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],

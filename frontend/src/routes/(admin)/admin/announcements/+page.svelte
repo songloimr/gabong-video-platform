@@ -8,6 +8,7 @@
     } from "$lib/api/mutations/announcements";
     import { Megaphone, Plus, Pencil, Trash2, X } from "@lucide/svelte";
     import { toaster } from "$lib/toaster";
+    import ConfirmDialog from "$lib/components/ui/ConfirmDialog.svelte";
 
     let page = $state(1);
     let limit = $state(25);
@@ -19,6 +20,8 @@
 
     // Modal state
     let isModalOpen = $state(false);
+    let showDeleteConfirm = $state(false);
+    let announcementToDelete = $state<string | null>(null);
     let editingId = $state<string | null>(null);
     let formData = $state<CreateAnnouncementInput>({
         title: "",
@@ -62,42 +65,50 @@
                 {
                     onSuccess: () => {
                         toaster.success({
-                            title: "Announcement updated successfully"
+                            title: "Announcement updated successfully",
                         });
                         isModalOpen = false;
                     },
-                    onError: () => toaster.error({
-                        title: "Failed to update announcement"
-                    }),
+                    onError: () =>
+                        toaster.error({
+                            title: "Failed to update announcement",
+                        }),
                 },
             );
         } else {
             createMutation.mutate(formData, {
                 onSuccess: () => {
                     toaster.success({
-                        title: "Announcement created successfully"
+                        title: "Announcement created successfully",
                     });
                     isModalOpen = false;
                 },
-                onError: () => toaster.error({
-                    title: "Failed to create announcement"
-                }),
+                onError: () =>
+                    toaster.error({
+                        title: "Failed to create announcement",
+                    }),
             });
         }
     }
 
     function handleDelete(id: string) {
-        if (!confirm("Are you sure you want to delete this announcement?"))
-            return;
+        announcementToDelete = id;
+        showDeleteConfirm = true;
+    }
 
-        deleteMutation.mutate(id, {
-            onSuccess: () => toaster.success({
-                title: "Announcement deleted"
-            }),
-            onError: () => toaster.error({
-                title: "Failed to delete announcement"
-            }),
+    function confirmDelete() {
+        if (!announcementToDelete) return;
+        deleteMutation.mutate(announcementToDelete, {
+            onSuccess: () =>
+                toaster.success({
+                    title: "Announcement deleted",
+                }),
+            onError: () =>
+                toaster.error({
+                    title: "Failed to delete announcement",
+                }),
         });
+        announcementToDelete = null;
     }
 
     const typeColors = {
@@ -244,6 +255,7 @@
     <div
         class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
         role="dialog"
+        tabindex="0"
         aria-modal="true"
         aria-labelledby="modal-title"
         onclick={(e) => {
@@ -257,7 +269,10 @@
             class="bg-surface-900 border border-surface-700 rounded-sm p-6 max-w-2xl w-full"
         >
             <div class="flex items-center justify-between mb-6">
-                <h2 id="modal-title" class="text-lg font-black text-surface-100">
+                <h2
+                    id="modal-title"
+                    class="text-lg font-black text-surface-100"
+                >
                     {editingId ? "Edit" : "Create"} Announcement
                 </h2>
                 <button
@@ -403,3 +418,11 @@
         </div>
     </div>
 {/if}
+
+<ConfirmDialog
+    bind:open={showDeleteConfirm}
+    title="Delete Announcement"
+    message="Are you sure you want to delete this announcement?"
+    onConfirm={confirmDelete}
+    onCancel={() => (announcementToDelete = null)}
+/>

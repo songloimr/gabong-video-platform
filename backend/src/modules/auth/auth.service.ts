@@ -7,55 +7,54 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import sharp = require('sharp');
 import { eq } from 'drizzle-orm';
 import { DrizzleService } from '../../database/drizzle.service';
 import { users, refreshTokens } from '../../database/schema';
 import { RegisterDto, LoginDto } from './dto';
 import { JwtPayload, TokensResponse } from '../../types';
 import { AUTH_CONSTANTS } from '../../constants';
-import { v4 as uuidv4 } from 'uuid';
-import * as fs from 'fs';
-import * as path from 'path';
 import { Role } from '../../constants/role.enum';
+import { StorageService } from '../storage/storage.service';
 
 @Injectable()
 export class AuthService {
   private readonly avatarColors = [
-    '#F44336', '#E91E63', '#9C27B0', '#673AB7', '#3F51B5',
-    '#2196F3', '#03A9F4', '#00BCD4', '#009688', '#4CAF50',
-    '#8BC34A', '#CDDC39', '#FF9800', '#FF5722', '#795548',
+    'F44336', 'E91E63', '9C27B0', '673AB7', '3F51B5',
+    '2196F3', '03A9F4', '00BCD4', '009688', '4CAF50',
+    '8BC34A', 'CDDC39', 'FF9800', 'FF5722', '795548',
   ];
-  private readonly uploadsDir = path.join(process.cwd(), 'uploads', 'avatars');
 
   constructor(
     private readonly drizzle: DrizzleService,
     private readonly jwtService: JwtService,
     private readonly configService: ConfigService,
-  ) {
-    if (!fs.existsSync(this.uploadsDir)) {
-      fs.mkdirSync(this.uploadsDir, { recursive: true });
-    }
-  }
+    private readonly storageService: StorageService,
+  ) {}
 
-  private generateDefaultAvatarSvg(username: string): string {
-    const initial = username?.charAt(0)?.toUpperCase() || '?';
+  private async generateDefaultAvatar(userId: string, username: string): Promise<string> {
     const colorIndex = username.charCodeAt(0) % this.avatarColors.length;
     const bgColor = this.avatarColors[colorIndex];
 
-    return `<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200">
-      <rect width="200" height="200" fill="${bgColor}"/>
-      <text x="100" y="125" text-anchor="middle" fill="white" font-size="100" font-family="Arial, sans-serif" font-weight="bold">${initial}</text>
-    </svg>`;
-  }
+    const url = `https://ui-avatars.com/api/?length=1&font-size=0.8&name=${encodeURIComponent(username)}&size=128&color=fff&background=${bgColor}`;
 
-  private saveDefaultAvatar(userId: string, username: string): string {
-    const svg = this.generateDefaultAvatarSvg(username);
-    const filename = `${userId}-${uuidv4()}.svg`;
-    const filepath = path.join(this.uploadsDir, filename);
+    // Fetch PNG from API
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new BadRequestException('Failed to generate default avatar');
+    }
+    const pngBuffer = Buffer.from(await response.arrayBuffer());
 
-    fs.writeFileSync(filepath, svg);
+    // Convert to JPG
+    const jpgBuffer = await sharp(pngBuffer)
+      .jpeg({ quality: 85 })
+      .toBuffer();
 
-    return `/uploads/avatars/${filename}`;
+    // Upload to R2
+    const key = `avatars/${userId}.jpg`;
+    await this.storageService.uploadFile(jpgBuffer, key, 'image/jpeg');
+
+    return key;
   }
 
   async register(dto: RegisterDto) {
@@ -92,7 +91,7 @@ export class AuthService {
       })
       .returning();
 
-    const avatarUrl = this.saveDefaultAvatar(newUser.id, newUser.username);
+    const avatarUrl = await this.generateDefaultAvatar(newUser.id, newUser.username);
 
     await this.drizzle.db
       .update(users)
@@ -120,7 +119,7 @@ export class AuthService {
     };
   }
 
-  async login(dto: LoginDto) {
+  async login(dto: LoginDto, ipAddress?: string) {
     const [user] = await this.drizzle.db
       .select()
       .from(users)
@@ -147,7 +146,7 @@ export class AuthService {
 
     await this.drizzle.db
       .update(users)
-      .set({ last_login_at: new Date() })
+      .set({ last_login_at: new Date(), last_ip: ipAddress || null })
       .where(eq(users.id, user.id));
 
     const tokens = await this.generateTokens({

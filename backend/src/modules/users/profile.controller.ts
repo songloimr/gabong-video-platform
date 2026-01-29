@@ -1,10 +1,9 @@
-import { Controller, Get, Put, Body, UseInterceptors, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator, Param, NotFoundException, Res } from '@nestjs/common';
+import { Controller, Get, Put, Body, UseInterceptors, UploadedFile, ParseFilePipe, MaxFileSizeValidator, FileTypeValidator } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UsersService } from './users.service';
 import { UpdateProfileDto } from './dto';
 import { Roles, User } from '../../common/decorators';
 import { JwtPayload } from '../../types';
-import { Response } from 'express';
 import { Role } from '../../constants/role.enum';
 
 @Controller('profile')
@@ -15,12 +14,6 @@ export class ProfileController {
   @Roles(Role.User, Role.Admin)
   async getProfile(@User() user: JwtPayload) {
     return this.usersService.findById(user.sub);
-  }
-
-  @Get(':avatar')
-  async getAvatar(@Res() res: Response, @Param('avatar') avatar?: string) {
-    const avatarPath = this.usersService.getAvatar(avatar);
-    return res.sendFile(avatarPath);
   }
 
   @Put()

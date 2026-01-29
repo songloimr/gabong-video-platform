@@ -13,6 +13,7 @@
 	} from "$lib/api/mutations/admin";
 	import AppPagination from "$lib/components/ui/AppPagination.svelte";
 	import Modal from "$lib/components/ui/Modal.svelte";
+	import ConfirmDialog from "$lib/components/ui/ConfirmDialog.svelte";
 	import TipTapEditor from "$lib/components/forms/TipTapEditor.svelte";
 	import {
 		Trash2,
@@ -81,6 +82,8 @@
 	}
 
 	let showEditModal = $state(false);
+	let showDeleteConfirm = $state(false);
+	let videoToDelete = $state<Video | null>(null);
 	let selectedVideo: Video | null = $state(null);
 	let searchInput = $state($page.url.searchParams.get("search") || "");
 
@@ -170,9 +173,14 @@
 	}
 
 	async function handleDelete(video: Video) {
-		if (!confirm(`Are you sure you want to delete "${video.title}"?`))
-			return;
-		await deleteMutation.mutateAsync(video.id);
+		videoToDelete = video;
+		showDeleteConfirm = true;
+	}
+
+	async function confirmDelete() {
+		if (!videoToDelete) return;
+		await deleteMutation.mutateAsync(videoToDelete.id);
+		videoToDelete = null;
 	}
 
 	function getStatusBadgeClass(status: string): string {
@@ -599,3 +607,11 @@
 		</div>
 	{/if}
 </Modal>
+
+<ConfirmDialog
+	bind:open={showDeleteConfirm}
+	title="Delete Video"
+	message={`Are you sure you want to delete "${videoToDelete?.title}"?`}
+	onConfirm={confirmDelete}
+	onCancel={() => (videoToDelete = null)}
+/>

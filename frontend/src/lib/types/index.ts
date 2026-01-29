@@ -7,6 +7,7 @@ export interface User {
   bio: string | null;
   status: 'active' | 'suspended' | 'banned';
   created_at: string;
+  last_ip?: string | null;
 }
 
 export interface VideoMarkup {
@@ -176,9 +177,9 @@ export interface PaginationMeta {
 
 export interface PaginatedResponse<T> {
   data: T[];
-  pagination?: PaginationMeta;
-  total?: number;
-  has_more?: boolean;
+  pagination: PaginationMeta;
+  total: number;
+  has_more: boolean;
 }
 
 export interface VideoListParams {

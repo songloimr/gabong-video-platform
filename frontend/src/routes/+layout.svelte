@@ -9,12 +9,14 @@
 	import "vidstack/player/styles/default/layouts/video.css";
 
 	import LoginModal from "$lib/components/auth/LoginModal.svelte";
+	import ErrorDialog from "$lib/components/ui/ErrorDialog.svelte";
 
 	let { children } = $props();
 </script>
 
 <QueryClientProvider client={queryClient}>
 	<LoginModal />
+	<ErrorDialog />
 	<Toast.Group {toaster}>
 		{#snippet children(toast)}
 			<Toast {toast}>

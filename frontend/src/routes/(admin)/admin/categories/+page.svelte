@@ -6,6 +6,7 @@
 		useDeleteCategory,
 	} from "$lib/api/mutations/categories";
 	import Modal from "$lib/components/ui/Modal.svelte";
+	import ConfirmDialog from "$lib/components/ui/ConfirmDialog.svelte";
 	import { toaster } from "$lib/toaster";
 	import type { Category } from "$lib/types";
 	import { Plus, Pencil, Trash2 } from "@lucide/svelte";
@@ -16,15 +17,16 @@
 	const deleteMutation = useDeleteCategory();
 
 	let showCreateModal = $state(false);
+	let showDeleteConfirm = $state(false);
+	let categoryToDelete = $state<Category | null>(null);
 	let editingCategory = $state<Category | null>(null);
 	let formData = $state({
 		name: "",
-		slug: "",
-		thumbnail_url: "",
+		slug: ""
 	});
 
 	function openCreateModal() {
-		formData = { name: "", slug: "", thumbnail_url: "" };
+		formData = { name: "", slug: ""};
 		editingCategory = null;
 		showCreateModal = true;
 	}
@@ -33,8 +35,7 @@
 		editingCategory = category;
 		formData = {
 			name: category.name,
-			slug: category.slug,
-			thumbnail_url: category.thumbnail_url || "",
+			slug: category.slug
 		};
 		showCreateModal = true;
 	}
@@ -75,10 +76,14 @@
 	}
 
 	async function handleDelete(category: Category) {
-		if (!confirm(`Are you sure you want to delete "${category.name}"?`))
-			return;
+		categoryToDelete = category;
+		showDeleteConfirm = true;
+	}
+
+	async function confirmDelete() {
+		if (!categoryToDelete) return;
 		try {
-			await deleteMutation.mutateAsync(category.id);
+			await deleteMutation.mutateAsync(categoryToDelete.id);
 			toaster.success({
 				title: "Category deleted successfully"
 			});
@@ -88,6 +93,7 @@
 				title: "Failed to delete category"
 			});
 		}
+		categoryToDelete = null;
 	}
 
 	function generateSlug(name: string): string {
@@ -279,3 +285,11 @@
 		</div>
 	</form>
 </Modal>
+
+<ConfirmDialog
+	bind:open={showDeleteConfirm}
+	title="Delete Category"
+	message={`Are you sure you want to delete "${categoryToDelete?.name}"?`}
+	onConfirm={confirmDelete}
+	onCancel={() => (categoryToDelete = null)}
+/>

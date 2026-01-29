@@ -263,6 +263,10 @@
 					>
 					<th
 						class="px-3 py-2 text-left font-black uppercase tracking-wider text-surface-400 w-32"
+						>Last IP</th
+					>
+					<th
+						class="px-3 py-2 text-left font-black uppercase tracking-wider text-surface-400 w-32"
 						>Actions</th
 					>
 				</tr>
@@ -309,6 +313,9 @@
 							</td>
 							<td class="px-3 py-2 text-surface-400">
 								{moment(user.created_at).format("MMM D, YYYY")}
+							</td>
+							<td class="px-3 py-2 text-surface-400 font-mono text-[10px]">
+								{user.last_ip || "-"}
 							</td>
 							<td class="px-3 py-2">
 								{@render actionButtons(user)}

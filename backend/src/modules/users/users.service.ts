@@ -1,30 +1,24 @@
-import { Injectable, NotFoundException, StreamableFile } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { eq, sql, or, ilike, and } from 'drizzle-orm';
 import { DrizzleService } from '../../database/drizzle.service';
 import { users } from '../../database/schema';
 import { UpdateProfileDto, UserFilterDto } from './dto';
 import { PaginationParams } from '../../types';
 import sharp = require('sharp');
+import { StorageService } from '../storage/storage.service';
 
 import {
   calculateOffset,
   buildPaginationMeta,
 } from '../../common/helpers/pagination.helper';
 import type { PaginatedResponse, UserProfileResponse, UserAdminListItemResponse, UserStatusUpdateResponse } from '../../types';
-import * as fs from 'fs';
-import * as path from 'path';
 
 @Injectable()
 export class UsersService {
-  private readonly uploadDir = path.join(process.cwd(), 'uploads', 'avatars');
-
   constructor(
     private readonly drizzle: DrizzleService,
-  ) {
-    if (!fs.existsSync(this.uploadDir)) {
-      fs.mkdirSync(this.uploadDir, { recursive: true });
-    }
-  }
+    private readonly storageService: StorageService,
+  ) {}
 
   async findByUsername(username: string): Promise<UserProfileResponse> {
     const [user] = await this.drizzle.db
@@ -79,35 +73,21 @@ export class UsersService {
     };
   }
 
-  getAvatar(fileName?: string) {
-    if (!fileName) {
-      throw new NotFoundException('Avatar not found');
-    }
-    const filePath = path.join(this.uploadDir, fileName);
-    if (!fs.existsSync(filePath)) {
-      throw new NotFoundException('Avatar not found');
-    }
-    return path.resolve(filePath);
-  }
-
   async updateAvatar(userId: string, avatarFile: Express.Multer.File) {
-    const ext = avatarFile.originalname.split('.').pop() || 'jpg';
-    const filename = `${userId}.${ext}`;
-    const filepath = path.join(this.uploadDir, filename);
-
-    await sharp(avatarFile.buffer)
+    const jpgBuffer = await sharp(avatarFile.buffer)
       .resize(200, 200)
-      .jpeg({ quality: 70 })
-      .toFile(filepath);
+      .jpeg({ quality: 80 })
+      .toBuffer();
+
+    const key = `avatars/${userId}.jpg`;
+    await this.storageService.uploadFile(jpgBuffer, key, 'image/jpeg');
 
     await this.drizzle.db
       .update(users)
-      .set({ avatar_url: filename, updated_at: new Date() })
+      .set({ avatar_url: key, updated_at: new Date() })
       .where(eq(users.id, userId));
 
-    return {
-      avatar_url: filename
-    };
+    return { avatar_url: key };
   }
 
   async findAllForAdmin(

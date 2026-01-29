@@ -19,6 +19,7 @@
     validateUsername,
     validatePassword,
   } from "$lib/utils/validation";
+  import { errorDialog } from "$lib/stores/errorDialog.svelte";
 
   const registerMutation = useRegister();
   let username = $state("");
@@ -86,6 +87,14 @@
       username: username.toLowerCase(),
       password,
       email: email || undefined,
+    }, {
+      onSuccess: () => {
+        window.location.href = '/';
+      },
+      onError: (e: any) => {
+        const message = e.response?.data?.message || "Registration failed. Please try again.";
+        errorDialog.show("Registration Failed", message);
+      },
     });
   }
 </script>
@@ -130,13 +139,13 @@
 
         <form onsubmit={handleSubmit} class="space-y-4">
 
-          <!-- Error Message -->
-          {#if formError || registerMutation.error}
+          <!-- Validation Error Message (form-level only) -->
+          {#if formError}
             <div
               class="flex items-center gap-3 p-3 bg-red-950/20 border border-red-900/30 rounded-lg text-red-500 font-bold text-xs animate-shake"
             >
               <AlertCircle size={16} strokeWidth={2.5} />
-              {formError || registerMutation.error?.message || "Có lỗi xảy ra"}
+              {formError}
             </div>
           {/if}
 

@@ -3,6 +3,7 @@ import axios from 'axios';
 import { auth } from '$lib/stores/auth.svelte';
 import { goto } from '$app/navigation';
 import { PUBLIC_VITE_API_URL } from '$env/static/public';
+import { errorDialog } from '$lib/stores/errorDialog.svelte';
 
 export const queryClient = new QueryClient({
   defaultOptions: {
@@ -47,6 +48,16 @@ api.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+
+    // Handle rate limit (429)
+    if (error.response?.status === 429) {
+      const retryAfter = error.response.headers['retry-after'];
+      const message = retryAfter 
+        ? `Too many requests. Please wait ${retryAfter} seconds and try again.`
+        : 'Too many requests. Please wait a moment and try again.';
+      errorDialog.show('Rate Limit Exceeded', message);
+      return Promise.reject(error);
+    }
 
     if (error.response?.status === 401 && !originalRequest._retry) {
       if (isRefreshing) {

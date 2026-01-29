@@ -15,6 +15,7 @@
 		ListVideo,
 		Play,
 	} from "@lucide/svelte";
+	import ConfirmDialog from "$lib/components/ui/ConfirmDialog.svelte";
 
 	const playlistId = page.params.id!;
 	const playlistQuery = useAdminPlaylistById(() => playlistId);
@@ -47,6 +48,9 @@
 	const addVideoMutation = useAddVideosToPlaylist();
 	const removeVideoMutation = useRemoveVideoFromPlaylist();
 
+	let showRemoveConfirm = $state(false);
+	let videoToRemove = $state<string | null>(null);
+
 	async function handleAddVideo(videoId: string) {
 		if (!playlistId) return;
 		await addVideoMutation.mutateAsync({
@@ -58,13 +62,18 @@
 
 	async function handleRemoveVideo(videoId: string) {
 		if (!playlistId) return;
-		if (confirm("Remove this video from playlist?")) {
-			await removeVideoMutation.mutateAsync({
-				playlistId,
-				videoId,
-			});
-			playlistQuery.refetch();
-		}
+		videoToRemove = videoId;
+		showRemoveConfirm = true;
+	}
+
+	async function confirmRemoveVideo() {
+		if (!playlistId || !videoToRemove) return;
+		await removeVideoMutation.mutateAsync({
+			playlistId,
+			videoId: videoToRemove,
+		});
+		playlistQuery.refetch();
+		videoToRemove = null;
 	}
 
 	function formatDuration(seconds: number): string {
@@ -332,3 +341,11 @@
 		</div>
 	</div>
 </div>
+
+<ConfirmDialog
+	bind:open={showRemoveConfirm}
+	title="Remove Video"
+	message="Remove this video from playlist?"
+	onConfirm={confirmRemoveVideo}
+	onCancel={() => (videoToRemove = null)}
+/>
