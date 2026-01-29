@@ -38,10 +38,10 @@
     if (/\d/.test(password)) score++;
     if (/[^a-zA-Z0-9]/.test(password)) score++;
 
-    if (score <= 2) return { score, label: "Weak", color: "bg-red-500" };
-    if (score <= 3) return { score, label: "Fair", color: "bg-yellow-500" };
-    if (score <= 4) return { score, label: "Good", color: "bg-blue-500" };
-    return { score, label: "Strong", color: "bg-green-500" };
+    if (score <= 2) return { score, label: $t("passwordStrength.weak"), color: "bg-red-500" };
+    if (score <= 3) return { score, label: $t("passwordStrength.fair"), color: "bg-yellow-500" };
+    if (score <= 4) return { score, label: $t("passwordStrength.good"), color: "bg-blue-500" };
+    return { score, label: $t("passwordStrength.strong"), color: "bg-green-500" };
   });
 
   // Derived validation

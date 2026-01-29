@@ -18,7 +18,7 @@
           class="flex items-center gap-2 text-primary-400 font-black text-[10px] uppercase tracking-widest"
         >
           <Clock size={12} strokeWidth={3} />
-          <span>Your Library</span>
+          <span>{$t("common.watchLater")}</span>
         </div>
         <h1
           class="text-3xl sm:text-4xl font-black tracking-tighter text-surface-100 uppercase"

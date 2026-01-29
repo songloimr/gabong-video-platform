@@ -5,3 +5,6 @@
 *.sql
 .kombai
 .sisyphus
+playerjs*.js
+*-prd-*
+TIPTAP_IMAGE_SECURITY.md

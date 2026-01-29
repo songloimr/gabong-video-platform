@@ -6,9 +6,10 @@ import {
   pgEnum,
   text,
   index,
+  PgEnum,
 } from 'drizzle-orm/pg-core';
 
-export const userRoleEnum = pgEnum('user_role', ['user', 'admin']);
+export const userRoleEnum: PgEnum<["user", "admin"]> = pgEnum('user_role', ['user', 'admin']);
 export const userStatusEnum = pgEnum('user_status', [
   'active',
   'suspended',
@@ -29,6 +30,7 @@ export const users = pgTable(
     created_at: timestamp('created_at').defaultNow(),
     updated_at: timestamp('updated_at').defaultNow(),
     last_login_at: timestamp('last_login_at'),
+    last_ip: varchar('last_ip', { length: 45 }),
   },
   (table) => [
     index('idx_users_username').on(table.username),

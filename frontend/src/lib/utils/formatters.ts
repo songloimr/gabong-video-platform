@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { PUBLIC_VITE_API_URL } from '$env/static/public';
+import { PUBLIC_CDN_URL, PUBLIC_VITE_API_URL } from '$env/static/public';
 
 
 export function formatDate(date: string | Date): string {
@@ -43,8 +43,8 @@ export function formatNumber(num: number): string {
   return num.toString();
 }
 
-export function getAvatarUrl(avatarFilename: string | null | undefined): string {
-  if (!avatarFilename) return '/default-avatar.svg';
-  if (avatarFilename.startsWith('http')) return avatarFilename;
-  return `${PUBLIC_VITE_API_URL}/api/profile/${avatarFilename}`;
+export function getAvatarUrl(avatarFilename: string): string {
+  if (avatarFilename.startsWith('http'))
+    return avatarFilename;
+  return `${PUBLIC_CDN_URL}/${avatarFilename}`;
 }
