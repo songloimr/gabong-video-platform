@@ -31,10 +31,6 @@
       setTimeout(() => {
         goto("/auth/login?redirect=/profile");
       }, 100);
-    } else {
-      setTimeout(() => {
-        window.location.href = "/auth/login?redirect=/profile";
-      }, 100);
     }
   });
 
