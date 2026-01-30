@@ -30,6 +30,7 @@ import { AnnouncementsModule } from './modules/announcements/announcements.modul
 import { SubtitlesModule } from './modules/subtitles/subtitles.module';
 import { VideoMarkupsModule } from './modules/video-markups/video-markups.module';
 import { FeedbacksModule } from './modules/feedbacks/feedbacks.module';
+import { SitemapModule } from './modules/sitemap/sitemap.module';
 import { RedisModule } from './common/redis';
 
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
@@ -111,6 +112,7 @@ import { BullBoardModule } from "@bull-board/nestjs";
     SubtitlesModule,
     VideoMarkupsModule,
     FeedbacksModule,
+    SitemapModule,
     RedisModule,
   ],
   controllers: [],

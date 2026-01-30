@@ -3,12 +3,13 @@
   import FeaturedVideos from "$lib/components/video/FeaturedVideos.svelte";
   import QueryError from "$lib/components/ui/QueryError.svelte";
   import AppPagination from "$lib/components/ui/AppPagination.svelte";
+  import Seo from "$lib/components/Seo.svelte";
   import { t } from "$lib/stores/i18n";
   import { goto } from "$app/navigation";
   import { page } from "$app/stores";
   import { Filter, Clock, Calendar, FolderOpen, Rss, LayoutGrid } from "@lucide/svelte";
   import type { PageData } from "./$types";
-  import { generateWebsiteJsonLd, SEO_CONFIG } from "$lib/utils/seo";
+  import { generateWebsiteJsonLd } from "$lib/utils/seo";
 
   let { data }: { data: PageData } = $props();
 
@@ -43,37 +44,23 @@
     }
     goto(`?${params.toString()}`);
   }
+
+  const pagination = $derived.by(() => {
+    if (!data.videos?.pagination) return undefined;
+    const p = data.videos.pagination;
+    return {
+      prev: p.page > 1 ? `?page=${p.page - 1}` : undefined,
+      next: p.has_next ? `?page=${p.page + 1}` : undefined,
+    };
+  });
 </script>
 
-<svelte:head>
-  <title>{$t("common.home")} - Gabong</title>
-  <meta name="description" content={SEO_CONFIG.defaultDescription} />
-  <link rel="canonical" href={SEO_CONFIG.siteUrl} />
-  
-  <!-- Open Graph -->
-  <meta property="og:title" content="Gabong - Xem video thể thao hay nhất" />
-  <meta property="og:description" content={SEO_CONFIG.defaultDescription} />
-  <meta property="og:url" content={SEO_CONFIG.siteUrl} />
-  <meta property="og:image" content={SEO_CONFIG.defaultImage} />
-  
-  <!-- Twitter -->
-  <meta name="twitter:title" content="Gabong - Xem video thể thao hay nhất" />
-  <meta name="twitter:description" content={SEO_CONFIG.defaultDescription} />
-  <meta name="twitter:image" content={SEO_CONFIG.defaultImage} />
-  
-  <!-- Pagination Links for SEO -->
-  {#if data.videos?.pagination}
-    {#if data.videos.pagination.page > 1}
-      <link rel="prev" href="?page={data.videos.pagination.page - 1}" />
-    {/if}
-    {#if data.videos.pagination.has_next}
-      <link rel="next" href="?page={data.videos.pagination.page + 1}" />
-    {/if}
-  {/if}
-  
-  <!-- JSON-LD Structured Data -->
-  {@html `<script type="application/ld+json">${generateWebsiteJsonLd()}</script>`}
-</svelte:head>
+<Seo
+  title={$t("common.home")}
+  canonical="/"
+  jsonLd={generateWebsiteJsonLd()}
+  {pagination}
+/>
 
 <div
   class="max-w-480 mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 transition-all duration-500"

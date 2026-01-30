@@ -43,8 +43,8 @@ const TIPTAP_ALLOWED_ATTR = [
  * // Returns: '<p>Hello </p>'
  * ```
  */
-export function sanitizeHTML(dirty: string, options: DOMPurify.Config = {}): string {
-	const config: DOMPurify.Config = {
+export function sanitizeHTML(dirty: string, options: any = {}): string {
+	const config: any = {
 		ALLOWED_TAGS: TIPTAP_ALLOWED_TAGS,
 		ALLOWED_ATTR: TIPTAP_ALLOWED_ATTR,
 		// Allow data attributes for TipTap functionality
@@ -88,7 +88,7 @@ export function sanitizeHTML(dirty: string, options: DOMPurify.Config = {}): str
 	// Remove hooks after use to prevent memory leaks
 	DOMPurify.removeAllHooks();
 	
-	return clean;
+	return typeof clean === 'string' ? clean : clean.toString();
 }
 
 /**

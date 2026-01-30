@@ -3,8 +3,10 @@
 	import { page } from "$app/state";
 	import { usePlaylist } from "$lib/api/queries/playlists";
 	import VideoGrid from "$lib/components/video/VideoGrid.svelte";
+	import Seo from "$lib/components/Seo.svelte";
 	import { PlaySquare, Calendar, Library, ArrowLeft } from "@lucide/svelte";
 	import moment from "moment";
+	import { generatePlaylistJsonLd, truncateDescription } from "$lib/utils/seo";
 
 	const slug = $derived(page.params.slug || "");
 	const playlistQuery = usePlaylist(() => slug);
@@ -12,21 +14,36 @@
 	const playlist = $derived(playlistQuery.data);
 	const isLoading = $derived(playlistQuery.isLoading);
 	const error = $derived(playlistQuery.error);
+
+	const seoTitle = $derived(
+		playlist ? `${playlist.title} - ${$t("common.playlists")}` : $t("common.playlists")
+	);
+
+	const seoDescription = $derived(
+		truncateDescription(playlist?.description) || `Playlist trên Gabong`
+	);
+
+	const jsonLd = $derived.by(() => {
+		if (!playlist) return undefined;
+		return generatePlaylistJsonLd(
+			{ name: playlist.title, description: playlist.description, slug },
+			(playlist.videos || []).map(v => ({
+				id: v.id,
+				slug: v.slug,
+				title: v.title,
+				thumbnail_url: v.thumbnail_url,
+			}))
+		);
+	});
 </script>
 
-<svelte:head>
-	{#if playlist}
-		<title>{playlist.title} - {$t("common.playlists")} | Gabong</title>
-		<meta name="description" content={playlist.description || ""} />
-		<meta property="og:title" content={playlist.title} />
-		<meta property="og:description" content={playlist.description || ""} />
-		{#if playlist.thumbnail_url}
-			<meta property="og:image" content={playlist.thumbnail_url} />
-		{/if}
-	{:else}
-		<title>{$t("common.playlists")} | Gabong</title>
-	{/if}
-</svelte:head>
+<Seo
+	title={seoTitle}
+	description={seoDescription}
+	canonical={playlist ? `/playlists/${slug}` : undefined}
+	ogImage={playlist?.thumbnail_url || undefined}
+	{jsonLd}
+/>
 
 <div class="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
 	<!-- Back Button & Breadcrumbs -->

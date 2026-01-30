@@ -1,6 +1,6 @@
 import { createMutation, useQueryClient } from '@tanstack/svelte-query';
 import { api } from '../client';
-import type { SiteSettings } from '../queries/site-settings';
+import type { SiteSettings } from '$lib/types';
 import type { ApiResponse } from '$lib/types';
 
 export interface R2ConnectionResult {

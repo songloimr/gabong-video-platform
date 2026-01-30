@@ -2,6 +2,7 @@
   import { page } from "$app/state";
   import { t } from "$lib/stores/i18n";
   import VideoCard from "$lib/components/video/VideoCard.svelte";
+  import Seo from "$lib/components/Seo.svelte";
   import { Search, SlidersHorizontal } from "@lucide/svelte";
   import type { PageData } from "./$types";
 
@@ -11,17 +12,27 @@
 
   const searchQuery = pageData.searchQuery || "";
   const totalResults = videosData?.pagination?.total ?? 0;
-  const pageTitle = searchQuery
-    ? `${$t("common.search")}: "${searchQuery}" - Gabong`
-    : `${$t("common.search")} - Gabong`;
-  const pageDescription = searchQuery
-    ? $t("common.searchResultsDescription", {
-        values: {
-          count: totalResults,
-          query: searchQuery,
-        },
-      })
-    : $t("common.searchDescription");
+  
+  const pageTitle = $derived(
+    searchQuery
+      ? `${$t("common.search")}: "${searchQuery}"`
+      : $t("common.search")
+  );
+  
+  const pageDescription = $derived(
+    searchQuery
+      ? $t("common.searchResultsDescription", {
+          values: {
+            count: totalResults,
+            query: searchQuery,
+          },
+        })
+      : $t("common.searchDescription")
+  );
+
+  const canonical = $derived(
+    searchQuery ? `/search?q=${encodeURIComponent(searchQuery)}` : undefined
+  );
 
   const nextPageParams = new URLSearchParams();
   nextPageParams.set("q", searchQuery);
@@ -29,20 +40,12 @@
   nextPageParams.set("sort", pageData.sort || "");
 </script>
 
-<svelte:head>
-  <title>{pageTitle}</title>
-  <meta name="description" content={pageDescription} />
-  <meta property="og:title" content={pageTitle} />
-  <meta property="og:description" content={pageDescription} />
-  <meta property="og:type" content="website" />
-  <meta name="robots" content="index, follow" />
-  {#if searchQuery}
-    <link
-      rel="canonical"
-      href={`https://gabong.net/search?q=${encodeURIComponent(searchQuery)}`}
-    />
-  {/if}
-</svelte:head>
+<Seo
+  title={pageTitle}
+  description={pageDescription}
+  {canonical}
+  robots="index, follow"
+/>
 
 <div class="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
   <div

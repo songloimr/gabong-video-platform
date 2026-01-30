@@ -2,8 +2,9 @@
 User-agent: *
 Allow: /
 
-# Sitemap
+# Sitemaps
 Sitemap: https://gabong.net/sitemap.xml
+Sitemap: https://gabong.net/sitemap-videos.xml
 
 # Block admin and private pages
 Disallow: /admin/

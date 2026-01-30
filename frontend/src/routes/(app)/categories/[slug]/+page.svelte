@@ -5,9 +5,10 @@
 	import VideoGrid from "$lib/components/video/VideoGrid.svelte";
 	import QueryError from "$lib/components/ui/QueryError.svelte";
 	import AppPagination from "$lib/components/ui/AppPagination.svelte";
+	import Seo from "$lib/components/Seo.svelte";
 	import { FolderOpen } from "@lucide/svelte";
 	import type { PageData } from "./$types";
-	import { SEO_CONFIG, generateVideoListJsonLd, generateBreadcrumbJsonLd } from "$lib/utils/seo";
+	import { generateVideoListJsonLd, generateBreadcrumbJsonLd, truncateDescription } from "$lib/utils/seo";
 
 	let { data }: { data: PageData } = $props();
 
@@ -25,55 +26,52 @@
 		data.category?.name || (data.slug || "").replace(/-/g, " "),
 	);
 	
-	const canonical = $derived(`${SEO_CONFIG.siteUrl}/categories/${data.slug}`);
+	const canonical = $derived(`/categories/${data.slug}`);
 	const description = $derived(
-		data.category?.description || 
-		`Xem các video ${categoryName} hay nhất trên Gabong. Cập nhật liên tục các video mới nhất.`
+		truncateDescription(
+			`Xem các video ${categoryName} hay nhất trên Gabong. Cập nhật liên tục các video mới nhất.`
+		)
 	);
+
+	const pagination = $derived.by(() => {
+		if (!data.videos?.pagination) return undefined;
+		const p = data.videos.pagination;
+		return {
+			prev: p.page > 1 ? `?page=${p.page - 1}` : undefined,
+			next: p.has_next ? `?page=${p.page + 1}` : undefined,
+		};
+	});
+
+	const jsonLd = $derived.by(() => {
+		const schemas: object[] = [
+			generateBreadcrumbJsonLd([
+				{ name: 'Trang chủ', url: '/' },
+				{ name: 'Danh mục', url: '/categories' },
+				{ name: categoryName, url: canonical }
+			])
+		];
+		
+		if (data.videos?.data?.length) {
+			schemas.push(
+				generateVideoListJsonLd(
+					data.videos.data.map(v => ({ id: v.id, slug: v.slug, title: v.title, thumbnail_url: v.thumbnail_url })),
+					categoryName,
+					canonical
+				)
+			);
+		}
+		
+		return schemas;
+	});
 </script>
 
-<svelte:head>
-	<title>{categoryName} - Gabong</title>
-	<meta name="description" content={description} />
-	<link rel="canonical" href={canonical} />
-	
-	<!-- Open Graph -->
-	<meta property="og:title" content="{categoryName} - Gabong" />
-	<meta property="og:description" content={description} />
-	<meta property="og:url" content={canonical} />
-	<meta property="og:type" content="website" />
-	<meta property="og:image" content={SEO_CONFIG.defaultImage} />
-	
-	<!-- Twitter -->
-	<meta name="twitter:title" content="{categoryName} - Gabong" />
-	<meta name="twitter:description" content={description} />
-	<meta name="twitter:image" content={SEO_CONFIG.defaultImage} />
-	
-	{#if data.videos?.pagination}
-		{#if data.videos.pagination.page > 1}
-			<link rel="prev" href="?page={data.videos.pagination.page - 1}" />
-		{/if}
-		{#if data.videos.pagination.has_next}
-			<link rel="next" href="?page={data.videos.pagination.page + 1}" />
-		{/if}
-	{/if}
-	
-	<!-- JSON-LD Breadcrumb -->
-	{@html `<script type="application/ld+json">${generateBreadcrumbJsonLd([
-		{ name: 'Trang chủ', url: '/' },
-		{ name: 'Danh mục', url: '/categories' },
-		{ name: categoryName, url: canonical }
-	])}</script>`}
-	
-	<!-- JSON-LD Video List -->
-	{#if data.videos?.data?.length}
-		{@html `<script type="application/ld+json">${generateVideoListJsonLd(
-			data.videos.data.map(v => ({ id: v.id, slug: v.slug, title: v.title, thumbnail_url: v.thumbnail_url })),
-			categoryName,
-			canonical
-		)}</script>`}
-	{/if}
-</svelte:head>
+<Seo
+	title={categoryName}
+	{description}
+	{canonical}
+	{jsonLd}
+	{pagination}
+/>
 
 <div class="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
 	<div class="flex flex-col gap-6 sm:gap-10 mb-8 sm:mb-12">
@@ -89,11 +87,6 @@
 			>
 				{categoryName}
 			</h1>
-			{#if data.category?.description}
-				<p class="text-sm text-surface-400 font-medium max-w-2xl mt-2">
-					{data.category.description}
-				</p>
-			{/if}
 			{#if data.videos?.pagination}
 				<p
 					class="text-xs text-surface-500 font-bold uppercase tracking-widest mt-3"

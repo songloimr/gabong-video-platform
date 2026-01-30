@@ -11,19 +11,27 @@
 	import VideoInfo from "$lib/components/video/VideoInfo.svelte";
 	import CommentSection from "$lib/components/comments/CommentSection.svelte";
 	import Storyboard from "$lib/components/video/Storyboard.svelte";
+	import Seo from "$lib/components/Seo.svelte";
 	import { LoaderCircle, X } from "@lucide/svelte";
 	import { onMount } from "svelte";
 	import type { PageProps } from "./$types";
 	import { PUBLIC_CDN_URL } from "$env/static/public";
-	import { generateVideoMeta } from "$lib/utils/seo";
+	import { generateVideoJsonLd, truncateDescription, SEO_CONFIG } from "$lib/utils/seo";
 
 	// SSR Data
 	let { data }: PageProps = $props();
 
 	const video = $derived(data.video);
 
-	// Generate SEO meta data
-	const seoMeta = $derived(video ? generateVideoMeta({
+	// SEO data
+	const seoTitle = $derived(video?.title || $t("video.defaultTitle"));
+	const seoDescription = $derived(
+		truncateDescription(video?.description) || `Xem ${video?.title} trên ${SEO_CONFIG.siteName}`
+	);
+	const seoKeywords = $derived(video?.tags?.map(t => t.name).join(', '));
+	const seoCanonical = $derived(video ? `/videos/${video.slug}` : undefined);
+	const seoImage = $derived(video?.thumbnail_url || SEO_CONFIG.defaultImage);
+	const jsonLd = $derived(video ? generateVideoJsonLd({
 		id: video.id,
 		slug: video.slug,
 		title: video.title,
@@ -36,7 +44,7 @@
 		updated_at: video.updated_at,
 		uploader: video.uploader,
 		tags: video.tags,
-	}) : null);
+	}) : undefined);
 
 	// API Mutations
 	const likeMutation = useLikeVideo();
@@ -97,32 +105,15 @@
 	}
 </script>
 
-<svelte:head>
-	<title>{video?.title || $t("video.defaultTitle")} - Gabong</title>
-	{#if video && seoMeta}
-		<!-- Primary Meta Tags -->
-		<meta name="description" content={seoMeta.description} />
-		<meta name="keywords" content={seoMeta.keywords || ''} />
-		<link rel="canonical" href={seoMeta.canonical} />
-		
-		<!-- Open Graph / Facebook -->
-		<meta property="og:type" content="video.other" />
-		<meta property="og:url" content={seoMeta.canonical} />
-		<meta property="og:title" content={seoMeta.ogTitle} />
-		<meta property="og:description" content={seoMeta.ogDescription} />
-		<meta property="og:image" content={seoMeta.ogImage} />
-		
-		<!-- Twitter -->
-		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:url" content={seoMeta.canonical} />
-		<meta name="twitter:title" content={seoMeta.twitterTitle} />
-		<meta name="twitter:description" content={seoMeta.twitterDescription} />
-		<meta name="twitter:image" content={seoMeta.twitterImage} />
-		
-		<!-- JSON-LD Structured Data -->
-		{@html `<script type="application/ld+json">${seoMeta.jsonLd}</script>`}
-	{/if}
-</svelte:head>
+<Seo
+	title={seoTitle}
+	description={seoDescription}
+	keywords={seoKeywords}
+	canonical={seoCanonical}
+	ogType="video.other"
+	ogImage={seoImage}
+	{jsonLd}
+/>
 
 {#if data.error}
 	<div class="max-w-480 mx-auto px-4 py-12">

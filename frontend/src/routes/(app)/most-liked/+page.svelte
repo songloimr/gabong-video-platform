@@ -5,8 +5,10 @@
 	import VideoGrid from "$lib/components/video/VideoGrid.svelte";
 	import QueryError from "$lib/components/ui/QueryError.svelte";
 	import AppPagination from "$lib/components/ui/AppPagination.svelte";
+	import Seo from "$lib/components/Seo.svelte";
 	import { PlaySquare, Filter } from "@lucide/svelte";
 	import type { PageData } from "./$types";
+	import { generateVideoListJsonLd } from "$lib/utils/seo";
 
 	let { data }: { data: PageData } = $props();
 
@@ -19,20 +21,33 @@
 		}
 		goto(`?${params.toString()}`);
 	}
+
+	const pagination = $derived.by(() => {
+		if (!data.videos?.pagination) return undefined;
+		const p = data.videos.pagination;
+		return {
+			prev: p.page > 1 ? `?page=${p.page - 1}` : undefined,
+			next: p.has_next ? `?page=${p.page + 1}` : undefined,
+		};
+	});
+
+	const jsonLd = $derived.by(() => {
+		if (!data.videos?.data?.length) return undefined;
+		return generateVideoListJsonLd(
+			data.videos.data.map(v => ({ id: v.id, slug: v.slug, title: v.title, thumbnail_url: v.thumbnail_url })),
+			'Video được yêu thích nhất',
+			'/most-liked'
+		);
+	});
 </script>
 
-<svelte:head>
-	<title>{$t("common.mostLiked")} - Gabong</title>
-	<meta name="description" content={$t("common.mostLikedDescription")} />
-	{#if data.videos?.pagination}
-		{#if data.videos.pagination.page > 1}
-			<link rel="prev" href="?page={data.videos.pagination.page - 1}" />
-		{/if}
-		{#if data.videos.pagination.has_next}
-			<link rel="next" href="?page={data.videos.pagination.page + 1}" />
-		{/if}
-	{/if}
-</svelte:head>
+<Seo
+	title={$t("common.mostLiked")}
+	description={$t("common.mostLikedDescription")}
+	canonical="/most-liked"
+	{jsonLd}
+	{pagination}
+/>
 
 <div class="max-w-480 mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
 	<div
