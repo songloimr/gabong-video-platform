@@ -3,6 +3,7 @@
   import { goto } from "$app/navigation";
   import { auth } from "$lib/stores/auth.svelte";
   import { loginModal } from "$lib/stores/loginModal.svelte";
+  import { feedbackModal } from "$lib/stores/feedbackModal.svelte";
   import { sidebarState } from "$lib/stores/sidebar.svelte";
   import { t } from "$lib/stores/i18n";
   import Search from "$lib/components/search/SearchBar.svelte";
@@ -19,6 +20,7 @@
     PlaySquare,
     Clock,
     X,
+    MessageSquare,
   } from "@lucide/svelte";
   import { useLogout } from "$lib/api/mutations/auth";
 
@@ -68,7 +70,7 @@
 
           <!-- Desktop Navigation -->
           <nav class="hidden md:flex items-center gap-1">
-            <a
+            <!-- <a
               href="/"
               class="group flex items-center gap-2 px-3 py-1.5 rounded transition-all duration-300 font-display font-semibold text-xs
               {page.url.pathname === '/'
@@ -80,20 +82,14 @@
                 strokeWidth={page.url.pathname === "/" ? 2.5 : 2}
               />
               <span>{$t("common.home")}</span>
-            </a>
-            <a
-              href="/videos"
-              class="group flex items-center gap-2 px-3 py-1.5 rounded transition-all duration-300 font-display font-semibold text-xs
-              {page.url.pathname === '/videos'
-                ? 'bg-primary-500/10 text-primary-400'
-                : 'text-surface-400 hover:bg-surface-800 hover:text-primary-400'}"
+            </a> -->
+            <button
+              onclick={() => feedbackModal.open()}
+              class="group flex items-center gap-2 px-3 py-1.5 rounded transition-all duration-300 font-display font-semibold text-xs text-surface-400 hover:bg-surface-800 hover:text-primary-400"
             >
-              <PlaySquare
-                size={16}
-                strokeWidth={page.url.pathname === "/videos" ? 2.5 : 2}
-              />
-              <span>{$t("common.newest")}</span>
-            </a>
+              <MessageSquare size={16} strokeWidth={2} />
+              <span>Feedback</span>
+            </button>
           </nav>
         </div>
 

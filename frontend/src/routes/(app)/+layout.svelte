@@ -7,6 +7,7 @@
     import BottomNav from "$lib/components/layout/BottomNav.svelte";
     import GlobalAnnouncementBar from "$lib/components/ui/GlobalAnnouncementBar.svelte";
     import AgeVerificationPopup from "$lib/components/ui/AgeVerificationPopup.svelte";
+    import FeedbackModal from "$lib/components/FeedbackModal.svelte";
     import type { LayoutProps } from "./$types";
 
     let { children, data }: LayoutProps = $props();
@@ -57,3 +58,4 @@
 <BottomNav />
 
 <AgeVerificationPopup bind:open={showAgeVerification} onConfirm={handleAgeConfirm} />
+<FeedbackModal />

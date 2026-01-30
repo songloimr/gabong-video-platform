@@ -247,3 +247,26 @@ export interface DashboardStatsResponse {
   today_uploads: number;
   today_registrations: number;
 }
+
+export type FeedbackType = 'bug' | 'suggestion' | 'other';
+
+export interface Feedback {
+  id: string;
+  type: FeedbackType;
+  title: string;
+  content: string;
+  user_id: string | null;
+  ip_address: string | null;
+  created_at: string;
+  user?: {
+    id: string;
+    username: string;
+    avatar_url: string | null;
+  } | null;
+}
+
+export interface CreateFeedbackDto {
+  type: FeedbackType;
+  title: string;
+  content: string;
+}

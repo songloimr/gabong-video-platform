@@ -21,6 +21,6 @@ export function useNotificationCount() {
       const { data } = await api.get<ApiResponse<{ unread_count: number }>>('/api/notifications/count');
       return data.data.unread_count;
     },
-    refetchInterval: 30000,
+    refetchInterval: 60_000,
   }));
 }

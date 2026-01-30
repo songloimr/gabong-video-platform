@@ -12,3 +12,4 @@ export * from './announcements.schema';
 export * from './subtitles.schema';
 export * from './video-markups.schema';
 export * from './materialized-views';
+export * from './feedbacks.schema';
