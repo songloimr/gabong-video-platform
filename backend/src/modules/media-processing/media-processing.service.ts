@@ -61,7 +61,7 @@ export class MediaProcessingService {
 
         const metadata = _metadata || await this.extractMetadata(filePath);
         const portrait = this.isPortrait(metadata.resolution);
-
+//
         console.log({ filePath, outputPath })
 
         const tileColumns = portrait ? 4 : 2;
@@ -172,7 +172,7 @@ export class MediaProcessingService {
         const playlistPath = path.join(outputDir, 'master.m3u8');
 
         // Get FFmpeg config from settings
-        const ffmpegConfig = await this.siteSettingsService.getFFmpegConfig();
+        //const ffmpegConfig = await this.siteSettingsService.getFFmpegConfig();
 
         return new Promise((resolve, reject) => {
             ffmpeg(inputPath)

@@ -19,10 +19,25 @@
 		/* Font family variables */
 		--font-display: 'Space Grotesk', ui-sans-serif, system-ui, sans-serif;
 		--font-body: 'Source Sans 3', ui-sans-serif, system-ui, sans-serif;
+		
+		/* Custom color palette overrides for Skeleton UI */
+		/* Background: #18222B, Secondary: #243342, Text: #d2d4d7, Text Secondary: #787f86 */
+		--color-surface-950: 24 34 43;      /* #18222B - darkest background */
+		--color-surface-900: 36 51 66;      /* #243342 - cards, elevated surfaces */
+		--color-surface-800: 48 68 89;      /* filters, inputs */
+		--color-surface-700: 63 88 115;     /* borders, subtle elements */
+		--color-surface-600: 80 92 104;     /* hover states */
+		--color-surface-500: 96 107 117;    /* muted text */
+		--color-surface-400: 120 127 134;   /* #787f86 - secondary text */
+		--color-surface-300: 145 156 168;   /* lighter text */
+		--color-surface-200: 170 180 190;   /* even lighter */
+		--color-surface-100: 195 203 210;   /* almost white */
+		--color-surface-50: 210 212 215;    /* #d2d4d7 - main text */
 	}
 
 	body {
-		@apply antialiased bg-surface-950 text-surface-50;
+		@apply antialiased text-surface-50;
+		background-color: rgb(var(--color-surface-950));
 		font-family: var(--font-body);
 		font-weight: 400;
 	}
@@ -33,7 +48,8 @@
 	h4,
 	h5,
 	h6 {
-		@apply tracking-tighter text-surface-50;
+		@apply tracking-tighter;
+		color: rgb(var(--color-surface-50));
 		font-family: var(--font-display);
 		font-weight: 700;
 	}
@@ -54,11 +70,19 @@
 	}
 
 	::-webkit-scrollbar-track {
-		@apply bg-surface-900/50;
+		background-color: rgb(var(--color-surface-900) / 0.5);
 	}
 
 	::-webkit-scrollbar-thumb {
-		@apply bg-surface-600 rounded-full border-2 border-transparent bg-clip-padding hover:bg-surface-500 transition-colors;
+		background-color: rgb(var(--color-surface-600));
+		border-radius: 9999px;
+		border: 2px solid transparent;
+		background-clip: padding-box;
+		transition: background-color 200ms;
+	}
+	
+	::-webkit-scrollbar-thumb:hover {
+		background-color: rgb(var(--color-surface-500));
 	}
 
 	/* Safe area support for mobile */
@@ -79,7 +103,15 @@
 	input,
 	textarea,
 	select {
-		@apply bg-surface-800 border-surface-600 text-surface-100 placeholder-surface-400;
+		background-color: rgb(var(--color-surface-800));
+		border-color: rgb(var(--color-surface-600));
+		color: rgb(var(--color-surface-100));
+	}
+	
+	input::placeholder,
+	textarea::placeholder,
+	select::placeholder {
+		color: rgb(var(--color-surface-400));
 	}
 
 	input:focus,
@@ -91,11 +123,17 @@
 
 @layer utilities {
 	.glass {
-		@apply bg-surface-900/80 backdrop-blur-xl border border-surface-700/50 rounded-md;
+		background-color: rgb(var(--color-surface-900) / 0.8);
+		backdrop-filter: blur(12px);
+		border: 1px solid rgb(var(--color-surface-700) / 0.5);
+		border-radius: 6px;
 	}
 
 	.glass-subtle {
-		@apply bg-surface-900/60 backdrop-blur-md border border-surface-800/50 rounded;
+		background-color: rgb(var(--color-surface-900) / 0.6);
+		backdrop-filter: blur(8px);
+		border: 1px solid rgb(var(--color-surface-800) / 0.5);
+		border-radius: 4px;
 	}
 
 	.animate-gradient-slow {
@@ -158,37 +196,48 @@
 		@apply border border-surface-800/50;
 	}
 
-	/* Card styles optimized for dark mode */
+	/* Card styles optimized for custom dark palette */
 	.card-dark {
-		@apply bg-surface-900 border border-surface-700/60 rounded-lg;
+		background-color: rgb(var(--color-surface-900));
+		border: 1px solid rgb(var(--color-surface-700) / 0.6);
+		border-radius: 8px;
 		box-shadow:
 			0 1px 2px rgba(0, 0, 0, 0.4),
-			0 0 0 1px rgba(255, 255, 255, 0.03);
+			0 0 0 1px rgba(255, 255, 255, 0.02);
 	}
 
 	.card-dark-hover {
-		@apply hover:border-surface-600/60 transition-all duration-300;
+		transition: all 300ms;
 	}
-
+	
 	.card-dark-hover:hover {
+		border-color: rgb(var(--color-surface-600) / 0.6);
 		box-shadow:
 			0 10px 25px -5px rgba(0, 0, 0, 0.5),
 			0 8px 10px -6px rgba(0, 0, 0, 0.3),
-			0 0 0 1px rgba(255, 255, 255, 0.05);
+			0 0 0 1px rgba(255, 255, 255, 0.04);
 	}
 
 	/* Text contrast utilities */
 	.text-muted {
-		@apply text-surface-400;
+		color: rgb(var(--color-surface-400));
 	}
 
 	.text-subtle {
-		@apply text-surface-500;
+		color: rgb(var(--color-surface-500));
 	}
 
 	/* Interactive element states */
 	.interactive {
-		@apply transition-all duration-200 hover:bg-surface-800 active:bg-surface-700;
+		transition: all 200ms;
+	}
+	
+	.interactive:hover {
+		background-color: rgb(var(--color-surface-800));
+	}
+	
+	.interactive:active {
+		background-color: rgb(var(--color-surface-700));
 	}
 
 	.interactive-primary {

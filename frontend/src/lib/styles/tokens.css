@@ -4,30 +4,34 @@
  */
 
 :root {
-  /* ========== Colors ========== */
+  /* ========== Custom Color Palette ========== */
+  /* Main text: #d2d4d7 (210, 212, 215) */
+  /* Secondary text: #787f86 (120, 127, 134) */
+  /* Background: #18222B (24, 34, 43) */
+  /* Secondary UI: #243342 (36, 51, 66) */
   
   /* Background colors */
-  --color-bg-primary: 12 12 12;           /* surface-950 */
-  --color-bg-elevated: 24 24 27;          /* surface-900 */
-  --color-bg-subtle: 39 39 42;            /* surface-800 */
-  --color-bg-muted: 63 63 70;             /* surface-700 */
+  --color-bg-primary: 24 34 43;           /* surface-950: #18222B - main background */
+  --color-bg-elevated: 36 51 66;          /* surface-900: #243342 - elevated cards */
+  --color-bg-subtle: 48 68 89;            /* surface-800: slightly lighter */
+  --color-bg-muted: 63 88 115;            /* surface-700: muted elements */
   
   /* Glass backgrounds */
-  --color-glass-bg: rgb(24 24 27 / 0.8);
-  --color-glass-border: rgb(63 63 70 / 0.5);
-  --color-glass-subtle-bg: rgb(24 24 27 / 0.6);
-  --color-glass-subtle-border: rgb(39 39 42 / 0.5);
+  --color-glass-bg: rgb(36 51 66 / 0.8);
+  --color-glass-border: rgb(63 88 115 / 0.5);
+  --color-glass-subtle-bg: rgb(36 51 66 / 0.6);
+  --color-glass-subtle-border: rgb(48 68 89 / 0.5);
   
   /* Text colors */
-  --color-text-primary: 250 250 250;      /* surface-50 */
-  --color-text-secondary: 161 161 170;    /* surface-400 */
-  --color-text-muted: 113 113 122;        /* surface-500 */
-  --color-text-subtle: 82 82 91;          /* surface-600 */
+  --color-text-primary: 210 212 215;      /* surface-50: #d2d4d7 - main text */
+  --color-text-secondary: 120 127 134;    /* surface-400: #787f86 - secondary text */
+  --color-text-muted: 96 107 117;         /* surface-500: between secondary and subtle */
+  --color-text-subtle: 80 92 104;         /* surface-600: subtle text */
   
   /* Border colors */
-  --color-border-default: rgb(63 63 70 / 0.6);
-  --color-border-subtle: rgb(39 39 42 / 0.5);
-  --color-border-strong: rgb(82 82 91 / 0.6);
+  --color-border-default: rgb(63 88 115 / 0.6);
+  --color-border-subtle: rgb(48 68 89 / 0.5);
+  --color-border-strong: rgb(80 92 104 / 0.6);
   
   /* ========== Shadows ========== */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.3);
