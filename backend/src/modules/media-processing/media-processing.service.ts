@@ -62,42 +62,37 @@ export class MediaProcessingService {
         const metadata = _metadata || await this.extractMetadata(filePath);
         const portrait = this.isPortrait(metadata.resolution);
 
+        console.log({ filePath, outputPath })
 
-        try {
-            //-i snaptik.vn_lAMds.mp4 -vsync vfr -vf "fps=1/2,scale=160:-1,tile=4x1" -qscale:v 3 "img%04d.jpg"
-            const tileColumns = portrait ? 4 : 2;
-            const tileRows = portrait ? 1 : 2;
-            const frameWidth = 1280 / tileColumns
+        const tileColumns = portrait ? 4 : 2;
+        const tileRows = portrait ? 1 : 2;
+        const frameWidth = 1280 / tileColumns;
+        const frameHeight = "-1"
 
-            const frameCount = Math.floor(metadata.duration / (tileColumns * tileRows));
+        const frameCount = Math.max(1, Math.ceil(metadata.duration / (tileColumns * tileRows)));
 
-            // this.logger.debug(`command: fps=1/${frameCount}, scale=${frameWidth}:-1, tile=${tileColumns}x${tileRows}`)
+        console.log({ frameCount, tileColumns, tileRows, frameWidth })
 
-            return new Promise((resolve, reject) => {
-                ffmpeg(filePath)
-                    .inputOptions(['-vsync vfr'])
-                    .videoFilters([{
-                        filter: 'fps',
-                        options: `1/${frameCount}`
-                    }, {
-                        filter: 'scale',
-                        options: `${frameWidth}:-1`
-                    }, {
-                        filter: 'tile',
-                        options: `${tileColumns}x${tileRows}`
-                    }])
-                    .outputOptions(['-qscale:v 3'])
-                    .save(outputPath)
-                    .on('end', () => resolve(outputPath))
-                    .on('error', (err) => reject(err));
-            });
-        } catch (err) {
-            this.logger.error(`Error generating thumbnail: ${err.message}`);
-        } finally {
-            if (fs.existsSync(outputPath)) {
-                fs.unlinkSync(outputPath);
-            }
-        }
+        return new Promise((resolve, reject) => {
+            ffmpeg(filePath)
+                .videoFilters([{
+                    filter: 'fps',
+                    options: `1/${frameCount}`
+                }, {
+                    filter: 'scale',
+                    options: `${frameWidth}:${frameHeight}`
+                }, {
+                    filter: 'tile',
+                    options: `${tileColumns}x${tileRows}`
+                }])
+                .outputOptions(['-vsync vfr', '-qscale:v 3'])
+                .save(outputPath)
+                .on('end', () => resolve(outputPath))
+                .on('error', (err) => {
+                    this.logger.error(`Error generating thumbnail: ${err.message}`);
+                    reject(err);
+                });
+        });
     }
 
     async remuxToMP4(inputPath: string, outputPath: string): Promise<string> {
@@ -182,11 +177,10 @@ export class MediaProcessingService {
         return new Promise((resolve, reject) => {
             ffmpeg(inputPath)
                 .outputOptions([
-                    '-codec: copy',
+                    '-c copy',
                     `-hls_time ${hlsTime}`,
                     '-hls_list_size 0',
                     '-f hls',
-                    `-preset ${ffmpegConfig.preset}`,
                 ])
                 .output(playlistPath)
                 .on('end', () => resolve(playlistPath))

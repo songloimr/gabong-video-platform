@@ -6,7 +6,7 @@ import {
   forwardRef,
   Logger,
 } from '@nestjs/common';
-import { eq, desc, sql, and, ilike, inArray, ne } from 'drizzle-orm';
+import { eq, desc, sql, and, ilike, inArray, ne, SQL } from 'drizzle-orm';
 import { DrizzleService } from '../../database/drizzle.service';
 import {
   videos,
@@ -40,10 +40,11 @@ import type {
   VideoStatus,
 } from '../../types';
 import { generateSlug } from '../../common/helpers/slug.helper';
-import fs from 'fs';
-import path from 'path';
+import fs = require('fs');
+import path = require('path');
 import { VideoProcessingProcessor } from '../video-processing/video-processing.processor';
 import { StorageService } from '../storage/storage.service';
+import { PgColumn } from 'drizzle-orm/pg-core';
 
 @Injectable()
 export class VideosService {
@@ -193,7 +194,7 @@ export class VideosService {
       // userId ? this.getWatchPosition(result.id, userId) : 0,
     ]);
 
-    return {...result, tags: tagData, watch_position: 0};
+    return { ...result, tags: tagData, watch_position: 0 };
   }
 
   /**
@@ -301,14 +302,18 @@ export class VideosService {
     if (!deletedVideo) {
       throw new NotFoundException('Video not found');
     }
-    if (deletedVideo.status === 'pending_processing') {
-      // Remove from processing queue if pending
-      await this.videoProcessingProcessor.removeFromQueue(id);
+    if (["pending_approval", "pending_processing", "rejected"].includes(deletedVideo.status)) {
       try {
+        console.log(deletedVideo.local_path)
+        console.log(path.resolve(deletedVideo.local_path))
         fs.rmSync(path.resolve(deletedVideo.local_path), { force: true, recursive: true });
       } catch (error) {
         this.logger.error(`Error cleaning up local path ${deletedVideo.local_path}: ${error.message}`);
       }
+    }
+    if (deletedVideo.status === 'pending_processing') {
+      // Remove from processing queue if pending
+      await this.videoProcessingProcessor.removeFromQueue(id);
     } else if (deletedVideo.status === 'approved') {
       // Delete from storage if processed
       await this.storageService.deleteDirectory(deletedVideo.video_key)
@@ -419,7 +424,7 @@ export class VideosService {
     const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
     // Build order by clause
-    let orderByClause;
+    let orderByClause: SQL | PgColumn;
     switch (filters?.sort) {
       case 'oldest':
         orderByClause = videos.created_at;

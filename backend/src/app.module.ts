@@ -31,13 +31,10 @@ import { SubtitlesModule } from './modules/subtitles/subtitles.module';
 import { VideoMarkupsModule } from './modules/video-markups/video-markups.module';
 import { RedisModule } from './common/redis';
 
-
-import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
 import { ValidationPipe } from './common/pipes/validation.pipe';
 
-import { JwtAuthGuard } from './common/guards/jwt-auth.guard';
 import { CustomThrottlerGuard } from './common/guards/custom-throttler.guard';
 
 import databaseConfig from './config/database.config';
