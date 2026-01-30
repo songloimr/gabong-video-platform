@@ -1,5 +1,5 @@
 import { writable, derived } from 'svelte/store';
-import { locale, t, _ } from 'svelte-i18n';
+import { locale, t, _, locales } from 'svelte-i18n';
 import { browser } from '$app/environment';
 
 export type Locale = 'vi' | 'en';
@@ -35,7 +35,7 @@ export function setLocale(newLocale: Locale) {
 }
 
 // Export the translation function for convenience
-export { t, _ };
+export { t, _, locale, locales };
 
 // Get locale display name
 export const localeDisplayName = derived(currentLocale, ($currentLocale) => {

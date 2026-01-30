@@ -1,4 +1,6 @@
 <script lang="ts">
+    import { t } from "$lib/stores/i18n";
+
     interface Props {
         url: string | null;
         title: string;
@@ -11,6 +13,6 @@
     <img src={url} alt={title} class="w-full h-full object-cover" />
 {:else}
     <div class="w-full h-full bg-surface-700 flex items-center justify-center">
-        <span class="text-xs text-surface-400">No Image</span>
+        <span class="text-xs text-surface-400">{$t("video.noImage")}</span>
     </div>
 {/if}

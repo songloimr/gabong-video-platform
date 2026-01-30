@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { t } from "svelte-i18n";
+  import { t } from "$lib/stores/i18n";
   import { useWatchLater } from "$lib/api/queries/watch-later";
   import VideoGrid from "$lib/components/video/VideoGrid.svelte";
   import QueryError from "$lib/components/ui/QueryError.svelte";

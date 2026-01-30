@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { t } from "$lib/stores/i18n";
   import { X } from "@lucide/svelte";
   import { Dialog } from "@skeletonlabs/skeleton-svelte";
 
@@ -14,10 +15,10 @@
 
   let {
     open = $bindable(false),
-    title = "Confirm",
-    message = "Are you sure?",
-    confirmText = "OK",
-    cancelText = "Cancel",
+    title,
+    message,
+    confirmText,
+    cancelText,
     onConfirm,
     onCancel,
   }: Props = $props();
@@ -49,11 +50,11 @@
         <Dialog.Title
           class="text-sm font-black uppercase tracking-widest text-surface-100"
         >
-          {title}
+          {title || $t("common.confirm")}
         </Dialog.Title>
         <Dialog.CloseTrigger
           class="p-1 text-surface-400 hover:text-surface-200 transition-colors rounded-md hover:bg-surface-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
-          aria-label="Close dialog"
+          aria-label={$t("common.close")}
         >
           <X size={18} strokeWidth={2.5} />
         </Dialog.CloseTrigger>
@@ -70,13 +71,13 @@
           onclick={handleCancel}
           class="px-4 py-2 rounded-sm border border-surface-600 text-surface-300 hover:bg-surface-700 transition-colors text-sm"
         >
-          {cancelText}
+          {cancelText || $t("common.cancel")}
         </button>
         <button
           onclick={handleConfirm}
           class="px-4 py-2 rounded-sm bg-primary-600 text-white hover:bg-primary-700 transition-colors text-sm font-bold"
         >
-          {confirmText}
+          {confirmText || $t("common.ok")}
         </button>
       </div>
     </Dialog.Content>

@@ -1,5 +1,6 @@
 <script lang="ts">
     import { goto } from "$app/navigation";
+    import { t } from "$lib/stores/i18n";
     import {
         Bell,
         CheckCircle,
@@ -56,10 +57,10 @@
         const diffHours = Math.floor(diffMs / 3600000);
         const diffDays = Math.floor(diffMs / 86400000);
 
-        if (diffMins < 1) return "Just now";
-        if (diffMins < 60) return `${diffMins}m ago`;
-        if (diffHours < 24) return `${diffHours}h ago`;
-        if (diffDays < 7) return `${diffDays}d ago`;
+        if (diffMins < 1) return $t("common.justNow");
+        if (diffMins < 60) return $t("common.minutesAgo", { values: { n: diffMins } });
+        if (diffHours < 24) return $t("common.hoursAgo", { values: { n: diffHours } });
+        if (diffDays < 7) return $t("common.daysAgo", { values: { n: diffDays } });
         return date.toLocaleDateString();
     }
 
@@ -151,7 +152,7 @@
                 <button
                     onclick={handleDelete}
                     class="opacity-0 group-hover:opacity-100 transition-opacity p-1 hover:bg-surface-700 rounded text-surface-400 hover:text-error-400"
-                    title="Delete"
+                    title={$t("common.delete")}
                 >
                     <Trash2 size={12} strokeWidth={2.5} />
                 </button>

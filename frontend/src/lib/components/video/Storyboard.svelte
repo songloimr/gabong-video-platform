@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { t } from "svelte-i18n";
+	import { t } from "$lib/stores/i18n";
 
 	interface Props {
 		storyboardUrl: string;
@@ -11,7 +11,7 @@
 
 <div class="storyboard-container">
 	<h3 class="text-lg font-bold text-surface-100 mb-4">
-		{$t("video.duration")} Preview
+		{$t("video.duration")} {$t("video.preview")}
 	</h3>
 	<div class="flex overflow-x-auto gap-2 pb-2">
 		{#each Array(10) as _, index}
@@ -22,7 +22,7 @@
 			>
 				<img
 					src={storyboardUrl}
-					alt={`Frame ${index}`}
+					alt={$t("video.previewFrame", { values: { index } })}
 					class="w-48 h-27 object-cover rounded border-2"
 					class:border-primary-500={index === activeTimestamp}
 					class:border-surface-700={index !== activeTimestamp}

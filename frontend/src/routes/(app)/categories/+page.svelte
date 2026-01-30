@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores";
-  import { t } from "svelte-i18n";
+  import { t } from "$lib/stores/i18n";
   import { useCategories } from "$lib/api/queries/categories";
   import QueryError from "$lib/components/ui/QueryError.svelte";
 

@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { t } from "$lib/stores/i18n";
     import { Bell } from "@lucide/svelte";
     import { useNotifications } from "$lib/api/queries/notifications";
     import {
@@ -36,12 +37,12 @@
         markAllMutation.mutate(undefined, {
             onSuccess: () => {
                 toaster.success({
-                    title: "All notifications marked as read"
+                    title: $t("notifications.allMarkedRead")
                 });
             },
             onError: () => {
                 toaster.error({
-                    title: "Failed to mark notifications as read"
+                    title: $t("notifications.markReadFailed")
                 });
             },
         });
@@ -54,7 +55,7 @@
 </script>
 
 <svelte:head>
-    <title>Notifications - Gabong</title>
+    <title>{$t("notifications.title")} - Gabong</title>
 </svelte:head>
 
 <div class="max-w-4xl mx-auto space-y-6 px-4 py-8">
@@ -64,10 +65,10 @@
             <h1
                 class="text-2xl font-black text-surface-100 tracking-tight mb-1"
             >
-                Notifications
+                {$t("notifications.title")}
             </h1>
             <p class="text-xs text-surface-400 font-medium">
-                Stay updated with your latest activity
+                {$t("notifications.description")}
             </p>
         </div>
 
@@ -77,7 +78,7 @@
                 disabled={markAllMutation.isPending}
                 class="px-4 py-2 bg-primary-500/10 hover:bg-primary-500/20 border border-primary-500/30 text-primary-400 font-bold text-xs rounded-sm transition-colors disabled:opacity-50"
             >
-                {markAllMutation.isPending ? "Marking..." : "Mark all as read"}
+                {markAllMutation.isPending ? $t("notifications.marking") : $t("notifications.markAllRead")}
             </button>
         {/if}
     </div>
@@ -91,7 +92,7 @@
                 ? 'border-primary-500 text-primary-400'
                 : 'border-transparent text-surface-400 hover:text-surface-200'}"
         >
-            All
+            {$t("common.all")}
             {#if notificationsQuery.data}
                 <span class="text-[10px] opacity-70">
                     ({notificationsQuery.data.pagination?.total || 0})
@@ -105,7 +106,7 @@
                 ? 'border-primary-500 text-primary-400'
                 : 'border-transparent text-surface-400 hover:text-surface-200'}"
         >
-            Unread
+            {$t("common.unread")}
             {#if notificationsQuery.data && notificationsQuery.data.unread_count > 0}
                 <span
                     class="ml-1 px-1.5 py-0.5 bg-primary-500/20 text-primary-400 text-[10px] font-bold rounded"
@@ -121,7 +122,7 @@
                 ? 'border-primary-500 text-primary-400'
                 : 'border-transparent text-surface-400 hover:text-surface-200'}"
         >
-            Read
+            {$t("common.read")}
         </button>
     </div>
 
@@ -133,7 +134,7 @@
                     class="inline-block w-8 h-8 border-2 border-surface-600 border-t-primary-500 rounded-full animate-spin"
                 ></div>
                 <p class="text-xs text-surface-400 mt-4">
-                    Loading notifications...
+                    {$t("notifications.loading")}
                 </p>
             </div>
         {:else if notificationsQuery.data && notificationsQuery.data.data.length === 0}
@@ -144,14 +145,14 @@
                     strokeWidth={1.5}
                 />
                 <h3 class="text-sm font-bold text-surface-300 mb-1">
-                    No notifications
+                    {$t("notifications.noNotifications")}
                 </h3>
                 <p class="text-xs text-surface-500">
                     {currentTab === "unread"
-                        ? "You're all caught up!"
+                        ? $t("notifications.caughtUp")
                         : currentTab === "read"
-                          ? "No read notifications yet"
-                          : "You haven't received any notifications yet"}
+                          ? $t("notifications.noReadYet")
+                          : $t("notifications.noneYet")}
                 </p>
             </div>
         {:else if notificationsQuery.data}

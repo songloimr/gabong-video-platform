@@ -48,7 +48,7 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
         if (!response.ok) {
             return {
                 ...defaultResponse,
-                error: 'Failed to load search results',
+                error: 'errors.loadFailed',
             };
         }
 
@@ -62,7 +62,7 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
         console.error('Failed to fetch search results:', error);
         return {
             ...defaultResponse,
-            error: 'Failed to load search results',
+            error: 'errors.loadFailed',
         };
     }
 };

@@ -32,7 +32,7 @@ export const load: PageServerLoad = async ({ url, fetch, params }) => {
         if (!videosResponse.ok) {
             return {
                 ...defaultResponse,
-                error: 'Failed to load videos',
+                error: 'errors.loadFailed',
             };
         }
 
@@ -52,7 +52,7 @@ export const load: PageServerLoad = async ({ url, fetch, params }) => {
         console.error('Failed to fetch category videos:', error);
         return {
             ...defaultResponse,
-            error: 'Failed to load videos',
+            error: 'errors.loadFailed',
         };
     }
 };

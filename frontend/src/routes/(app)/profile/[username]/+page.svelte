@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { t } from "$lib/stores/i18n";
   import { page } from "$app/state";
   import { useUser } from "$lib/api/queries/users";
   import { auth } from "$lib/stores/auth.svelte";
@@ -10,7 +11,7 @@
 </script>
 
 <svelte:head>
-  <title>{userQuery.data?.username || "Profile"} - Gabong</title>
+  <title>{userQuery.data?.username || $t("common.profile")} - Gabong</title>
 </svelte:head>
 
 <div class="container mx-auto px-4 py-6 md:py-8">
@@ -47,11 +48,11 @@
             </p>
           {/if}
           <p class="text-sm text-surface-500">
-            Joined {new Date(userQuery.data.created_at).toLocaleDateString()}
+            {$t("profile.joined", { values: { date: new Date(userQuery.data.created_at).toLocaleDateString() } })}
           </p>
           {#if isOwnProfile}
             <a href="/profile" class="text-primary-400 hover:underline">
-              Edit Profile
+              {$t("profile.editProfile")}
             </a>
           {/if}
         </div>
@@ -59,7 +60,7 @@
     </div>
   {:else}
     <div class="text-center py-12">
-      <p class="text-lg text-surface-400">User not found</p>
+      <p class="text-lg text-surface-400">{$t("errors.userNotFound")}</p>
     </div>
   {/if}
 </div>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { t } from "svelte-i18n";
+  import { t } from "$lib/stores/i18n";
   import { auth } from "$lib/stores/auth.svelte";
   import { useUpdateProfile, useUpdateAvatar } from "$lib/api/mutations/users";
   import TipTapEditor from "$lib/components/forms/TipTapEditor.svelte";
@@ -44,25 +44,25 @@
   const updateAvatarMutation = useUpdateAvatar();
 
   function formatFileSize(bytes: number): string {
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
-    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+    if (bytes < 1024) return `${bytes} ${$t("common.units.b")}`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} ${$t("common.units.kb")}`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} ${$t("common.units.mb")}`;
   }
 
   function getErrorMessage(error: any): string {
     const data = error.response?.data;
-    if (!data) return "Failed to upload avatar";
+    if (!data) return $t("profile.uploadError");
 
     if (data.message?.includes("file size")) {
       const match = data.message.match(/current file size is (\d+), expected size is less than (\d+)/);
       if (match) {
         const currentSize = formatFileSize(parseInt(match[1]));
         const maxSize = formatFileSize(parseInt(match[2]));
-        return `File too large (${currentSize}). Maximum size is ${maxSize}`;
+        return $t("profile.fileTooLarge", { values: { currentSize, maxSize } });
       }
     }
 
-    return data.message || "Failed to upload avatar";
+    return data.message || $t("profile.uploadError");
   }
 
   async function handleAvatarChange(e: Event) {
@@ -81,11 +81,11 @@
           refresh_token: auth.refresh_token,
         });
         avatarKey = Date.now();
-        toaster.create({ title: "Success", description: "Avatar updated!", type: "success" });
+        toaster.create({ title: $t("common.success"), description: $t("profile.avatarUpdated"), type: "success" });
       }
     } catch (error: any) {
       console.error("Avatar upload error:", error);
-      toaster.create({ title: "Error", description: getErrorMessage(error), type: "error" });
+      toaster.create({ title: $t("common.error"), description: getErrorMessage(error), type: "error" });
     } finally {
       isUploadingAvatar = false;
       target.value = "";
@@ -108,10 +108,10 @@
         });
       }
 
-      toaster.create({ title: "Success", description: "Profile updated!", type: "success" });
+      toaster.create({ title: $t("common.success"), description: $t("profile.profileUpdated"), type: "success" });
     } catch (error: any) {
       console.error("Profile update error:", error);
-      toaster.create({ title: "Error", description: error.response?.data?.message || "Failed to update profile", type: "error" });
+      toaster.create({ title: $t("common.error"), description: error.response?.data?.message || $t("profile.updateError"), type: "error" });
     } finally {
       isSavingProfile = false;
     }
@@ -119,7 +119,7 @@
 </script>
 
 <svelte:head>
-  <title>Profile - Gabong</title>
+  <title>{$t("profile.title")} - Gabong</title>
 </svelte:head>
 
 {#if !auth.isAuthenticated && authChecked}
@@ -128,8 +128,8 @@
       <div class="inline-flex items-center justify-center w-16 h-16 rounded-full bg-primary-500/20 mb-2">
         <Loader2 size={32} class="text-primary-400 animate-spin" />
       </div>
-      <h2 class="text-xl font-bold text-surface-100">Authentication Required</h2>
-      <p class="text-sm text-surface-400">Redirecting to login page...</p>
+      <h2 class="text-xl font-bold text-surface-100">{$t("auth.authRequired")}</h2>
+      <p class="text-sm text-surface-400">{$t("auth.redirecting")}</p>
     </div>
   </div>
 {:else}
@@ -151,7 +151,7 @@
               {:else}
                 <img
                   src="{getAvatarUrl(auth.user?.avatar_url!)}"
-                  alt="Avatar"
+                  alt={$t("common.avatar")}
                   class="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl object-cover ring-4 ring-surface-900 shadow-xl"
                 />
                 <label
@@ -181,8 +181,8 @@
                   <Calendar size={14} />
                   <span>
                     {auth.user?.created_at
-                      ? new Date(auth.user.created_at).toLocaleDateString()
-                      : "N/A"}
+                      ? $t("profile.joined", { values: { date: new Date(auth.user.created_at).toLocaleDateString() } })
+                      : $t("common.notAvailable")}
                   </span>
                 </div>
               </div>
@@ -197,10 +197,10 @@
             >
               {#if isUploadingAvatar}
                 <Loader2 size={16} class="animate-spin" />
-                <span>Uploading...</span>
+                <span>{$t("common.uploading")}</span>
               {:else}
                 <Camera size={16} />
-                <span>Change Avatar</span>
+                <span>{$t("profile.changeAvatar")}</span>
               {/if}
               <input
                 type="file"
@@ -218,7 +218,7 @@
         <div class="px-4 sm:px-6 pb-6 space-y-5">
           <div class="flex items-center gap-2 pt-2 border-t border-surface-800/50">
             <h2 class="text-[10px] font-black uppercase tracking-[0.15em] text-surface-500 py-3">
-              Profile Information
+              {$t("profile.info")}
             </h2>
           </div>
 
@@ -228,7 +228,7 @@
               class="text-[10px] font-bold uppercase tracking-wider text-surface-500 flex items-center gap-2"
             >
               <User size={12} />
-              Username
+              {$t("common.username")}
             </label>
             <input
               id="username"
@@ -251,37 +251,36 @@
               id="email"
               type="email"
               bind:value={email}
-              placeholder="your@email.com"
-              class="w-full px-4 py-3 bg-surface-950/50 border border-surface-700/50 rounded-xl text-sm font-medium text-surface-100 placeholder:text-surface-600 focus:ring-2 focus:ring-primary-500/30 focus:border-primary-500/50 outline-none transition-all"
+              class="w-full px-4 py-3 bg-surface-800 border border-surface-700 rounded-xl text-sm font-medium text-surface-100 focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500/50 transition-all outline-none"
             />
           </div>
 
           <div class="space-y-2">
             <label
-              class="text-[10px] font-bold uppercase tracking-wider text-surface-500"
+              for="bio"
+              class="text-[10px] font-bold uppercase tracking-wider text-surface-500 flex items-center gap-2"
             >
-              Bio
+              <Shield size={12} />
+              {$t("profile.bio")}
             </label>
-            <div class="rounded-xl overflow-hidden border border-surface-700/50">
-              <TipTapEditor
-                bind:value={bio}
-                placeholder="Tell us about yourself..."
-              />
-            </div>
+            <TipTapEditor
+              bind:value={bio}
+              placeholder={$t("profile.bioPlaceholder")}
+            />
           </div>
 
-          <div class="pt-4">
+          <div class="pt-2">
             <button
               type="submit"
               disabled={isSavingProfile}
-              class="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-primary-600 hover:bg-primary-500 text-white rounded-xl text-sm font-bold shadow-lg shadow-primary-600/20 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:active:scale-100"
+              class="w-full flex items-center justify-center gap-2 py-4 bg-primary-600 hover:bg-primary-500 disabled:opacity-50 text-white rounded-xl font-black uppercase tracking-[0.15em] text-xs transition-all shadow-lg shadow-primary-600/20 active:scale-[0.98]"
             >
               {#if isSavingProfile}
-                <Loader2 size={18} class="animate-spin" />
-                <span>Saving...</span>
+                <Loader2 size={16} class="animate-spin" />
+                <span>{$t("profile.saving")}</span>
               {:else}
-                <Save size={18} />
-                <span>Save Changes</span>
+                <Save size={16} />
+                <span>{$t("profile.saveChanges")}</span>
               {/if}
             </button>
           </div>

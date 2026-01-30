@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { t } from "$lib/stores/i18n";
   import { X, TriangleAlert } from "@lucide/svelte";
   import { Dialog } from "@skeletonlabs/skeleton-svelte";
   import { errorDialog } from "$lib/stores/errorDialog.svelte";
@@ -17,7 +18,7 @@
       <!-- Close button - absolute positioned -->
       <Dialog.CloseTrigger
         class="absolute top-3 right-3 p-1.5 text-surface-500 hover:text-surface-300 transition-colors rounded-lg hover:bg-surface-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 z-10"
-        aria-label="Close dialog"
+        aria-label={$t("common.close")}
       >
         <X size={18} strokeWidth={2} />
       </Dialog.CloseTrigger>
@@ -48,7 +49,7 @@
           onclick={() => errorDialog.hide()}
           class="w-full px-4 py-2.5 rounded-lg bg-surface-800 text-surface-200 hover:bg-surface-700 active:bg-surface-750 transition-all duration-150 text-sm font-medium border border-surface-700 hover:border-surface-600 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-900"
         >
-          Got it
+          {$t("common.gotIt")}
         </button>
       </div>
     </Dialog.Content>

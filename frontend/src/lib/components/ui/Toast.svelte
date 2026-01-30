@@ -1,6 +1,7 @@
 <script lang="ts">
   import { fade } from 'svelte/transition';
   import { createEventDispatcher, onMount } from 'svelte';
+  import { t } from "$lib/stores/i18n";
 
   export let message = '';
   export let type: 'success' | 'error' | 'warning' | 'info' = 'info';
@@ -48,10 +49,11 @@
     class="fixed top-4 right-4 z-50 p-4 rounded-lg shadow-lg text-white flex items-center gap-3 {colors[type]}"
   >
     <span class="text-xl">{icons[type]}</span>
-    <span>{message}</span>
+    <span>{message.startsWith('common.') || message.startsWith('errors.') || message.startsWith('auth.') || message.startsWith('video.') || message.startsWith('comment.') || message.startsWith('profile.') || message.startsWith('notifications.') ? $t(message) : message}</span>
     <button
       on:click={hide}
       class="ml-2 hover:opacity-80"
+      aria-label={$t("common.close")}
     >
       <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />

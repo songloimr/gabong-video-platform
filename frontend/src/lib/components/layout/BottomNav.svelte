@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import { t } from "svelte-i18n";
+  import { t } from "$lib/stores/i18n";
   import {
     Home,
     PlaySquare,

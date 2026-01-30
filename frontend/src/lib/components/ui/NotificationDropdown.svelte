@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { t } from "$lib/stores/i18n";
     import { goto } from "$app/navigation";
     import { Bell, X } from "@lucide/svelte";
     import { useNotifications } from "$lib/api/queries/notifications";
@@ -19,12 +20,12 @@
         markAllMutation.mutate(undefined, {
             onSuccess: () => {
                 toaster.success({
-                    title: "All notifications marked as read"
+                    title: $t("common.allNotificationsMarkedAsRead")
                 });
             },
             onError: () => {
                 toaster.error({
-                    title: "Failed to mark notifications as read"
+                    title: $t("common.failedToMarkNotificationsAsRead")
                 });
             },
         });
@@ -46,7 +47,7 @@
     >
         <div class="flex items-center gap-2">
             <Bell size={16} class="text-primary-400" strokeWidth={2.5} />
-            <h3 class="text-xs font-black text-surface-100">Notifications</h3>
+            <h3 class="text-xs font-black text-surface-100">{$t("notifications.title")}</h3>
             {#if notificationsQuery.data?.unread_count}
                 <span
                     class="px-1.5 py-0.5 bg-primary-500/20 text-primary-400 text-[10px] font-bold rounded"
@@ -58,7 +59,7 @@
         <button
             onclick={onClose}
             class="p-1 hover:bg-surface-800 rounded text-surface-400 hover:text-surface-200 transition-colors"
-            title="Close"
+            title={$t("common.close")}
         >
             <X size={14} strokeWidth={2.5} />
         </button>
@@ -80,10 +81,10 @@
                     strokeWidth={1.5}
                 />
                 <p class="text-xs font-bold text-surface-400">
-                    No notifications
+                    {$t("common.noNotifications")}
                 </p>
                 <p class="text-[10px] text-surface-500 mt-1">
-                    You're all caught up!
+                    {$t("common.allCaughtUp")}
                 </p>
             </div>
         {:else if notificationsQuery.data}
@@ -106,13 +107,13 @@
                     !notificationsQuery.data.unread_count}
                 class="text-xs font-bold text-primary-400 hover:text-primary-300 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
-                Mark all as read
+                {$t("common.markAllAsRead")}
             </button>
             <button
                 onclick={handleViewAll}
                 class="text-xs font-bold text-surface-300 hover:text-surface-100 transition-colors flex items-center gap-1"
             >
-                View all
+                {$t("common.viewAll")}
                 <span class="text-[10px]">→</span>
             </button>
         </div>

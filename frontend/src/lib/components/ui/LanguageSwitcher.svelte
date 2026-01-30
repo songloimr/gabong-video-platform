@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { locale, locales } from "svelte-i18n";
+  import { locale, locales } from "$lib/stores/i18n";
+  import { t } from "$lib/stores/i18n";
   import { browser } from "$app/environment";
   import { Languages } from "@lucide/svelte";
 
@@ -35,7 +36,7 @@
     <div
       class="absolute right-0 mt-2 w-40 bg-surface-800 border border-surface-700 rounded-lg shadow-lg z-50"
       role="listbox"
-      aria-label="Available languages"
+      aria-label={$t("common.availableLanguages")}
     >
       {#each $locales as lang}
         <button

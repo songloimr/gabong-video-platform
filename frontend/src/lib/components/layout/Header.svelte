@@ -4,7 +4,7 @@
   import { auth } from "$lib/stores/auth.svelte";
   import { loginModal } from "$lib/stores/loginModal.svelte";
   import { sidebarState } from "$lib/stores/sidebar.svelte";
-  import { t } from "svelte-i18n";
+  import { t } from "$lib/stores/i18n";
   import Search from "$lib/components/search/SearchBar.svelte";
   import NotificationBell from "$lib/components/ui/NotificationBell.svelte";
   import LanguageSwitcher from "$lib/components/ui/LanguageSwitcher.svelte";
@@ -49,7 +49,7 @@
           <button
             onclick={() => sidebarState.toggle()}
             class="lg:hidden p-2 text-surface-400 hover:bg-surface-800 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
-            aria-label={sidebarState.isOpen ? "Close menu" : "Open menu"}
+            aria-label={sidebarState.isOpen ? $t("common.closeMenu") : $t("common.openMenu")}
             aria-expanded={sidebarState.isOpen}
           >
             {#if sidebarState.isOpen}
@@ -126,7 +126,7 @@
               <div class="relative group max-sm:hidden">
                 <button
                   class="flex items-center gap-1 p-0.5 rounded-lg hover:bg-surface-800 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
-                  aria-label="User menu"
+                  aria-label={$t("common.userMenu")}
                   aria-haspopup="true"
                 >
                   <div class="relative">
@@ -198,15 +198,15 @@
             <div class="flex items-center gap-1 sm:gap-2">
               <button
                 onclick={() => loginModal.open()}
-                class="hidden sm:block px-4 py-2 font-bold text-xs text-surface-200 hover:text-primary-400 hover:bg-surface-800 rounded-lg transition-all"
+                class="flex items-center gap-2 px-3 py-1.5 sm:px-4 sm:py-2 text-xs font-bold text-surface-400 hover:text-white transition-colors rounded-lg focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
               >
-                {$t("common.login")}
+                <span>{$t("common.login")}</span>
               </button>
               <a
                 href="/auth/register"
-                class="bg-primary-600 text-white px-4 py-2 rounded-lg font-bold text-xs shadow-md shadow-primary-600/20 hover:bg-primary-500 transition-all active:scale-95"
+                class="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg text-xs font-bold transition-all active:scale-95 border border-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/50"
               >
-                {$t("common.register")}
+                <span>{$t("common.register")}</span>
               </a>
             </div>
           {/if}

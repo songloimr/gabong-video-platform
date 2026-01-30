@@ -1,5 +1,6 @@
 <script lang="ts">
   import { type Snippet } from "svelte";
+  import { t } from "$lib/stores/i18n";
   import { page } from "$app/state";
   import { auth } from "$lib/stores/auth.svelte";
   import { goto } from "$app/navigation";
@@ -44,7 +45,7 @@
         <Loader2 size={32} />
       </div>
       <p class="text-sm text-muted-foreground italic">
-        Checking authentication...
+        {$t("common.authRequired")}
       </p>
     </div>
   </div>

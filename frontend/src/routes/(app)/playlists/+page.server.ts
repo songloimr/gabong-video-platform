@@ -24,7 +24,7 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
         if (!response.ok) {
             return {
                 ...defaultResponse,
-                error: 'Failed to load playlists',
+                error: 'errors.loadFailed',
             };
         }
 
@@ -38,7 +38,7 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
         console.error('Failed to fetch playlists:', error);
         return {
             ...defaultResponse,
-            error: 'Failed to load playlists',
+            error: 'errors.loadFailed',
         };
     }
 };

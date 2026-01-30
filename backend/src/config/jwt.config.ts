@@ -15,9 +15,9 @@ export default registerAs('jwt', () => {
   }
 
   return {
-    secret: secret || 'dev-secret-only-for-development',
-    refreshSecret: refreshSecret || 'dev-refresh-secret-only-for-development',
-    accessTokenExpiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN || '30m',
-    refreshTokenExpiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN || '7d',
+    secret: secret,
+    refreshSecret: refreshSecret,
+    accessTokenExpiresIn: process.env.JWT_ACCESS_TOKEN_EXPIRES_IN,
+    refreshTokenExpiresIn: process.env.JWT_REFRESH_TOKEN_EXPIRES_IN,
   };
 });

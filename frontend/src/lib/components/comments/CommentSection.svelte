@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { t } from "svelte-i18n";
+  import { t } from "$lib/stores/i18n";
   import { Loader2, MessageSquarePlus } from "@lucide/svelte";
   import CommentItem from "./CommentItem.svelte";
   import CommentForm from "./CommentForm.svelte";
@@ -48,7 +48,7 @@
         >
           {$t("auth.login")}
         </a>
-        {" "} to join the conversation
+        {" "} {$t("comment.loginToJoin")}
       </p>
     </div>
   {/if}
@@ -86,7 +86,7 @@
         class="flex flex-col items-center justify-center py-16 text-surface-400 gap-2 bg-surface-900/20 rounded-2xl border border-dashed border-surface-800"
       >
         <p class="text-lg font-medium">{$t("comment.noComments")}</p>
-        <p class="text-sm">Be the first to share your thoughts!</p>
+        <p class="text-sm">{$t("comment.beFirst")}</p>
       </div>
     {/if}
   </div>

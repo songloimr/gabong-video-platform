@@ -2,6 +2,7 @@
   import { AlertTriangle } from "@lucide/svelte";
   import { Dialog } from "@skeletonlabs/skeleton-svelte";
   import { browser } from "$app/environment";
+  import { t } from "$lib/stores/i18n";
 
   interface Props {
     open: boolean;
@@ -39,12 +40,11 @@
         </div>
         
         <h2 class="text-2xl font-display font-black text-surface-50 mb-3">
-          Xác nhận độ tuổi
+          {$t("ageVerification.title")}
         </h2>
         
         <p class="text-surface-300 text-sm leading-relaxed mb-6">
-          Trang web này chứa nội dung dành cho người trên 18 tuổi. 
-          Bằng việc tiếp tục, bạn xác nhận rằng bạn đã đủ 18 tuổi.
+          {$t("ageVerification.description")}
         </p>
 
         <div class="flex flex-col gap-3">
@@ -52,13 +52,13 @@
             onclick={handleConfirm}
             class="w-full py-3.5 px-4 bg-primary-600 hover:bg-primary-500 text-white font-display font-bold rounded-md transition-all hover:shadow-lg hover:shadow-primary-500/20 active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-900"
           >
-            Tôi đủ 18 tuổi
+            {$t("ageVerification.confirm")}
           </button>
           <button
             onclick={handleExit}
             class="w-full py-3.5 px-4 bg-surface-800 hover:bg-surface-700 text-surface-200 font-body font-semibold rounded-md transition-all active:scale-[0.98] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-surface-600"
           >
-            Thoát <span class="text-xs text-surface-500">(redirects to Google)</span>
+            {$t("ageVerification.exit")} <span class="text-xs text-surface-500">{$t("ageVerification.redirectNotice")}</span>
           </button>
         </div>
       </div>

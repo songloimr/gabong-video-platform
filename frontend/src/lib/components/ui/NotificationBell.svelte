@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { t } from "$lib/stores/i18n";
   import { Bell } from "@lucide/svelte";
   import { useNotificationCount } from "$lib/api/queries/notifications";
   import NotificationDropdown from "./NotificationDropdown.svelte";
@@ -23,7 +24,7 @@
 >
   <Popover.Trigger
     class="relative p-2 text-surface-300 hover:text-primary-400 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 rounded-lg"
-    aria-label={unreadCount > 0 ? `Notifications (${unreadCount} unread)` : "Notifications"}
+    aria-label={unreadCount > 0 ? $t("common.unreadNotifications", { values: { count: unreadCount } }) : $t("common.notifications")}
   >
     <Bell size={20} />
     {#if unreadCount > 0}

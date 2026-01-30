@@ -1,4 +1,5 @@
 <script lang="ts">
+    import { t } from "$lib/stores/i18n";
     import {
         Volume2,
         VolumeX,
@@ -50,7 +51,7 @@
                 <button
                     onclick={() => onSeek("-60")}
                     class="flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-md hover:bg-surface-800 transition-all group active:scale-95"
-                    title="-1 Minute"
+                    title={$t("video.skipBackward", { values: { seconds: 60 } })}
                 >
                     <Rewind
                         size={16}
@@ -64,7 +65,7 @@
                 <button
                     onclick={() => onSeek("-10")}
                     class="flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-md hover:bg-surface-800 transition-all group active:scale-95"
-                    title="-10 Seconds"
+                    title={$t("video.skipBackward", { values: { seconds: 10 } })}
                 >
                     <RotateCcw
                         size={16}
@@ -111,7 +112,7 @@
                 <button
                     onclick={() => onSeek("+60")}
                     class="flex items-center gap-1 px-2 sm:px-2.5 py-1 rounded-md hover:bg-surface-800 transition-all group active:scale-95"
-                    title="+1 Minute"
+                    title={$t("video.skipForward", { values: { seconds: 60 } })}
                 >
                     <span
                         class="text-[8px] sm:text-[9px] font-black uppercase tracking-tighter text-surface-400"

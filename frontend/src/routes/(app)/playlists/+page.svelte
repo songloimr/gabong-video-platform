@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { t } from "svelte-i18n";
+    import { t } from "$lib/stores/i18n";
     import { goto } from "$app/navigation";
     import { page } from "$app/stores";
     import QueryError from "$lib/components/ui/QueryError.svelte";
@@ -24,7 +24,7 @@
   <title>{$t("common.playlists")} - Gabong</title>
   <meta
     name="description"
-    content="Browse curated video playlists on Gabong."
+    content={$t("common.playlistsDescription")}
   />
   {#if data.playlists?.pagination}
     {#if data.playlists.pagination.page > 1}
@@ -43,7 +43,7 @@
         class="flex items-center gap-2 text-primary-400 font-display font-semibold text-xs uppercase tracking-wider"
       >
         <Library size={14} strokeWidth={2.5} />
-        <span>Collections</span>
+        <span>{$t("common.collections")}</span>
       </div>
       <h1
         class="text-3xl sm:text-5xl font-display font-black tracking-tighter text-surface-100"
@@ -55,11 +55,11 @@
           <p
             class="text-sm text-surface-400 font-display font-medium"
           >
-            <span class="text-surface-200 font-semibold">{data.playlists.pagination.total}</span> playlists
+            <span class="text-surface-200 font-semibold">{$t("common.playlistCount", { values: { count: data.playlists.pagination.total } })}</span>
           </p>
           <div class="w-1 h-1 rounded-full bg-surface-700"></div>
           <p class="text-sm text-surface-400 font-display font-medium">
-            Page <span class="text-surface-200 font-semibold">{data.playlists.pagination.page}</span> of {data.playlists.pagination.total_pages}
+            {$t("common.pageOf", { values: { current: data.playlists.pagination.page, total: data.playlists.pagination.total_pages } })}
           </p>
         </div>
       {/if}
@@ -69,7 +69,7 @@
   {#if data.error}
     <div class="py-12">
       <QueryError
-        error={new Error(data.error)}
+        error={new Error($t(data.error))}
         reset={() => goto($page.url.pathname)}
       />
     </div>
@@ -146,7 +146,7 @@
           {$t("common.noResults")}
         </p>
         <p class="text-sm font-body text-surface-400">
-          No playlists available yet.
+          {$t("common.noVideosYet")}
         </p>
       </div>
     </div>

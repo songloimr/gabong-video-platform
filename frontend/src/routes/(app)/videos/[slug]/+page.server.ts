@@ -17,7 +17,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
         if (!videoResponse.ok) {
             return {
                 ...baseResponse,
-                error: videoResponse.status === 404 ? 'Video not found' : 'Failed to load video'
+                error: videoResponse.status === 404 ? 'errors.notFound' : 'errors.loadFailed'
             };
         }
         const { data } = await videoResponse.json();
@@ -42,7 +42,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
         console.error('Failed to fetch video:', error);
         return {
             ...baseResponse,
-            error: 'Failed to load video'
+            error: 'errors.loadFailed'
         };
     }
 };

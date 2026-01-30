@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Send } from "@lucide/svelte";
-  import { t } from "svelte-i18n";
+  import { t } from "$lib/stores/i18n";
   import { useAddComment } from "$lib/api/mutations/comments";
   import { requireAuth } from "$lib/utils/requireAuth";
 

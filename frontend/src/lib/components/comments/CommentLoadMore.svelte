@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { t } from 'svelte-i18n';
+  import { t } from '$lib/stores/i18n';
   export let onClick: () => void;
   export let hasMore = false;
   export let loading = false;

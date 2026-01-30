@@ -4,7 +4,7 @@
   import { useLogin } from "$lib/api/mutations/auth";
   import { goto } from "$app/navigation";
   import Modal from "$lib/components/ui/Modal.svelte";
-  import { t } from "svelte-i18n";
+  import { t } from "$lib/stores/i18n";
   import { User, Lock, Loader2 } from "@lucide/svelte";
 
   let username = $state("");

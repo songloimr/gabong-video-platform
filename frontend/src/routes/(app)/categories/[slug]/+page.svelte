@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { t } from "svelte-i18n";
+	import { t } from "$lib/stores/i18n";
 	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
 	import VideoGrid from "$lib/components/video/VideoGrid.svelte";
@@ -29,7 +29,7 @@
 	<title>{categoryName} - Gabong</title>
 	<meta
 		name="description"
-		content="Watch videos in {categoryName} category on Gabong."
+		content={$t("common.categoryDescription", { values: { category: categoryName } })}
 	/>
 	{#if data.videos?.pagination}
 		{#if data.videos.pagination.page > 1}
@@ -48,7 +48,7 @@
 				class="flex items-center gap-2 text-primary-400 font-black text-[10px] uppercase tracking-widest"
 			>
 				<FolderOpen size={12} strokeWidth={3} />
-				<span>Category Archive</span>
+				<span>{$t("common.categoryArchive")}</span>
 			</div>
 			<h1
 				class="text-3xl sm:text-4xl font-black tracking-tighter text-surface-100 uppercase"
@@ -64,9 +64,7 @@
 				<p
 					class="text-xs text-surface-500 font-bold uppercase tracking-widest mt-3"
 				>
-					{data.videos.pagination.total} videos • Page {data.videos
-						.pagination.page} of {data.videos.pagination
-						.total_pages}
+					{$t("common.totalVideos", { values: { count: data.videos.pagination.total } })} • {$t("common.pageOf", { values: { current: data.videos.pagination.page, total: data.videos.pagination.total_pages } })}
 				</p>
 			{/if}
 		</div>
@@ -74,7 +72,7 @@
 
 	{#if data.error}
 		<QueryError
-			error={new Error(data.error)}
+			error={new Error($t(data.error))}
 			reset={() => goto($page.url.pathname)}
 		/>
 	{:else if data.videos && data.videos.data.length > 0}
@@ -101,7 +99,7 @@
 					{$t("common.noResults")}
 				</p>
 				<p class="text-sm font-bold text-surface-400">
-					No videos found in this category.
+					{$t("common.noVideosInCategory")}
 				</p>
 			</div>
 		</div>

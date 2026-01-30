@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { Play, Clock, ThumbsUp, Pin } from "@lucide/svelte";
+  import { t } from "$lib/stores/i18n";
+  import { Play, ThumbsUp, Pin } from "@lucide/svelte";
   import moment from "moment";
   import type { Video } from "$lib/types";
   import { PUBLIC_CDN_URL } from "$env/static/public";
@@ -60,7 +61,7 @@
 <a
   href={`/videos/${video.slug}`}
   class="group relative flex flex-col w-full bg-transparent transition-all duration-500 animate-fade-in focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500 focus-visible:ring-offset-2 focus-visible:ring-offset-surface-950 rounded-lg"
-  aria-label="Watch {video.title}"
+  aria-label={$t("video.watch", { values: { title: video.title } })}
 >
   <!-- svelte-ignore a11y_no_static_element_interactions -->
   <div
@@ -109,7 +110,7 @@
     {#if video.is_pinned}
       <div
         class="absolute top-2 left-2 bg-yellow-500/90 text-yellow-950 p-1.5 rounded-md z-20"
-        title="Featured"
+        title={$t("video.featured")}
       >
         <Pin size={12} strokeWidth={2.5} />
       </div>

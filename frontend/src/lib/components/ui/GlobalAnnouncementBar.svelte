@@ -1,5 +1,6 @@
 <script lang="ts">
   import { X, Info, AlertTriangle, CheckCircle, XCircle } from "@lucide/svelte";
+  import { t } from "$lib/stores/i18n";
 
   interface Announcement {
     id: string;
@@ -59,7 +60,7 @@
         <button
           onclick={() => dismiss(announcement.id)}
           class="absolute right-2 p-1 rounded hover:bg-black/10 transition-colors"
-          aria-label="Dismiss"
+          aria-label={$t("common.close")}
         >
           <X size={14} strokeWidth={2.5} />
         </button>

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { t } from "svelte-i18n";
+  import { t } from "$lib/stores/i18n";
 </script>
 
 <footer
@@ -14,8 +14,7 @@
         <p
           class="text-sm font-medium text-surface-400 leading-relaxed max-w-xs"
         >
-          The next generation video streaming platform for creators and viewers
-          alike. Enjoy high quality content, anywhere.
+          {$t("footer.tagline")}
         </p>
       </div>
 
@@ -23,7 +22,7 @@
         <h4
           class="text-sm font-black uppercase tracking-widest text-surface-100"
         >
-          Platform
+          {$t("footer.platform")}
         </h4>
         <ul class="space-y-4">
           <li>
@@ -54,7 +53,7 @@
         <h4
           class="text-sm font-black uppercase tracking-widest text-surface-100"
         >
-          Community
+          {$t("footer.community")}
         </h4>
         <ul class="space-y-4">
           <li>
@@ -68,7 +67,7 @@
             <a
               href="/profiles"
               class="text-sm font-semibold text-surface-400 hover:text-primary-400 transition-colors"
-              >Creators</a
+              >{$t("footer.creators")}</a
             >
           </li>
         </ul>
@@ -78,28 +77,28 @@
         <h4
           class="text-sm font-black uppercase tracking-widest text-surface-100"
         >
-          Legal
+          {$t("footer.legal")}
         </h4>
         <ul class="space-y-4">
           <li>
             <a
               href="/privacy"
               class="text-sm font-semibold text-surface-400 hover:text-primary-400 transition-colors"
-              >Privacy Policy</a
+              >{$t("footer.privacyPolicy")}</a
             >
           </li>
           <li>
             <a
               href="/terms"
               class="text-sm font-semibold text-surface-400 hover:text-primary-400 transition-colors"
-              >Terms of Service</a
+              >{$t("footer.termsOfService")}</a
             >
           </li>
           <li>
             <a
               href="/cookies"
               class="text-sm font-semibold text-surface-400 hover:text-primary-400 transition-colors"
-              >Cookie Policy</a
+              >{$t("footer.cookiePolicy")}</a
             >
           </li>
         </ul>
@@ -110,13 +109,13 @@
       class="flex flex-col md:flex-row justify-between items-center gap-6 pt-8 border-t border-surface-800/50"
     >
       <div class="text-xs font-bold text-surface-500">
-        &copy; {new Date().getFullYear()} Gabong Video Platform. All rights reserved.
+        &copy; {new Date().getFullYear()} Gabong Video Platform. {$t("footer.copyright")}
       </div>
       <div class="flex items-center gap-6">
         <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
         <span
           class="text-xs font-black uppercase tracking-widest text-surface-500"
-          >Systems Operational</span
+          >{$t("footer.systemsOperational")}</span
         >
       </div>
     </div>

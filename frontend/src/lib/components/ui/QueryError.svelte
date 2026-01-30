@@ -1,5 +1,5 @@
 <script lang="ts">
-    import { t } from "svelte-i18n";
+    import { t } from "$lib/stores/i18n";
     import { AlertCircle, RefreshCcw } from "@lucide/svelte";
     import type { ApiError } from "$lib/types";
     import axios from "axios";

@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { t } from "svelte-i18n";
+	import { t } from "$lib/stores/i18n";
 	import { page } from "$app/state";
 	import { usePlaylist } from "$lib/api/queries/playlists";
 	import VideoGrid from "$lib/components/video/VideoGrid.svelte";
@@ -40,7 +40,7 @@
 			>
 				<ArrowLeft size={14} strokeWidth={2.5} />
 			</div>
-			<span>All Playlists</span>
+			<span>{$t("common.allPlaylists")}</span>
 		</a>
 	</div>
 
@@ -128,7 +128,7 @@
 							<div
 								class="w-6 h-0.5 bg-current rounded-full"
 							></div>
-							<span>Video Collection</span>
+							<span>{$t("common.videoCollection")}</span>
 						</div>
 						<h1
 							class="text-4xl lg:text-5xl font-black tracking-tighter text-surface-50 uppercase leading-none"
@@ -165,7 +165,7 @@
 							<div class="flex flex-col">
 								<span
 									class="text-[10px] font-black text-surface-500 uppercase tracking-widest"
-									>Videos</span
+									>{$t("video.videos")}</span
 								>
 								<span
 									class="text-sm font-black text-surface-200"
@@ -185,12 +185,12 @@
 							<div class="flex flex-col">
 								<span
 									class="text-[10px] font-black text-surface-500 uppercase tracking-widest"
-									>Created</span
+									>{$t("common.created")}</span
 								>
 								<span
 									class="text-sm font-black text-surface-200"
 									>{moment(playlist.created_at).format(
-										"MMM D, YYYY",
+										$t("common.dateFormat"),
 									)}</span
 								>
 							</div>
@@ -206,7 +206,7 @@
 				<h2
 					class="text-lg font-black text-surface-100 uppercase tracking-widest flex items-center gap-3"
 				>
-					<span>Playlist Content</span>
+					<span>{$t("common.playlistContent")}</span>
 					<div class="h-px flex-1 bg-surface-800 min-w-[100px]"></div>
 				</h2>
 			</div>
@@ -227,11 +227,10 @@
 							<p
 								class="text-xl font-black text-surface-100 uppercase"
 							>
-								No videos yet
+								{$t("common.noVideosYet")}
 							</p>
 							<p class="text-sm font-bold text-surface-500">
-								This playlist is currently empty. Check back
-								later for new content.
+								{$t("common.emptyPlaylist")}
 							</p>
 						</div>
 					</div>
@@ -253,7 +252,7 @@
 					href="/playlists"
 					class="inline-block px-6 py-3 bg-primary-600 text-white rounded-xl font-bold hover:bg-primary-500 transition-all font-heading uppercase tracking-widest text-sm"
 				>
-					Explore Playlists
+					{$t("common.explorePlaylists")}
 				</a>
 			</div>
 		</div>

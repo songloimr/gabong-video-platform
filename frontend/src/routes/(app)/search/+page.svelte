@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import { t } from "svelte-i18n";
+  import { t } from "$lib/stores/i18n";
   import VideoCard from "$lib/components/video/VideoCard.svelte";
   import { Search, SlidersHorizontal } from "@lucide/svelte";
   import type { PageData } from "./$types";
@@ -15,8 +15,13 @@
     ? `${$t("common.search")}: "${searchQuery}" - Gabong`
     : `${$t("common.search")} - Gabong`;
   const pageDescription = searchQuery
-    ? `Tìm thấy ${totalResults} kết quả cho "${searchQuery}" trên Gabong. Xem video, phim và nội dung liên quan.`
-    : "Tìm kiếm video, phim và nội dung trên Gabong.";
+    ? $t("common.searchResultsDescription", {
+        values: {
+          count: totalResults,
+          query: searchQuery,
+        },
+      })
+    : $t("common.searchDescription");
 
   const nextPageParams = new URLSearchParams();
   nextPageParams.set("q", searchQuery);
@@ -48,7 +53,7 @@
         class="flex items-center gap-2 text-primary-400 font-black text-[10px] uppercase tracking-widest"
       >
         <Search size={12} strokeWidth={3} />
-        <span>Search Results</span>
+        <span>{$t("common.searchResults")}</span>
       </div>
       <h1
         class="text-3xl sm:text-4xl font-black tracking-tighter text-surface-100 uppercase"
@@ -64,14 +69,14 @@
       class="flex items-center gap-2 px-4 py-2 bg-surface-800 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-surface-700 transition-all"
     >
       <SlidersHorizontal size={14} />
-      <span>Filters</span>
+      <span>{$t("common.filters")}</span>
     </button>
   </div>
 
   {#if pageData.error}
     <div class="py-12">
       <div class="text-center">
-        <p class="text-lg font-black text-red-500">{pageData.error}</p>
+        <p class="text-lg font-black text-red-500">{$t("errors.loadFailed")}</p>
         <a
           href={page.url.href}
           class="mt-4 inline-block px-4 py-2 bg-primary-600 text-white rounded-lg font-bold text-sm"

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { t } from "svelte-i18n";
+  import { t } from "$lib/stores/i18n";
   import {
     User,
     Lock,
@@ -49,7 +49,7 @@
   const passwordError = $derived(password ? validatePassword(password) : null);
   const confirmError = $derived(
     confirmPassword && password !== confirmPassword
-      ? "Mật khẩu xác nhận không khớp"
+      ? $t("auth.confirmPasswordMismatch")
       : null,
   );
 
@@ -79,7 +79,7 @@
     }
 
     if (password !== confirmPassword) {
-      formError = "Mật khẩu xác nhận không khớp";
+      formError = $t("auth.confirmPasswordMismatch");
       return;
     }
 
@@ -92,8 +92,8 @@
         window.location.href = '/';
       },
       onError: (e: any) => {
-        const message = e.response?.data?.message || "Registration failed. Please try again.";
-        errorDialog.show("Registration Failed", message);
+        const message = e.response?.data?.message || $t("auth.registrationFailedDesc");
+        errorDialog.show($t("auth.registrationFailedTitle"), message);
       },
     });
   }
@@ -124,7 +124,7 @@
           <h1
             class="text-3xl font-display font-black text-surface-100 tracking-tighter uppercase"
           >
-            Create <span class="text-primary-600">Account.</span>
+            {$t("auth.accountText")} <span class="text-primary-600">{$t("auth.createAccount")}</span>
           </h1>
           <p class="text-xs font-body font-semibold text-surface-400">
             {$t("auth.noAccount")}
@@ -157,7 +157,7 @@
                   for="username"
                   class="block text-xs font-black uppercase tracking-wider text-surface-400"
                 >
-                  {$t("auth.username")} * <span class="text-surface-600 text-[10px] font-normal normal-case">(3-{USERNAME_MAX_LENGTH} chars, a-z, 0-9)</span>
+                  {$t("auth.username")} * <span class="text-surface-600 text-[10px] font-normal normal-case">({$t("auth.minChars", { values: { min: 3 } })}, a-z, 0-9)</span>
                 </label>
                 <span
                   class="text-xs font-bold {username.length >
@@ -182,7 +182,7 @@
                   id="username"
                   type="text"
                   bind:value={username}
-                  placeholder="username"
+                  placeholder={$t("auth.usernamePlaceholder")}
                   maxlength={USERNAME_MAX_LENGTH + 5}
                   class="w-full pl-10 pr-3 py-3 bg-surface-950 border border-surface-800 rounded-lg text-sm focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all outline-none text-surface-100 placeholder:text-surface-600 {usernameError
                     ? 'border-red-500/50'
@@ -207,7 +207,7 @@
                 class="block text-xs font-black uppercase tracking-wider text-surface-400 ml-1"
               >
                 {$t("auth.email")}
-                <span class="text-surface-600 text-[10px] font-normal normal-case">(optional)</span>
+                <span class="text-surface-600 text-[10px] font-normal normal-case">{$t("auth.optional")}</span>
               </label>
               <div class="relative group">
                 <div
@@ -223,7 +223,7 @@
                   id="email"
                   type="email"
                   bind:value={email}
-                  placeholder="your@email.com"
+                  placeholder={$t("auth.emailPlaceholder")}
                   class="w-full pl-10 pr-3 py-3 bg-surface-950 border border-surface-800 rounded-lg text-sm focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all outline-none text-surface-100 placeholder:text-surface-600"
                 />
               </div>
@@ -237,7 +237,7 @@
                   for="password"
                   class="block text-xs font-black uppercase tracking-wider text-surface-400 ml-1"
                 >
-                  {$t("auth.password")} * <span class="text-surface-600 text-[10px] font-normal normal-case">(min {PASSWORD_MIN_LENGTH} chars)</span>
+                  {$t("auth.password")} * <span class="text-surface-600 text-[10px] font-normal normal-case">({$t("auth.minChars", { values: { min: PASSWORD_MIN_LENGTH } })})</span>
                 </label>
                 <div class="relative group">
                   <div
@@ -274,15 +274,15 @@
                     <div class="text-[10px] text-surface-500 space-y-0.5">
                       <div class="flex items-center gap-1.5">
                         {#if password.length >= 8}<Check size={10} class="text-green-500" />{:else}<XIcon size={10} class="text-surface-600" />{/if}
-                        <span>At least 8 characters</span>
+                        <span>{$t("auth.passwordRequirements.minChars")}</span>
                       </div>
                       <div class="flex items-center gap-1.5">
                         {#if /[a-z]/.test(password) && /[A-Z]/.test(password)}<Check size={10} class="text-green-500" />{:else}<XIcon size={10} class="text-surface-600" />{/if}
-                        <span>Uppercase & lowercase letters</span>
+                        <span>{$t("auth.passwordRequirements.case")}</span>
                       </div>
                       <div class="flex items-center gap-1.5">
                         {#if /\d/.test(password)}<Check size={10} class="text-green-500" />{:else}<XIcon size={10} class="text-surface-600" />{/if}
-                        <span>At least one number</span>
+                        <span>{$t("auth.passwordRequirements.number")}</span>
                       </div>
                     </div>
                   </div>
@@ -304,7 +304,7 @@
                   for="confirmPassword"
                   class="block text-xs font-black uppercase tracking-wider text-surface-400 ml-1"
                 >
-                  Confirm Password *
+                  {$t("auth.confirmPassword")} *
                 </label>
                 <div class="relative group">
                   <div
@@ -338,7 +338,7 @@
                 {:else if confirmPassword && password === confirmPassword}
                   <p class="text-xs font-bold text-green-500 ml-1 animate-fade-in flex items-center gap-1">
                     <Check size={12} />
-                    Passwords match
+                    {$t("auth.passwordsMatch")}
                   </p>
                 {/if}
               </div>
@@ -354,7 +354,7 @@
               <div
                 class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"
               ></div>
-              <span>{$t("auth.registering")}...</span>
+              <span>{$t("auth.registering")}</span>
             {:else}
               <span>{$t("auth.register")}</span>
               <ArrowRight size={14} strokeWidth={2.5} />

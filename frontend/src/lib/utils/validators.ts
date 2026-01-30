@@ -1,3 +1,6 @@
+import { get } from 'svelte/store';
+import { t } from '$lib/stores/i18n';
+
 export function validateUsername(username: string): boolean {
   return /^[a-zA-Z0-9_]{3,50}$/.test(username);
 }
@@ -15,11 +18,12 @@ export function validateFileSize(size: number, maxSize: number = 500 * 1024 * 10
 }
 
 export function validateVideoFile(file: File): { valid: boolean; error?: string } {
+  const $t = get(t);
   if (!file.type.startsWith('video/')) {
-    return { valid: false, error: 'File must be a video' };
+    return { valid: false, error: $t('validation.fileMustBeVideo') };
   }
   if (!validateFileSize(file.size)) {
-    return { valid: false, error: 'File size exceeds 500MB limit' };
+    return { valid: false, error: $t('validation.fileTooLarge', { values: { limit: '500MB' } }) };
   }
   return { valid: true };
 }

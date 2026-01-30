@@ -1,7 +1,7 @@
 <script lang="ts">
   import { page } from "$app/state";
   import { sidebarState } from "$lib/stores/sidebar.svelte";
-  import { t } from "svelte-i18n";
+  import { t } from "$lib/stores/i18n";
   import {
     Home,
     PlaySquare,
@@ -14,7 +14,7 @@
 
   const navItems = [
     { href: "/", icon: Home, label: "common.home" },
-    { href: "/most-liked", icon: ThumbsUp, label: "Most Liked" },
+    { href: "/most-liked", icon: ThumbsUp, label: "common.mostLiked" },
     { href: "/categories", icon: FolderOpen, label: "common.categories" },
     { href: "/watch-later", icon: Clock, label: "common.watchLater" },
     { href: "/playlists", icon: Library, label: "common.playlists" },
@@ -31,7 +31,7 @@
   <button
     onclick={() => sidebarState.close()}
     class="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm lg:hidden border-none p-0 m-0 w-full h-full cursor-default"
-    aria-label="Close Sidebar"
+    aria-label={$t("common.closeMenu")}
   ></button>
 {/if}
 
@@ -53,7 +53,7 @@
       <button
         onclick={() => sidebarState.close()}
         class="p-2 text-surface-500 hover:bg-surface-800 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
-        aria-label="Close sidebar"
+        aria-label={$t("common.closeMenu")}
       >
         <X size={20} strokeWidth={2.5} />
       </button>
@@ -65,7 +65,7 @@
         <h3
           class="px-3 text-[10px] font-black uppercase tracking-[0.2em] text-surface-500 mb-2"
         >
-          Discover
+          {$t("common.discover")}
         </h3>
         <nav class="space-y-0.5">
           {#each navItems.slice(0, 3) as item}
@@ -93,7 +93,7 @@
         <h3
           class="px-3 text-[10px] font-black uppercase tracking-[0.2em] text-surface-500 mb-2"
         >
-          Library
+          {$t("common.library")}
         </h3>
         <nav class="space-y-0.5">
           {#each navItems.slice(3) as item}

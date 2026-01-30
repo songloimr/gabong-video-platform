@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { t } from "svelte-i18n";
+  import { t } from "$lib/stores/i18n";
   import {
     ThumbsUp,
     Calendar,
@@ -87,11 +87,11 @@
           ? window.location.href
           : ''}"
         class="flex items-center justify-center gap-1 py-2 rounded-md bg-surface-800 text-surface-300 hover:bg-red-900/40 hover:text-red-400 transition-all"
-        title="Report"
+        title={$t("video.report")}
       >
         <Flag size={14} />
         <span class="text-[9px] font-black uppercase tracking-tighter"
-          >Report</span
+          >{$t("video.report")}</span
         >
       </a>
     </div>
@@ -118,7 +118,7 @@
           <span
             class="text-[10px] font-black text-surface-200 uppercase tracking-wide truncate max-w-[120px]"
           >
-            {video.user?.username || "Anonymous"}
+            {video.user?.username || $t("video.anonymous")}
           </span>
         </div>
       </div>

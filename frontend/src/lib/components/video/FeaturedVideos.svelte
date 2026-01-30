@@ -1,7 +1,7 @@
 <script lang="ts">
   import VideoCard from "./VideoCard.svelte";
   import { Star } from "@lucide/svelte";
-  import { t } from "svelte-i18n";
+  import { t } from "$lib/stores/i18n";
   import type { Video } from "$lib/types";
 
   let { videos = [] }: { videos: Video[] } = $props();
@@ -17,9 +17,6 @@
         <h2 class="text-xl sm:text-2xl font-black tracking-tight text-surface-50">
           {$t("video.featured")}
         </h2>
-        <p class="text-xs text-surface-500 font-medium">
-          {$t("video.featured_description") ?? "Những video nổi bật được chọn lọc"}
-        </p>
       </div>
     </div>
 

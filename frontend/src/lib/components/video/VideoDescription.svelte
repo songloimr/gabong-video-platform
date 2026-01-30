@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { Video } from "$lib/types";
-    import { t } from "svelte-i18n";
+    import { t } from "$lib/stores/i18n";
     import TimestampedText from "$lib/components/common/TimestampedText.svelte";
 
     let {

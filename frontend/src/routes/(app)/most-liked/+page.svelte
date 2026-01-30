@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { t } from "svelte-i18n";
+	import { t } from "$lib/stores/i18n";
 	import { goto } from "$app/navigation";
 	import { page } from "$app/stores";
 	import VideoGrid from "$lib/components/video/VideoGrid.svelte";
@@ -22,8 +22,8 @@
 </script>
 
 <svelte:head>
-	<title>Most Liked - Gabong</title>
-	<meta name="description" content="Watch the most liked videos on Gabong." />
+	<title>{$t("common.mostLiked")} - Gabong</title>
+	<meta name="description" content={$t("common.mostLikedDescription")} />
 	{#if data.videos?.pagination}
 		{#if data.videos.pagination.page > 1}
 			<link rel="prev" href="?page={data.videos.pagination.page - 1}" />
@@ -34,29 +34,21 @@
 	{/if}
 </svelte:head>
 
-<div class="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+<div class="max-w-480 mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
 	<div
 		class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8 sm:mb-12"
 	>
 		<div class="space-y-1">
-			<div
-				class="flex items-center gap-2 text-primary-400 font-black text-[10px] uppercase tracking-widest"
-			>
-				<PlaySquare size={12} strokeWidth={3} />
-				<span>Discovery</span>
-			</div>
 			<h1
 				class="text-3xl sm:text-4xl font-black tracking-tighter text-surface-100 uppercase"
 			>
-				Most Liked
+				{$t("common.mostLiked")}
 			</h1>
 			{#if data.videos?.pagination}
 				<p
 					class="text-xs text-surface-500 font-bold uppercase tracking-widest mt-2"
 				>
-					{data.videos.pagination.total} videos • Page {data.videos
-						.pagination.page} of {data.videos.pagination
-						.total_pages}
+					{$t("common.totalVideos", { values: { count: data.videos.pagination.total } })} • {$t("common.pageOf", { values: { current: data.videos.pagination.page, total: data.videos.pagination.total_pages } })}
 				</p>
 			{/if}
 		</div>
@@ -66,14 +58,14 @@
 				class="flex items-center gap-2 px-4 py-2 bg-surface-800 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-surface-700 transition-all border border-surface-700/50"
 			>
 				<Filter size={14} />
-				<span>Refine</span>
+				<span>{$t("common.refine")}</span>
 			</button>
 		</div>
 	</div>
 
 	{#if data.error}
 		<QueryError
-			error={new Error(data.error)}
+			error={new Error($t(data.error))}
 			reset={() => goto($page.url.pathname)}
 		/>
 	{:else if data.videos && data.videos.data.length > 0}
@@ -100,7 +92,7 @@
 					{$t("common.noResults")}
 				</p>
 				<p class="text-sm font-bold text-surface-400">
-					No videos available yet.
+					{$t("common.noVideosYet")}
 				</p>
 			</div>
 		</div>

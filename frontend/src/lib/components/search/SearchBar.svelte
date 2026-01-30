@@ -1,6 +1,6 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
-  import { t } from "svelte-i18n";
+  import { t } from "$lib/stores/i18n";
   import { Search as SearchIcon, X } from "@lucide/svelte";
 
   let { class: className = "" } = $props();

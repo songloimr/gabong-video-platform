@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { t } from "svelte-i18n";
+	import { t } from "$lib/stores/i18n";
 	import {
 		useLikeVideo,
 		useSaveToWatchLater,
@@ -81,7 +81,7 @@
 </script>
 
 <svelte:head>
-	<title>{video?.title || "Video"} - Gabong</title>
+	<title>{video?.title || $t("video.defaultTitle")} - Gabong</title>
 	{#if video}
 		<meta name="description" content={video.description || video.title} />
 		<meta property="og:title" content={video.title} />
@@ -95,13 +95,13 @@
 	<div class="max-w-480 mx-auto px-4 py-12">
 		<div class="text-center space-y-4">
 			<h1 class="text-2xl font-black text-surface-100">
-				{data.error}
+				{$t(data.error)}
 			</h1>
 			<a
 				href="/"
 				class="inline-block px-6 py-3 bg-primary-600 text-white rounded-xl font-bold hover:bg-primary-500 transition-all"
 			>
-				{$t("common.backToHome")}
+				{$t("errors.goHome")}
 			</a>
 		</div>
 	</div>
@@ -147,23 +147,18 @@
 									class="text-2xl font-black text-surface-50 uppercase tracking-tighter mb-3"
 								>
 									{#if video.status === "rejected"}
-										Video bị từ chối
+										{$t("video.status.rejected")}
 									{:else}
-										Video đang chờ duyệt
+										{$t("video.status.pending")}
 									{/if}
 								</h2>
 								<p class="text-surface-400 font-medium mb-6">
 									{#if video.status === "rejected"}
-										Rất tiếc, video này không phù hợp với
-										tiêu chuẩn cộng đồng của chúng tôi.
+										{$t("video.status.rejectedMsg")}
 									{:else if video.status === "processing"}
-										Video đã được duyệt và đang trong quá
-										trình xử lý kỹ thuật. Vui lòng quay lại
-										sau ít phút.
+										{$t("video.status.processingMsg")}
 									{:else}
-										Video đã được tải lên thành công và đang
-										chờ ban quản trị phê duyệt. Quá trình
-										này thường mất vài giờ.
+										{$t("video.status.pendingMsg")}
 									{/if}
 								</p>
 								<div class="flex flex-col gap-3">
@@ -171,7 +166,7 @@
 										href="/"
 										class="px-6 py-3 bg-white text-surface-900 rounded-xl font-black uppercase tracking-widest text-sm hover:scale-105 transition-all"
 									>
-										{$t("common.backToHome")}
+										{$t("errors.goHome")}
 									</a>
 								</div>
 							</div>

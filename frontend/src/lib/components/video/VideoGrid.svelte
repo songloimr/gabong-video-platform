@@ -1,7 +1,7 @@
 <script lang="ts">
   import VideoCard from "./VideoCard.svelte";
   import type { Video } from "$lib/types";
-  import { t } from "svelte-i18n";
+  import { t } from "$lib/stores/i18n";
   import { PlaySquare } from "@lucide/svelte";
 
   let {

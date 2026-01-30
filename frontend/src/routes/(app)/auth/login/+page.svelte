@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { t } from "svelte-i18n";
+  import { t } from "$lib/stores/i18n";
   import { User, Lock, ArrowRight, Loader2 } from "@lucide/svelte";
   import { useLogin } from "$lib/api/mutations/auth";
   import { auth } from "$lib/stores/auth.svelte";
@@ -36,8 +36,8 @@
     } catch (e: any) {
       const message =
         e.response?.data?.message ||
-        "Login failed. Please check your credentials.";
-      errorDialog.show("Login Failed", message);
+        $t("auth.loginFailedDesc");
+      errorDialog.show($t("auth.loginFailedTitle"), message);
     }
   }
 </script>
@@ -67,7 +67,7 @@
           <h1
             class="text-3xl font-display font-black text-surface-100 tracking-tighter uppercase"
           >
-            Welcome <span class="text-primary-600">Back.</span>
+            {@html $t("auth.welcomeBack")}
           </h1>
           <p class="text-xs font-body font-semibold text-surface-400">
             {$t("auth.hasAccount")}
@@ -134,7 +134,7 @@
               <span
                 class="text-xs font-bold text-surface-400 group-hover:text-surface-100 transition-colors"
               >
-                Keep me logged in for 30 days
+                {$t("auth.rememberMeText")}
               </span>
             </label>
             <a
@@ -154,7 +154,7 @@
               <div
                 class="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"
               ></div>
-              <span>{$t("auth.loggingIn")}...</span>
+              <span>{$t("auth.loggingIn")}</span>
             {:else}
               <span>{$t("auth.login")}</span>
               <ArrowRight size={14} strokeWidth={2.5} />
