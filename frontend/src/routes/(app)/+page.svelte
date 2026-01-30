@@ -8,6 +8,7 @@
   import { page } from "$app/stores";
   import { Filter, Clock, Calendar, FolderOpen, Rss, LayoutGrid } from "@lucide/svelte";
   import type { PageData } from "./$types";
+  import { generateWebsiteJsonLd, SEO_CONFIG } from "$lib/utils/seo";
 
   let { data }: { data: PageData } = $props();
 
@@ -46,6 +47,21 @@
 
 <svelte:head>
   <title>{$t("common.home")} - Gabong</title>
+  <meta name="description" content={SEO_CONFIG.defaultDescription} />
+  <link rel="canonical" href={SEO_CONFIG.siteUrl} />
+  
+  <!-- Open Graph -->
+  <meta property="og:title" content="Gabong - Xem video thể thao hay nhất" />
+  <meta property="og:description" content={SEO_CONFIG.defaultDescription} />
+  <meta property="og:url" content={SEO_CONFIG.siteUrl} />
+  <meta property="og:image" content={SEO_CONFIG.defaultImage} />
+  
+  <!-- Twitter -->
+  <meta name="twitter:title" content="Gabong - Xem video thể thao hay nhất" />
+  <meta name="twitter:description" content={SEO_CONFIG.defaultDescription} />
+  <meta name="twitter:image" content={SEO_CONFIG.defaultImage} />
+  
+  <!-- Pagination Links for SEO -->
   {#if data.videos?.pagination}
     {#if data.videos.pagination.page > 1}
       <link rel="prev" href="?page={data.videos.pagination.page - 1}" />
@@ -54,6 +70,9 @@
       <link rel="next" href="?page={data.videos.pagination.page + 1}" />
     {/if}
   {/if}
+  
+  <!-- JSON-LD Structured Data -->
+  {@html `<script type="application/ld+json">${generateWebsiteJsonLd()}</script>`}
 </svelte:head>
 
 <div

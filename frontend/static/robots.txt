@@ -1,3 +1,24 @@
-# allow crawling everything by default
+# Gabong.net Robots.txt
 User-agent: *
-Disallow:
+Allow: /
+
+# Sitemap
+Sitemap: https://gabong.net/sitemap.xml
+
+# Block admin and private pages
+Disallow: /admin/
+Disallow: /api/
+Disallow: /auth/
+Disallow: /profile/edit
+Disallow: /settings/
+
+# Block search with filters (prevent duplicate content)
+Disallow: /search?*duration=
+Disallow: /search?*year=
+
+# Block pagination beyond first pages for main listing
+Disallow: /?page=
+Disallow: /categories/*?page=
+
+# Crawl delay (optional, for politeness)
+Crawl-delay: 1

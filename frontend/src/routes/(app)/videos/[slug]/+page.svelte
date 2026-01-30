@@ -14,12 +14,29 @@
 	import { LoaderCircle, X } from "@lucide/svelte";
 	import { onMount } from "svelte";
 	import type { PageProps } from "./$types";
-    import { PUBLIC_CDN_URL } from "$env/static/public";
+	import { PUBLIC_CDN_URL } from "$env/static/public";
+	import { generateVideoMeta } from "$lib/utils/seo";
 
 	// SSR Data
 	let { data }: PageProps = $props();
 
 	const video = $derived(data.video);
+
+	// Generate SEO meta data
+	const seoMeta = $derived(video ? generateVideoMeta({
+		id: video.id,
+		slug: video.slug,
+		title: video.title,
+		description: video.description,
+		thumbnail_url: video.thumbnail_url,
+		video_url: video.video_url,
+		duration: video.duration,
+		view_count: video.view_count,
+		created_at: video.created_at,
+		updated_at: video.updated_at,
+		uploader: video.uploader,
+		tags: video.tags,
+	}) : null);
 
 	// API Mutations
 	const likeMutation = useLikeVideo();
@@ -82,12 +99,28 @@
 
 <svelte:head>
 	<title>{video?.title || $t("video.defaultTitle")} - Gabong</title>
-	{#if video}
-		<meta name="description" content={video.description || video.title} />
-		<meta property="og:title" content={video.title} />
-		<meta property="og:description" content={video.description || ""} />
-		<meta property="og:image" content={video.thumbnail_url || ""} />
+	{#if video && seoMeta}
+		<!-- Primary Meta Tags -->
+		<meta name="description" content={seoMeta.description} />
+		<meta name="keywords" content={seoMeta.keywords || ''} />
+		<link rel="canonical" href={seoMeta.canonical} />
+		
+		<!-- Open Graph / Facebook -->
 		<meta property="og:type" content="video.other" />
+		<meta property="og:url" content={seoMeta.canonical} />
+		<meta property="og:title" content={seoMeta.ogTitle} />
+		<meta property="og:description" content={seoMeta.ogDescription} />
+		<meta property="og:image" content={seoMeta.ogImage} />
+		
+		<!-- Twitter -->
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:url" content={seoMeta.canonical} />
+		<meta name="twitter:title" content={seoMeta.twitterTitle} />
+		<meta name="twitter:description" content={seoMeta.twitterDescription} />
+		<meta name="twitter:image" content={seoMeta.twitterImage} />
+		
+		<!-- JSON-LD Structured Data -->
+		{@html `<script type="application/ld+json">${seoMeta.jsonLd}</script>`}
 	{/if}
 </svelte:head>
 
