@@ -121,7 +121,7 @@
     <div class="flex-1 space-y-1.5">
       {#if showStats}
         <div
-          class="flex items-center flex-wrap gap-x-2 gap-y-1 text-[10px] text-surface-500 font-bold uppercase tracking-widest"
+          class="flex items-center flex-wrap gap-x-2 gap-y-1 text-[11px] font-bold uppercase tracking-widest"
         >
           <div
             class="flex items-center gap-1.5 hover:text-primary-500 transition-colors cursor-pointer"

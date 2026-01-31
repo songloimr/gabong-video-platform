@@ -1,15 +1,18 @@
-import { Injectable, BadRequestException, Logger } from '@nestjs/common';
+import { Injectable, BadRequestException, Logger, InternalServerErrorException } from '@nestjs/common';
 import { VideosService } from '../videos/videos.service';
 import { CreateVideoDto } from '../videos/dto';
 import { StorageService } from '../storage/storage.service';
 import { MediaProcessingService } from '../media-processing/media-processing.service';
 import { SiteSettingsService } from '../site-settings/site-settings.service';
 
-import * as path from 'path';
-import * as fs from 'fs';
+import path = require('path');
+import fs = require('fs');
 import { v4 as uuidv4 } from 'uuid';
 import { VideoSourceType } from '../../types/video.types';
-import sharp from 'sharp';
+import sharp = require('sharp');
+import { HttpService } from '@nestjs/axios';
+import { firstValueFrom } from 'rxjs';
+import { createWriteStream } from 'fs';
 
 @Injectable()
 export class UploadService {
@@ -21,10 +24,30 @@ export class UploadService {
     private readonly storageService: StorageService,
     private readonly mediaProcessingService: MediaProcessingService,
     private readonly siteSettingsService: SiteSettingsService,
+    private readonly httpService: HttpService
   ) {
     if (!fs.existsSync(this.uploadDir)) {
       fs.mkdirSync(this.uploadDir, { recursive: true });
     }
+  }
+
+  async fetchThumbnail(url: string, filePath: string) {
+    const writer = createWriteStream(filePath);
+
+    try {
+      const response = await firstValueFrom(
+        this.httpService.get(url, { responseType: "stream" })
+      )
+      response.data.pipe(writer)
+
+      return new Promise((resolve, reject) => {
+        writer.on('finish', () => resolve(filePath));
+        writer.on('error', reject);
+      });
+    } catch (error) {
+      this.logger.error('Failed to download image: ' + url);
+    }
+    return null;
   }
 
   async handleUpload(
@@ -37,7 +60,7 @@ export class UploadService {
     if (dto.source_type === VideoSourceType.EMBED) {
       const video = await this.videosService.create({ ...dto, thumbnail_url: dto.thumbnail_url }, userId);
 
-      if (thumbnailFile) {
+      if (!dto.thumbnail_url && thumbnailFile) {
         const thumbExt = path.extname(thumbnailFile.originalname) || '.jpg';
         const thumbnailKey = `videos/${video.id}/thumbnail${thumbExt}`;
         await this.storageService.uploadFile(
@@ -95,15 +118,14 @@ export class UploadService {
       // Extract metadata (duration, resolution) to save immediately
       const metadata = await this.mediaProcessingService.extractMetadata(localPath);
 
-      // Save thumbnail if provided
-      if (thumbnailFile) {
+      if (dto.thumbnail_url) {
+        this.logger.log("Using remote thumbnail: " + dto.thumbnail_url)
+      } else if (thumbnailFile) {
         const thumbExt = path.extname(thumbnailFile.originalname) || '.jpg';
         const thumbPath = path.join(videoTempDir, `thumbnail.jpg`);
 
         if (thumbExt !== '.jpg') {
-          await sharp(thumbnailFile.buffer)
-            .jpeg()
-            .toFile(thumbPath)
+          await sharp(thumbnailFile.buffer).jpeg().toFile(thumbPath)
         }
         fs.writeFileSync(thumbPath, thumbnailFile.buffer);
       }

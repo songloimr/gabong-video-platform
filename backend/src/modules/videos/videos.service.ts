@@ -305,8 +305,7 @@ export class VideosService {
     if (["pending_approval", "pending_processing", "rejected"].includes(deletedVideo.status)) {
       try {
         console.log(deletedVideo.local_path)
-        console.log(path.resolve(deletedVideo.local_path))
-        fs.rmSync(path.resolve(deletedVideo.local_path), { force: true, recursive: true });
+        fs.rmdirSync(path.dirname(deletedVideo.local_path));
       } catch (error) {
         this.logger.error(`Error cleaning up local path ${deletedVideo.local_path}: ${error.message}`);
       }

@@ -8,6 +8,7 @@ import { SubtitlesModule } from '../subtitles/subtitles.module';
 import { VideoMarkupsModule } from '../video-markups/video-markups.module';
 import { VideoProcessingModule } from '../video-processing/video-processing.module';
 import { StorageModule } from '../storage/storage.module';
+
 @Module({
   imports: [DrizzleModule, SubtitlesModule, VideoMarkupsModule, forwardRef(() => VideoProcessingModule), StorageModule],
   controllers: [VideosController, VideosUserController, VideosAdminController],

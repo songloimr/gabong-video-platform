@@ -61,7 +61,7 @@ export class MediaProcessingService {
 
         const metadata = _metadata || await this.extractMetadata(filePath);
         const portrait = this.isPortrait(metadata.resolution);
-//
+        //
         console.log({ filePath, outputPath })
 
         const tileColumns = portrait ? 4 : 2;
@@ -110,25 +110,27 @@ export class MediaProcessingService {
         const filename = `preview.gif`;
         const outputPath = path.join(outputDir, filename);
         const frameCount = 20;
+        const screenshotPattern = 'preview_%02d.jpg';
 
         try {
             // Step 1: Generate screenshots from video
             await new Promise<void>((resolve, reject) => {
                 ffmpeg(filePath)
-                    .screenshots({
-                        count: frameCount,
-                        filename: 'preview-%d.jpg',
-                        folder: outputDir,
-                    })
+                    .videoFilters([
+                        { filter: "fps", options: `${frameCount}/${metadata.duration}` }
+                    ])
+                    .outputOptions([`-vframes ${frameCount}`])
+                    .output(path.join(outputDir, screenshotPattern))
                     .on('end', () => resolve())
-                    .on('error', (err) => reject(err));
+                    .on('error', (err) => reject(err))
+                    .run();
             });
 
             // Step 2: Create GIF from screenshots
             await new Promise<void>((resolve, reject) => {
                 ffmpeg()
-                    .input(path.join(outputDir, 'preview-1_%d.jpg'))
-                    .inputOptions(['-framerate 5'])
+                    .input(path.join(outputDir, screenshotPattern))
+                    .inputOptions(['-framerate 4'])
                     .videoFilters([
                         { filter: 'scale', options: '480:-1' }
                     ])
@@ -145,7 +147,7 @@ export class MediaProcessingService {
         } finally {
             // Step 3: Cleanup temp screenshot files
             for (let i = 1; i <= frameCount; i++) {
-                const tempFile = path.join(outputDir, `preview-${i}.jpg`);
+                const tempFile = path.join(outputDir, `preview_${String(i).padStart(2, '0')}.jpg`);
                 if (fs.existsSync(tempFile)) {
                     fs.unlinkSync(tempFile);
                 }
@@ -153,7 +155,7 @@ export class MediaProcessingService {
         }
     }
     async transcodeToHLS(inputPath: string, outputDir: string, metadata: VideoMetadata): Promise<string> {
-        this.logger.log(`Transcoding ${inputPath} to HLS in ${outputDir}`);
+        this.logger.debug(`Transcoding ${path.basename(inputPath)} to HLS in ${path.basename(outputDir)}`);
 
         if (!fs.existsSync(outputDir)) {
             fs.mkdirSync(outputDir, { recursive: true });

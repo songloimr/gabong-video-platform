@@ -47,36 +47,34 @@ export class VideoProcessingProcessor {
                 return;
             }
 
-            // 4. Handle thumbnail (use existing if uploaded, otherwise generate)
-            let thumbnailLocalPath: string | undefined;
-            const files = fs.readdirSync(tempDir);
-            const thumbFile = files.find(f => f.startsWith('thumb.'));
+            if (!video.thumbnail_url) {
+                // 4. Handle thumbnail (use existing if uploaded, otherwise generate)
+                let thumbnailLocalPath = path.join(tempDir, "thumbnail.jpg")
+                if (fs.existsSync(thumbnailLocalPath)) {
+                    this.logger.debug(`Using uploaded thumbnail: ${thumbnailLocalPath}`);
+                } else {
+                    this.logger.debug('Generating thumbnail from video...');
+                    thumbnailLocalPath = await this.mediaProcessingService.generateThumbnail(
+                        localPath,
+                        tempDir,
+                        metadata,
+                    );
+                }
 
-            if (thumbFile) {
-                thumbnailLocalPath = path.join(tempDir, thumbFile);
-                this.logger.log(`Using uploaded thumbnail: ${thumbFile}`);
-            } else {
-                this.logger.log('Generating thumbnail from video...');
-                thumbnailLocalPath = await this.mediaProcessingService.generateThumbnail(
-                    localPath,
-                    tempDir,
-                    metadata,
+                // 5. Upload thumbnail to R2
+                this.logger.debug(`Uploading thumbnail to R2...`);
+                const thumbnailBuffer = fs.readFileSync(thumbnailLocalPath);
+                await this.storageService.uploadFile(
+                    thumbnailBuffer,
+                    `videos/${videoId}/${path.basename(thumbnailLocalPath)}`,
+                    'image/jpeg',
                 );
             }
-            
-            // 5. Upload thumbnail to R2
-            this.logger.log(`Uploading thumbnail to R2...`);
-            const thumbnailBuffer = fs.readFileSync(thumbnailLocalPath);
-            await this.storageService.uploadFile(
-                thumbnailBuffer,
-                `videos/${videoId}/${path.basename(thumbnailLocalPath)}`,
-                'image/jpeg',
-            );
-            
-            this.logger.log('Generating preview GIF...');
+
+            this.logger.debug('Generating preview GIF...');
             const previewGifLocalPath = await this.mediaProcessingService.createPreviewGif(localPath, tempDir, metadata);
 
-            this.logger.log(`Uploaded preview GIF to R2...`);
+            this.logger.debug(`Uploaded preview GIF to R2...`);
             const previewGifBuffer = fs.readFileSync(previewGifLocalPath);
             await this.storageService.uploadFile(
                 previewGifBuffer,
@@ -116,7 +114,7 @@ export class VideoProcessingProcessor {
             // 8. Cleanup local files
             this.cleanup(tempDir);
 
-            this.logger.log(`Finished processing video: ${videoId}`);
+            this.logger.debug(`Finished processing video: ${videoId}`);
         } catch (error) {
             this.logger.error(`Error processing video ${videoId}: ${error.message}`);
             await this.videosService.updateStatus(videoId, 'rejected', 'Processing error');
