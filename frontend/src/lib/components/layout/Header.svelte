@@ -130,6 +130,8 @@
                       <img
                         src={getAvatarUrl(auth.user.avatar_url)}
                         alt={auth.user.username}
+                        loading="lazy"
+                        decoding="async"
                         class="w-8 h-8 rounded-lg object-cover ring-2 ring-surface-800/50 shadow-sm group-hover:ring-primary-500 transition-all"
                       />
                     {:else}

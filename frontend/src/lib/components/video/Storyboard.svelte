@@ -23,6 +23,8 @@
 				<img
 					src={storyboardUrl}
 					alt={$t("video.previewFrame", { values: { index } })}
+					loading="lazy"
+					decoding="async"
 					class="w-48 h-27 object-cover rounded border-2"
 					class:border-primary-500={index === activeTimestamp}
 					class:border-surface-700={index !== activeTimestamp}

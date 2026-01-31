@@ -96,6 +96,8 @@
       <img
         src={getAvatarUrl(comment.user.avatar_url)}
         alt={comment.user.username}
+        loading="lazy"
+        decoding="async"
         class="rounded-full object-cover ring-2 ring-surface-800/50 shadow-sm"
         style="width: {avatarSize}px; height: {avatarSize}px;"
       />

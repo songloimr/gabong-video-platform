@@ -5,7 +5,7 @@
   import type { Video } from "$lib/types";
   import { PUBLIC_CDN_URL } from "$env/static/public";
 
-  let { video, showStats = true }: { video: Video; showStats?: boolean } =
+  let { video, showStats = true, priority = false }: { video: Video; showStats?: boolean; priority?: boolean } =
     $props();
 
   let displayDate = $state("");
@@ -75,7 +75,8 @@
       <img
         src={getThumbnailUrl()}
         alt={video.title}
-        loading="lazy"
+        loading={priority ? 'eager' : 'lazy'}
+        decoding="async"
         class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
       />
       {#if isHovering && video.video_key}

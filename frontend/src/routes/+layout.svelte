@@ -4,6 +4,8 @@
 	import { isLoading } from "svelte-i18n";
 	import { Toast } from "@skeletonlabs/skeleton-svelte";
 	import { toaster } from "$lib/toaster";
+	import "@fontsource-variable/inter";
+	import "@fontsource-variable/outfit";
 	import "./layout.css";
 	import "vidstack/player/styles/default/theme.css";
 	import "vidstack/player/styles/default/layouts/video.css";

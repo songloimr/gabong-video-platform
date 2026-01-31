@@ -34,7 +34,7 @@
   {:else if videos && videos.length > 0}
     {#each videos as video, i (video.id)}
       <div class="animate-fade-in" style="animation-delay: {i * 30}ms">
-        <VideoCard {video} />
+        <VideoCard {video} priority={i === 0} />
       </div>
     {/each}
   {:else}

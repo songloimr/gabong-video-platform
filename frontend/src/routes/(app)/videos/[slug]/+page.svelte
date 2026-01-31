@@ -30,19 +30,19 @@
 	);
 	const seoKeywords = $derived(video?.tags?.map(t => t.name).join(', '));
 	const seoCanonical = $derived(video ? `/videos/${video.slug}` : undefined);
-	const seoImage = $derived(video?.thumbnail_url || SEO_CONFIG.defaultImage);
 	const jsonLd = $derived(video ? generateVideoJsonLd({
 		id: video.id,
 		slug: video.slug,
 		title: video.title,
-		description: video.description,
+		description: video.description || "",
 		thumbnail_url: video.thumbnail_url,
-		video_url: video.video_url,
-		duration: video.duration,
-		view_count: video.view_count,
-		created_at: video.created_at,
-		updated_at: video.updated_at,
-		uploader: video.uploader,
+		video_url: video.video_url!,
+		duration: video.duration!,
+		created_at: video.published_at!,
+		updated_at: video.published_at!,
+		uploader: {
+			username: video.user?.username!,
+		},
 		tags: video.tags,
 	}) : undefined);
 
@@ -110,8 +110,6 @@
 	description={seoDescription}
 	keywords={seoKeywords}
 	canonical={seoCanonical}
-	ogType="video.other"
-	ogImage={seoImage}
 	{jsonLd}
 />
 

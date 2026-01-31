@@ -28,6 +28,8 @@
           <img
             src={getAvatarUrl(userQuery.data.avatar_url)}
             alt={userQuery.data.username}
+            loading="lazy"
+            decoding="async"
             class="w-24 h-24 rounded-full ring-4 ring-surface-800/50 shadow-lg"
           />
         {:else}

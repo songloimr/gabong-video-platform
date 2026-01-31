@@ -106,7 +106,7 @@
 
 {#snippet thumbnailCell(url: string | null, title: string)}
 	{#if url}
-		<img src={url} alt={title} class="w-16 h-10 object-cover rounded-sm" />
+		<img src={url} alt={title} loading="lazy" decoding="async" class="w-16 h-10 object-cover rounded-sm" />
 	{:else}
 		<div
 			class="w-16 h-10 bg-surface-700 rounded-sm flex items-center justify-center"
@@ -250,11 +250,13 @@
 								{#if video.user}
 									<div class="flex items-center gap-1.5">
 {#if video.user.avatar_url}
-									<img
-										src={getAvatarUrl(video.user.avatar_url)}
-										alt={video.user.username}
-												class="w-5 h-5 rounded-full object-cover"
-											/>
+								<img
+									src={getAvatarUrl(video.user.avatar_url)}
+									alt={video.user.username}
+									loading="lazy"
+									decoding="async"
+											class="w-5 h-5 rounded-full object-cover"
+										/>
 										{:else}
 											<div
 												class="w-5 h-5 rounded-full bg-primary-500/30 flex items-center justify-center text-[10px] text-primary-400 font-black"

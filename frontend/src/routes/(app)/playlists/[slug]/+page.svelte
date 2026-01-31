@@ -26,7 +26,7 @@
 	const jsonLd = $derived.by(() => {
 		if (!playlist) return undefined;
 		return generatePlaylistJsonLd(
-			{ name: playlist.title, description: playlist.description, slug },
+			{ name: playlist.title, slug },
 			(playlist.videos || []).map(v => ({
 				id: v.id,
 				slug: v.slug,
@@ -41,11 +41,10 @@
 	title={seoTitle}
 	description={seoDescription}
 	canonical={playlist ? `/playlists/${slug}` : undefined}
-	ogImage={playlist?.thumbnail_url || undefined}
 	{jsonLd}
 />
 
-<div class="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+<div class="max-w-480 mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
 	<!-- Back Button & Breadcrumbs -->
 	<div class="mb-8">
 		<a
@@ -110,7 +109,7 @@
 		<div class="mb-12">
 			<div class="flex flex-col md:flex-row gap-8 lg:gap-12">
 				<!-- Thumbnail -->
-				<div class="w-full md:w-96 flex-shrink-0 animate-scale-in">
+				<div class="w-full md:w-96 shrink-0 animate-scale-in">
 					<div
 						class="aspect-video rounded-3xl overflow-hidden bg-surface-800 border-2 border-surface-700/50 shadow-2xl relative group"
 					>
@@ -118,11 +117,13 @@
 							<img
 								src={playlist.thumbnail_url}
 								alt={playlist.title}
+								loading="lazy"
+								decoding="async"
 								class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
 							/>
 						{:else}
 							<div
-								class="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-500/10 to-primary-600/20"
+								class="w-full h-full flex items-center justify-center bg-linear-to-br from-primary-500/10 to-primary-600/20"
 							>
 								<Library
 									size={64}
@@ -131,7 +132,7 @@
 							</div>
 						{/if}
 						<div
-							class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+							class="absolute inset-0 bg-linear-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"
 						></div>
 					</div>
 				</div>
@@ -224,7 +225,7 @@
 					class="text-lg font-black text-surface-100 uppercase tracking-widest flex items-center gap-3"
 				>
 					<span>{$t("common.playlistContent")}</span>
-					<div class="h-px flex-1 bg-surface-800 min-w-[100px]"></div>
+					<div class="h-px flex-1 bg-surface-800 min-w-25"></div>
 				</h2>
 			</div>
 

@@ -1,5 +1,5 @@
 import { PUBLIC_VITE_API_URL } from '$env/static/public';
-import type { VideoMarkup, VideoSubtitle } from '$lib/types';
+import type { ApiResponse, Video, VideoMarkup, VideoSubtitle } from '$lib/types';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params, fetch }) => {
@@ -20,7 +20,9 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
                 error: videoResponse.status === 404 ? 'errors.notFound' : 'errors.loadFailed'
             };
         }
-        const { data } = await videoResponse.json();
+        const { data }: ApiResponse<Video> = await videoResponse.json();
+
+        console.log(data)
 
         const [markupsResponse, subtitlesResponse] = await Promise.all([
             fetch(baseUrl + `/videos/${data.id}/markups`),
@@ -28,8 +30,8 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
         ]);
 
         const [{ data: markups }, { data: subtitles }] = await Promise.all([
-            markupsResponse.json() as Promise<{ data: VideoMarkup[] }>,
-            subtitlesResponse.json() as Promise<{ data: VideoSubtitle[] }>,
+            markupsResponse.json() as Promise<ApiResponse<VideoMarkup[]>>,
+            subtitlesResponse.json() as Promise<ApiResponse<VideoSubtitle[]>>,
         ]);
 
         return {

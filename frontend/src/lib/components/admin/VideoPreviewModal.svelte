@@ -281,11 +281,13 @@
 								class="w-10 h-10 rounded-full bg-surface-700 overflow-hidden ring-2 ring-primary-500/20"
 							>
 								{#if video.user?.avatar_url}
-									<img
-										src={getAvatarUrl(video.user.avatar_url)}
-										alt={video.user.username}
-										class="w-full h-full object-cover"
-									/>
+								<img
+									src={getAvatarUrl(video.user.avatar_url)}
+									alt={video.user.username}
+									loading="lazy"
+									decoding="async"
+									class="w-full h-full object-cover"
+								/>
 								{:else}
 									<div
 										class="w-full h-full flex items-center justify-center text-xs font-bold text-surface-400 capitalize"

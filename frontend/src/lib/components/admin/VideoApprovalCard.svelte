@@ -81,11 +81,13 @@
 				class="relative aspect-video rounded-xl overflow-hidden group-hover:ring-2 ring-primary-500/20 transition-all"
 			>
 				{#if video.thumbnail_url}
-					<img
-						src={video.thumbnail_url}
-						alt={video.title}
-						class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-					/>
+				<img
+					src={video.thumbnail_url}
+					alt={video.title}
+					loading="lazy"
+					decoding="async"
+					class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+				/>
 				{:else}
 					<div
 						class="w-full h-full bg-surface-700 flex items-center justify-center"

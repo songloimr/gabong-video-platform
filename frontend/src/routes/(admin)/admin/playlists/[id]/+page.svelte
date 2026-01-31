@@ -100,7 +100,7 @@
 
 {#snippet thumbnailCell(url: string | null, title: string)}
 	{#if url}
-		<img src={url} alt={title} class="w-16 h-10 object-cover rounded-sm" />
+		<img src={url} alt={title} loading="lazy" decoding="async" class="w-16 h-10 object-cover rounded-sm" />
 	{:else}
 		<div
 			class="w-16 h-10 bg-surface-700 rounded-sm flex items-center justify-center"
@@ -184,11 +184,13 @@
 											class="w-12 h-8 rounded-sm overflow-hidden bg-surface-700 flex-shrink-0"
 										>
 											{#if video.thumbnail_url}
-												<img
-													src={video.thumbnail_url}
-													alt={video.title}
-													class="w-full h-full object-cover"
-												/>
+									<img
+											src={video.thumbnail_url}
+											alt={video.title}
+											loading="lazy"
+											decoding="async"
+											class="w-full h-full object-cover"
+										/>
 											{:else}
 												<div
 													class="w-full h-full flex items-center justify-center"

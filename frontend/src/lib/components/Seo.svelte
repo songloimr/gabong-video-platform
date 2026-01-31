@@ -7,8 +7,6 @@
 		canonical?: string;
 		robots?: string;
 		keywords?: string;
-		ogType?: 'website' | 'video.other' | 'article';
-		ogImage?: string;
 		jsonLd?: object | object[];
 		pagination?: {
 			prev?: string;
@@ -22,8 +20,6 @@
 		canonical,
 		robots,
 		keywords,
-		ogType = 'website',
-		ogImage = SEO_CONFIG.defaultImage,
 		jsonLd,
 		pagination
 	}: Props = $props();
@@ -47,24 +43,6 @@
 	{/if}
 	{#if canonicalUrl}
 		<link rel="canonical" href={canonicalUrl} />
-	{/if}
-
-	<!-- Open Graph -->
-	<meta property="og:title" content={title} />
-	<meta property="og:description" content={description} />
-	<meta property="og:type" content={ogType} />
-	{#if canonicalUrl}
-		<meta property="og:url" content={canonicalUrl} />
-	{/if}
-	{#if ogImage}
-		<meta property="og:image" content={ogImage} />
-	{/if}
-
-	<!-- Twitter -->
-	<meta name="twitter:title" content={title} />
-	<meta name="twitter:description" content={description} />
-	{#if ogImage}
-		<meta name="twitter:image" content={ogImage} />
 	{/if}
 
 	<!-- Pagination -->

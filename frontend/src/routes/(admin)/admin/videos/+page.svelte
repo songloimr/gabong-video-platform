@@ -219,7 +219,7 @@
 
 {#snippet thumbnailCell(url: string | null, title: string)}
 	{#if url}
-		<img src={url} alt={title} class="w-16 h-10 object-cover rounded-sm" />
+		<img src={url} alt={title} loading="lazy" decoding="async" class="w-16 h-10 object-cover rounded-sm" />
 	{:else}
 		<div
 			class="w-16 h-10 bg-surface-700 rounded-sm flex items-center justify-center"

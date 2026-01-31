@@ -112,9 +112,11 @@
 
 {#snippet userAvatar(user: User)}
 {#if user.avatar_url}
-								<img
-									src={getAvatarUrl(user.avatar_url)}
-									alt={user.username}
+							<img
+								src={getAvatarUrl(user.avatar_url)}
+								alt={user.username}
+								loading="lazy"
+								decoding="async"
 			class="w-8 h-8 rounded-full object-cover ring-2 ring-surface-800/50 shadow-sm"
 		/>
 	{:else}

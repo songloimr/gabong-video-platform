@@ -105,6 +105,8 @@
           <img
             src={getAvatarUrl(video.user.avatar_url)}
             alt={video.user.username}
+            loading="lazy"
+            decoding="async"
             class="w-6 h-6 rounded-full object-cover border border-surface-700"
           />
         {:else}
