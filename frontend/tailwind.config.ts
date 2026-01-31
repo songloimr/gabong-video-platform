@@ -15,8 +15,8 @@ export default {
 				'desktop': '1024px',
 			},
 			fontFamily: {
-				sans: ['Inter', 'system-ui', 'sans-serif'],
-				heading: ['Outfit', 'Inter', 'sans-serif'],
+				sans: ['Inter Variable', 'Inter', 'system-ui', 'sans-serif'],
+				heading: ['Outfit Variable', 'Outfit', 'Inter Variable', 'sans-serif'],
 			},
 			gridTemplateColumns: {
 				'mobile': 'repeat(1, minmax(0, 1fr))',
