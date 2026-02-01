@@ -31,7 +31,9 @@ import { SubtitlesModule } from './modules/subtitles/subtitles.module';
 import { VideoMarkupsModule } from './modules/video-markups/video-markups.module';
 import { FeedbacksModule } from './modules/feedbacks/feedbacks.module';
 import { SitemapModule } from './modules/sitemap/sitemap.module';
+import { SystemMetricsModule } from './modules/system-metrics/system-metrics.module';
 import { RedisModule } from './common/redis';
+import { RequestMetricsInterceptor } from './common/interceptors/request-metrics.interceptor';
 
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { TransformInterceptor } from './common/interceptors/transform.interceptor';
@@ -45,6 +47,7 @@ import cloudflareConfig from './config/cloudflare.config';
 import redisConfig from './config/redis.config';
 import { ExpressAdapter } from "@bull-board/express";
 import { BullBoardModule } from "@bull-board/nestjs";
+import { PrometheusModule } from "@willsoto/nestjs-prometheus";
 
 @Module({
   imports: [
@@ -52,6 +55,7 @@ import { BullBoardModule } from "@bull-board/nestjs";
       isGlobal: true,
       load: [databaseConfig, jwtConfig, cloudflareConfig, redisConfig],
     }),
+    // PrometheusModule.register(),
     BullModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
@@ -113,12 +117,14 @@ import { BullBoardModule } from "@bull-board/nestjs";
     VideoMarkupsModule,
     FeedbacksModule,
     SitemapModule,
+    SystemMetricsModule,
     RedisModule,
   ],
   controllers: [],
   providers: [
     { provide: APP_FILTER, useClass: AllExceptionsFilter },
     { provide: APP_INTERCEPTOR, useClass: TransformInterceptor },
+    { provide: APP_INTERCEPTOR, useClass: RequestMetricsInterceptor },
     { provide: APP_PIPE, useClass: ValidationPipe },
     { provide: APP_GUARD, useClass: CustomThrottlerGuard },
   ],
