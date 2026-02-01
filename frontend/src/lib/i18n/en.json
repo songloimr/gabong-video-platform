@@ -399,5 +399,124 @@
     "cookiePolicy": "Cookie Policy",
     "copyright": "All rights reserved.",
     "systemsOperational": "Systems Operational"
+  },
+  "legal": {
+    "termsTitle": "Terms of Service",
+    "privacyTitle": "Privacy Policy",
+    "cookiesTitle": "Cookie Policy",
+    "lastUpdated": "Last updated: {date}",
+    "tableOfContents": "Table of Contents",
+    "contactEmail": "Contact email",
+    "sections": {
+      "ageRequirement": {
+        "title": "1. Age Requirements",
+        "content": "You must be 18 years or older to use this website. By accessing and using our services, you confirm that you are of legal age in your jurisdiction to view adult content. We reserve the right to request age verification at any time."
+      },
+      "contentWarning": {
+        "title": "2. Content Warning",
+        "content": "This website contains adult content, including but not limited to: pornographic material, violence, profanity, and other sensitive content. This content is not suitable for individuals under 18 years of age. You are solely responsible for your decision to view this content."
+      },
+      "contentOwnership": {
+        "title": "3. Content Ownership",
+        "content": "When you upload content to this website, you grant us a perpetual, worldwide, non-exclusive, royalty-free license to use, copy, modify, distribute, publicly display, create derivative works from, and delete such content at our discretion. This license is irrevocable and non-refundable."
+      },
+      "uploaderResponsibility": {
+        "title": "4. Uploader Responsibility",
+        "content": "You are fully legally responsible for all content you upload. You warrant that: (a) you own or have the legal right to upload the content, (b) all individuals appearing in the content are 18 years or older and have consented, (c) the content does not infringe upon copyrights or rights of third parties."
+      },
+      "prohibitedContent": {
+        "title": "5. Prohibited Content",
+        "content": "The following content is strictly prohibited: (a) child sexual abuse material (CSAM), (b) revenge porn or non-consensual content, (c) real violence or torture, (d) content promoting crime or terrorism, (e) spam or fraudulent content, (f) copyright infringement. Violations will result in permanent account termination and may be reported to authorities."
+      },
+      "contentRemoval": {
+        "title": "6. Complaints & Content Removal Requests",
+        "content": "To request content removal, please email {email} with the following information: (a) URL of the content to be removed, (b) reason for removal request, (c) supporting evidence for your request (if any). The decision to remove content is solely at the discretion of the website administrator. We are not obligated to remove any content and will review each case individually."
+      },
+      "disclaimer": {
+        "title": "7. Disclaimer",
+        "content": "We are not responsible for: (a) user-generated content, (b) the accuracy, completeness, or legality of content, (c) any direct, indirect, incidental, or consequential damages arising from the use of our services, (d) the behavior of other users. The service is provided \"as is\" without any warranties."
+      },
+      "accountSecurity": {
+        "title": "8. Account Security",
+        "content": "You are fully responsible for maintaining the security of your login credentials. Do not share your account or password with anyone. You must notify us immediately if you discover unauthorized access to your account. We are not liable for any losses resulting from your failure to secure your account."
+      },
+      "termination": {
+        "title": "9. Account Termination",
+        "content": "We reserve the right to suspend, restrict, or terminate your account at any time, for any reason, without prior notice. In case of termination, you will not receive any refunds (if applicable) and your content may be permanently deleted. This decision is final and cannot be appealed."
+      },
+      "termsChanges": {
+        "title": "10. Changes to Terms",
+        "content": "We reserve the right to update, modify, or replace these terms at any time without prior notice. Changes take effect immediately upon posting to the website. Your continued use of the service after changes constitutes acceptance of the new terms."
+      },
+      "applicableLaw": {
+        "title": "11. Applicable Law",
+        "content": "This service operates globally. You are solely responsible for compliance with all local, national, and international laws applicable to your use of the service. If any part of these terms is deemed invalid, the remaining provisions shall remain in effect."
+      }
+    },
+    "privacy": {
+      "intro": {
+        "title": "Introduction",
+        "content": "This Privacy Policy explains how we collect, use, and protect your personal information when you use our services."
+      },
+      "dataCollection": {
+        "title": "1. Information We Collect",
+        "content": "We collect the following information: (a) account information (email, username), (b) IP address and device information, (c) cookies and session data, (d) viewing history and interactions, (e) content you upload."
+      },
+      "dataUsage": {
+        "title": "2. How We Use Your Information",
+        "content": "We use your information to: (a) provide and operate our services, (b) personalize your user experience, (c) security and fraud prevention, (d) analyze and improve our services, (e) communicate with you when necessary."
+      },
+      "dataSharing": {
+        "title": "3. Data Sharing",
+        "content": "We do not sell your personal data. We only share information when: (a) required by legal authorities, (b) necessary to protect our rights and safety or that of other users, (c) with your consent."
+      },
+      "cookies": {
+        "title": "4. Cookies",
+        "content": "We use cookies to maintain your login session, save preferences, and analyze usage. See our Cookie Policy for more details."
+      },
+      "dataSecurity": {
+        "title": "5. Data Security",
+        "content": "We implement reasonable security measures to protect your data, including encryption, access controls, and regular backups. However, no method of internet transmission is 100% secure."
+      },
+      "dataRetention": {
+        "title": "6. Data Retention",
+        "content": "Your data is retained until you delete your account or request deletion. Some data may be retained as required by law."
+      },
+      "userRights": {
+        "title": "7. Your Rights",
+        "content": "You have the right to: (a) access your personal data, (b) request correction of inaccurate information, (c) request deletion of your account and data, (d) withdraw consent at any time."
+      },
+      "contact": {
+        "title": "8. Contact",
+        "content": "If you have questions about this privacy policy, please contact: {email}"
+      }
+    },
+    "cookies": {
+      "intro": {
+        "title": "What are Cookies?",
+        "content": "Cookies are small text files stored on your device when you visit a website. They help the website function more efficiently and provide a better experience for you."
+      },
+      "ourCookies": {
+        "title": "Cookies We Use",
+        "content": "We use the following types of cookies: (a) Session cookies - to maintain your login, (b) Preference cookies - to save language and interface settings, (c) Security cookies - to prevent fraud and protect your account, (d) Analytics cookies - to understand how users use the website."
+      },
+      "thirdParty": {
+        "title": "Third-Party Cookies",
+        "content": "We may use Google Analytics to analyze traffic. Google may collect anonymous information about your website usage."
+      },
+      "manage": {
+        "title": "Managing Cookies",
+        "content": "You can control and delete cookies through your browser settings. However, disabling cookies may affect website functionality, especially login and personal preferences."
+      },
+      "contact": {
+        "title": "Contact",
+        "content": "If you have questions about this cookie policy, please contact: {email}"
+      }
+    },
+    "acceptTerms": "I have read and agree to the",
+    "termsLink": "Terms of Service",
+    "and": "and",
+    "privacyLink": "Privacy Policy",
+    "mustAcceptTerms": "You must agree to the terms to continue"
   }
 }

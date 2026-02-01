@@ -399,5 +399,124 @@
     "cookiePolicy": "Chính sách cookie",
     "copyright": "Bảo lưu mọi quyền.",
     "systemsOperational": "Hệ thống đang hoạt động"
+  },
+  "legal": {
+    "termsTitle": "Điều khoản Dịch vụ",
+    "privacyTitle": "Chính sách Bảo mật",
+    "cookiesTitle": "Chính sách Cookie",
+    "lastUpdated": "Cập nhật lần cuối: {date}",
+    "tableOfContents": "Mục lục",
+    "contactEmail": "Email liên hệ",
+    "sections": {
+      "ageRequirement": {
+        "title": "1. Điều kiện tuổi",
+        "content": "Bạn phải đủ 18 tuổi để sử dụng website này. Bằng việc truy cập và sử dụng dịch vụ của chúng tôi, bạn xác nhận rằng bạn đã đủ tuổi theo quy định pháp luật tại quốc gia của bạn để xem nội dung người lớn. Chúng tôi có quyền yêu cầu xác minh tuổi bất kỳ lúc nào."
+      },
+      "contentWarning": {
+        "title": "2. Cảnh báo nội dung",
+        "content": "Website này chứa nội dung dành cho người lớn, bao gồm nhưng không giới hạn: nội dung khiêu dâm, bạo lực, ngôn ngữ thô tục và các nội dung nhạy cảm khác. Nội dung không phù hợp với người dưới 18 tuổi. Bạn hoàn toàn chịu trách nhiệm về quyết định xem nội dung này."
+      },
+      "contentOwnership": {
+        "title": "3. Quyền sở hữu nội dung",
+        "content": "Khi bạn đăng tải nội dung lên website, bạn cấp cho chúng tôi quyền vĩnh viễn, toàn cầu, không độc quyền, miễn phí bản quyền để sử dụng, sao chép, chỉnh sửa, phân phối, hiển thị công khai, tạo các tác phẩm phái sinh và xóa nội dung đó theo quyết định của chúng tôi. Quyền này không thể thu hồi và không được hoàn tiền."
+      },
+      "uploaderResponsibility": {
+        "title": "4. Trách nhiệm người đăng tải",
+        "content": "Bạn hoàn toàn chịu trách nhiệm pháp lý về tất cả nội dung bạn đăng tải. Bạn cam kết rằng: (a) bạn sở hữu hoặc có quyền hợp pháp để đăng tải nội dung đó, (b) tất cả cá nhân xuất hiện trong nội dung đều đã đủ 18 tuổi và đã đồng ý, (c) nội dung không vi phạm bản quyền hoặc quyền của bên thứ ba."
+      },
+      "prohibitedContent": {
+        "title": "5. Nội dung bị cấm",
+        "content": "Nghiêm cấm đăng tải các nội dung sau: (a) nội dung liên quan đến trẻ em (CSAM), (b) revenge porn hoặc nội dung không có sự đồng ý, (c) bạo lực thực sự hoặc tra tấn, (d) nội dung quảng bá tội phạm hoặc khủng bố, (e) spam hoặc nội dung lừa đảo, (f) vi phạm bản quyền. Vi phạm sẽ dẫn đến xóa tài khoản vĩnh viễn và có thể bị báo cáo cho cơ quan chức năng."
+      },
+      "contentRemoval": {
+        "title": "6. Khiếu nại & Yêu cầu gỡ bỏ nội dung",
+        "content": "Để yêu cầu gỡ bỏ nội dung, vui lòng gửi email đến {email} với các thông tin sau: (a) URL của nội dung cần gỡ bỏ, (b) lý do yêu cầu gỡ bỏ, (c) bằng chứng hỗ trợ yêu cầu của bạn (nếu có). Quyết định gỡ bỏ nội dung hoàn toàn phụ thuộc vào quyết định của quản trị viên website. Chúng tôi không có nghĩa vụ phải gỡ bỏ bất kỳ nội dung nào và sẽ xem xét từng trường hợp cụ thể."
+      },
+      "disclaimer": {
+        "title": "7. Miễn trừ trách nhiệm",
+        "content": "Chúng tôi không chịu trách nhiệm về: (a) nội dung do người dùng đăng tải, (b) tính chính xác, đầy đủ hoặc hợp pháp của nội dung, (c) bất kỳ thiệt hại trực tiếp, gián tiếp, ngẫu nhiên hoặc hậu quả nào phát sinh từ việc sử dụng dịch vụ, (d) hành vi của người dùng khác. Dịch vụ được cung cấp \"nguyên trạng\" mà không có bất kỳ bảo đảm nào."
+      },
+      "accountSecurity": {
+        "title": "8. Bảo mật tài khoản",
+        "content": "Bạn hoàn toàn chịu trách nhiệm bảo mật thông tin đăng nhập của mình. Không chia sẻ tài khoản hoặc mật khẩu với bất kỳ ai. Bạn phải thông báo ngay cho chúng tôi nếu phát hiện truy cập trái phép vào tài khoản của bạn. Chúng tôi không chịu trách nhiệm cho bất kỳ tổn thất nào do việc không bảo mật tài khoản của bạn."
+      },
+      "termination": {
+        "title": "9. Chấm dứt tài khoản",
+        "content": "Chúng tôi có quyền tạm ngưng, hạn chế hoặc chấm dứt tài khoản của bạn bất kỳ lúc nào, vì bất kỳ lý do gì, mà không cần thông báo trước. Trong trường hợp chấm dứt, bạn sẽ không được hoàn lại bất kỳ khoản phí nào (nếu có) và nội dung của bạn có thể bị xóa vĩnh viễn. Quyết định này là cuối cùng và không thể kháng cáo."
+      },
+      "termsChanges": {
+        "title": "10. Thay đổi điều khoản",
+        "content": "Chúng tôi có quyền cập nhật, sửa đổi hoặc thay thế các điều khoản này bất kỳ lúc nào mà không cần thông báo trước. Các thay đổi có hiệu lực ngay khi được đăng tải trên website. Việc tiếp tục sử dụng dịch vụ sau khi có thay đổi đồng nghĩa với việc bạn chấp nhận các điều khoản mới."
+      },
+      "applicableLaw": {
+        "title": "11. Luật áp dụng",
+        "content": "Dịch vụ này hoạt động trên phạm vi toàn cầu. Bạn hoàn toàn chịu trách nhiệm tuân thủ tất cả luật pháp địa phương, quốc gia và quốc tế áp dụng cho việc sử dụng dịch vụ của bạn. Nếu bất kỳ phần nào của điều khoản này bị coi là không hợp lệ, các phần còn lại vẫn có hiệu lực."
+      }
+    },
+    "privacy": {
+      "intro": {
+        "title": "Giới thiệu",
+        "content": "Chính sách bảo mật này giải thích cách chúng tôi thu thập, sử dụng và bảo vệ thông tin cá nhân của bạn khi sử dụng dịch vụ của chúng tôi."
+      },
+      "dataCollection": {
+        "title": "1. Thông tin thu thập",
+        "content": "Chúng tôi thu thập các thông tin sau: (a) thông tin tài khoản (email, tên đăng nhập), (b) địa chỉ IP và thông tin thiết bị, (c) cookies và dữ liệu phiên, (d) lịch sử xem và tương tác, (e) nội dung bạn đăng tải."
+      },
+      "dataUsage": {
+        "title": "2. Mục đích sử dụng",
+        "content": "Chúng tôi sử dụng thông tin của bạn để: (a) cung cấp và vận hành dịch vụ, (b) cá nhân hóa trải nghiệm người dùng, (c) bảo mật và ngăn chặn gian lận, (d) phân tích và cải thiện dịch vụ, (e) liên lạc với bạn khi cần thiết."
+      },
+      "dataSharing": {
+        "title": "3. Chia sẻ dữ liệu",
+        "content": "Chúng tôi không bán dữ liệu cá nhân của bạn. Chúng tôi chỉ chia sẻ thông tin khi: (a) có yêu cầu pháp lý từ cơ quan chức năng, (b) cần thiết để bảo vệ quyền lợi và an toàn của chúng tôi hoặc người dùng khác, (c) với sự đồng ý của bạn."
+      },
+      "cookies": {
+        "title": "4. Cookie",
+        "content": "Chúng tôi sử dụng cookies để duy trì phiên đăng nhập, lưu tùy chọn và phân tích sử dụng. Xem Chính sách Cookie để biết thêm chi tiết."
+      },
+      "dataSecurity": {
+        "title": "5. Bảo mật dữ liệu",
+        "content": "Chúng tôi áp dụng các biện pháp bảo mật hợp lý để bảo vệ dữ liệu của bạn, bao gồm mã hóa, kiểm soát truy cập và sao lưu định kỳ. Tuy nhiên, không có phương thức truyền tải internet nào an toàn 100%."
+      },
+      "dataRetention": {
+        "title": "6. Lưu trữ dữ liệu",
+        "content": "Dữ liệu của bạn được lưu trữ cho đến khi bạn xóa tài khoản hoặc yêu cầu xóa. Một số dữ liệu có thể được giữ lại theo yêu cầu pháp lý."
+      },
+      "userRights": {
+        "title": "7. Quyền của bạn",
+        "content": "Bạn có quyền: (a) truy cập dữ liệu cá nhân của mình, (b) yêu cầu chỉnh sửa thông tin không chính xác, (c) yêu cầu xóa tài khoản và dữ liệu, (d) rút lại sự đồng ý bất kỳ lúc nào."
+      },
+      "contact": {
+        "title": "8. Liên hệ",
+        "content": "Nếu bạn có câu hỏi về chính sách bảo mật này, vui lòng liên hệ: {email}"
+      }
+    },
+    "cookies": {
+      "intro": {
+        "title": "Cookie là gì?",
+        "content": "Cookie là các tệp văn bản nhỏ được lưu trữ trên thiết bị của bạn khi truy cập website. Chúng giúp website hoạt động hiệu quả hơn và cung cấp trải nghiệm tốt hơn cho bạn."
+      },
+      "ourCookies": {
+        "title": "Cookie chúng tôi sử dụng",
+        "content": "Chúng tôi sử dụng các loại cookie sau: (a) Cookie phiên - duy trì đăng nhập của bạn, (b) Cookie tùy chọn - lưu cài đặt ngôn ngữ và giao diện, (c) Cookie bảo mật - ngăn chặn gian lận và bảo vệ tài khoản, (d) Cookie phân tích - hiểu cách người dùng sử dụng website."
+      },
+      "thirdParty": {
+        "title": "Cookie bên thứ ba",
+        "content": "Chúng tôi có thể sử dụng Google Analytics để phân tích lưu lượng truy cập. Google có thể thu thập thông tin ẩn danh về việc sử dụng website của bạn."
+      },
+      "manage": {
+        "title": "Quản lý Cookie",
+        "content": "Bạn có thể kiểm soát và xóa cookie thông qua cài đặt trình duyệt. Tuy nhiên, việc vô hiệu hóa cookie có thể ảnh hưởng đến chức năng của website, đặc biệt là đăng nhập và các tùy chọn cá nhân."
+      },
+      "contact": {
+        "title": "Liên hệ",
+        "content": "Nếu bạn có câu hỏi về chính sách cookie này, vui lòng liên hệ: {email}"
+      }
+    },
+    "acceptTerms": "Tôi đã đọc và đồng ý với",
+    "termsLink": "Điều khoản Dịch vụ",
+    "and": "và",
+    "privacyLink": "Chính sách Bảo mật",
+    "mustAcceptTerms": "Bạn phải đồng ý với điều khoản để tiếp tục"
   }
 }
