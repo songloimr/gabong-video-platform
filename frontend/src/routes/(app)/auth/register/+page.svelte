@@ -26,6 +26,7 @@
   let email = $state("");
   let password = $state("");
   let confirmPassword = $state("");
+  let acceptTerms = $state(false);
   let formError = $state("");
 
   // Password strength calculation
@@ -57,6 +58,7 @@
     username &&
       password &&
       confirmPassword &&
+      acceptTerms &&
       !usernameError &&
       !passwordError &&
       password === confirmPassword,
@@ -80,6 +82,11 @@
 
     if (password !== confirmPassword) {
       formError = $t("auth.confirmPasswordMismatch");
+      return;
+    }
+
+    if (!acceptTerms) {
+      formError = $t("legal.mustAcceptTerms");
       return;
     }
 
@@ -342,6 +349,37 @@
                   </p>
                 {/if}
               </div>
+            </div>
+
+            <!-- Terms and Privacy Checkbox -->
+            <div class="space-y-1.5 pt-2">
+              <label class="flex items-start gap-3 cursor-pointer group">
+                <input
+                  type="checkbox"
+                  bind:checked={acceptTerms}
+                  class="mt-0.5 w-4 h-4 rounded border-surface-600 bg-surface-900 text-primary-500 focus:ring-primary-500/20 focus:ring-2 cursor-pointer"
+                />
+                <span class="text-xs text-surface-400 leading-relaxed">
+                  {$t("legal.acceptTerms")}
+                  <a
+                    href="/terms"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-primary-400 hover:underline font-bold"
+                  >
+                    {$t("legal.termsLink")}
+                  </a>
+                  {$t("legal.and")}
+                  <a
+                    href="/privacy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="text-primary-400 hover:underline font-bold"
+                  >
+                    {$t("legal.privacyLink")}
+                  </a>
+                </span>
+              </label>
             </div>
           </div>
 

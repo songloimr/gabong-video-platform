@@ -65,6 +65,11 @@ const DEFAULT_SETTINGS: Record<string, any> = {
     // Comment rate limit settings
     comment_cooldown_seconds: 30,
     comment_daily_limit: 30,
+    // Legal settings
+    contact_email: 'admin@gabong.net',
+    terms_updated_at: new Date().toISOString(),
+    privacy_updated_at: new Date().toISOString(),
+    cookies_updated_at: new Date().toISOString(),
 };
 
 @Injectable()

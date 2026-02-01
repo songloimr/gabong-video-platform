@@ -35,4 +35,9 @@ export class SiteSettingsResponse {
     daily_upload_limit?: number;
     comment_cooldown_seconds?: number;
     comment_daily_limit?: number;
+    // Legal settings
+    contact_email?: string;
+    terms_updated_at?: string;
+    privacy_updated_at?: string;
+    cookies_updated_at?: string;
 }
