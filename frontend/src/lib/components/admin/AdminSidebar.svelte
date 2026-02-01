@@ -14,6 +14,7 @@
         Settings,
         Megaphone,
         Bell,
+        Activity,
     } from "@lucide/svelte";
 
     let { isOpen = $bindable(false) } = $props();
@@ -49,6 +50,11 @@
             label: "System",
             items: [
                 { href: "/admin/settings", icon: Settings, label: "Settings" },
+                {
+                    href: "/admin/metrics",
+                    icon: Activity,
+                    label: "System Metrics",
+                },
                 {
                     href: "/admin/announcements",
                     icon: Megaphone,
