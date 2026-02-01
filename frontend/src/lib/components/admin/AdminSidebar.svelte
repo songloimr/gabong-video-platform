@@ -15,6 +15,7 @@
         Megaphone,
         Bell,
         Activity,
+        MessageSquareText,
     } from "@lucide/svelte";
 
     let { isOpen = $bindable(false) } = $props();
@@ -54,6 +55,11 @@
                     href: "/admin/metrics",
                     icon: Activity,
                     label: "System Metrics",
+                },
+                {
+                    href: "/admin/feedbacks",
+                    icon: MessageSquareText,
+                    label: "Feedbacks",
                 },
                 {
                     href: "/admin/announcements",
