@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { drizzle } from 'drizzle-orm/node-postgres';
 import { eq } from 'drizzle-orm';
 import { Pool } from 'pg';
@@ -57,6 +58,8 @@ async function seed() {
     await db.delete(schema.videos);
     await db.delete(schema.categories);
     await db.delete(schema.bannerAds);
+    await db.delete(schema.announcements);
+    await db.delete(schema.siteSettings);
     await db.delete(schema.refreshTokens);
     await db.delete(schema.users);
 
@@ -403,6 +406,53 @@ async function seed() {
     console.log(`Inserted ${uniqueWatchLater.length} unique watch later items`);
 
     // ============================================
+    // SITE SETTINGS
+    // ============================================
+    console.log('Seeding site settings...');
+    const siteSettingsData = [
+      // Branding
+      { key: 'site_name', value: 'Gabong.net' },
+      { key: 'site_tagline', value: 'Video Streaming Platform' },
+      { key: 'site_url', value: 'https://gabong.net' },
+      // General
+      { key: 'age_verification_enabled', value: false },
+      { key: 'google_analytics_code', value: '' },
+      { key: 'custom_head_html', value: '' },
+      { key: 'custom_body_html', value: '' },
+      // Upload
+      { key: 'max_upload_size_mb', value: 500 },
+      { key: 'max_video_duration', value: 900 },
+      { key: 'max_files_per_upload', value: 5 },
+      { key: 'allowed_video_formats', value: ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime', 'video/x-msvideo'] },
+      // R2 Storage
+      { key: 'r2_account_id', value: '' },
+      { key: 'r2_access_key_id', value: '' },
+      { key: 'r2_secret_access_key', value: '' },
+      { key: 'r2_bucket', value: '' },
+      // FFmpeg
+      { key: 'ffmpeg_path', value: '' },
+      { key: 'ffmpeg_max_processes', value: 1 },
+      { key: 'ffmpeg_preset', value: 'medium' },
+      // Cache
+      { key: 'cache_ttl_minutes', value: 15 },
+      // Rate limits
+      { key: 'global_rate_limit_requests', value: 15 },
+      { key: 'global_rate_limit_seconds', value: 60 },
+      { key: 'new_account_wait_hours', value: 24 },
+      { key: 'daily_upload_limit', value: 2 },
+      { key: 'comment_cooldown_seconds', value: 30 },
+      { key: 'comment_daily_limit', value: 30 },
+      // Legal
+      { key: 'contact_email', value: 'admin@gabong.net' },
+      { key: 'terms_updated_at', value: new Date().toISOString() },
+      { key: 'privacy_updated_at', value: new Date().toISOString() },
+      { key: 'cookies_updated_at', value: new Date().toISOString() },
+    ];
+
+    await db.insert(schema.siteSettings).values(siteSettingsData);
+    console.log(`Inserted ${siteSettingsData.length} site settings`);
+
+    // ============================================
     // BANNER ADS
     // ============================================
     console.log('Seeding banner ads...');
@@ -441,6 +491,7 @@ async function seed() {
     console.log(`   - Playlists: ${insertedPlaylists.length}`);
     console.log(`   - Total Comments: ${commentsData.length + repliesData.length}`);
     console.log(`   - Unique Likes: ${uniqueLikes.length}`);
+    console.log(`   - Site Settings: ${siteSettingsData.length}`);
 
     console.log('\nTest Accounts:');
     console.log('   Admin: admin@gabong.net / password123');

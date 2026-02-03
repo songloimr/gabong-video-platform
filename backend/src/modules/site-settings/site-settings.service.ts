@@ -28,50 +28,6 @@ export interface VideoFormatConfig {
     allowedExtensions: string[];
 }
 
-const DEFAULT_SETTINGS: Record<string, any> = {
-    // General settings
-    age_verification_enabled: false,
-    google_analytics_code: '',
-    custom_head_html: '',
-    custom_body_html: '',
-    // Upload settings
-    max_upload_size_mb: 500,
-    max_video_duration: 900,
-    max_files_per_upload: 5,
-    allowed_video_formats: [
-        'video/mp4',
-        'video/webm',
-        'video/ogg',
-        'video/quicktime',
-        'video/x-msvideo',
-    ],
-    // R2 Storage settings
-    r2_account_id: '',
-    r2_access_key_id: '',
-    r2_secret_access_key: '',
-    r2_bucket: '',
-    // FFmpeg settings
-    ffmpeg_path: '',
-    ffmpeg_max_processes: 1,
-    ffmpeg_preset: 'medium',
-    // Cache settings
-    cache_ttl_minutes: 15,
-    // Rate limit settings
-    global_rate_limit_requests: 15,
-    global_rate_limit_seconds: 60,
-    // Upload restriction settings
-    new_account_wait_hours: 24,
-    daily_upload_limit: 2,
-    // Comment rate limit settings
-    comment_cooldown_seconds: 30,
-    comment_daily_limit: 30,
-    // Legal settings
-    contact_email: 'admin@gabong.net',
-    terms_updated_at: new Date().toISOString(),
-    privacy_updated_at: new Date().toISOString(),
-    cookies_updated_at: new Date().toISOString(),
-};
-
 @Injectable()
 export class SiteSettingsService implements OnModuleInit {
     private readonly logger = new Logger(SiteSettingsService.name);
@@ -119,11 +75,6 @@ export class SiteSettingsService implements OnModuleInit {
             this.logger.error(`Error getting setting ${key}: ${error.message}`);
         }
 
-        // Return default value if available
-        if (key in DEFAULT_SETTINGS) {
-            return DEFAULT_SETTINGS[key] as T;
-        }
-
         return null;
     }
 
@@ -135,29 +86,22 @@ export class SiteSettingsService implements OnModuleInit {
                 // Filter by keys if provided
                 const results = await query;
                 const filtered = results.filter((s) => keys.includes(s.key));
-                const dbSettings = this.mapToObject(filtered);
-
-                // Merge with defaults for requested keys
-                const result: Record<string, any> = {};
-                for (const key of keys) {
-                    result[key] = dbSettings[key] ?? DEFAULT_SETTINGS[key] ?? null;
-                }
-                return result;
+                return this.mapToObject(filtered);
             }
 
             const results = await query;
-            const dbSettings = this.mapToObject(results);
-
-            // Merge database settings with defaults
-            return { ...DEFAULT_SETTINGS, ...dbSettings };
+            return this.mapToObject(results);
         } catch (error) {
             this.logger.error(`Error getting settings: ${error.message}`);
-            return { ...DEFAULT_SETTINGS };
+            return {};
         }
     }
 
     async getAllPublicSettings(): Promise<SiteSettingsResponse> {
         const publicKeys = [
+            'site_name',
+            'site_tagline',
+            'site_url',
             'age_verification_enabled',
             'google_analytics_code',
             'custom_head_html',
@@ -165,6 +109,10 @@ export class SiteSettingsService implements OnModuleInit {
             'max_upload_size_mb',
             'max_video_duration',
             'allowed_video_formats',
+            'contact_email',
+            'terms_updated_at',
+            'privacy_updated_at',
+            'cookies_updated_at',
         ];
 
         const settings = await this.getSettings(publicKeys);
@@ -226,7 +174,7 @@ export class SiteSettingsService implements OnModuleInit {
     // Helper method for video format configuration
     async getVideoFormatConfig(): Promise<VideoFormatConfig> {
         const formats = await this.getSetting<string[]>('allowed_video_formats');
-        const allowedMimeTypes = formats ?? DEFAULT_SETTINGS.allowed_video_formats;
+        const allowedMimeTypes = formats ?? ['video/mp4', 'video/webm', 'video/ogg', 'video/quicktime', 'video/x-msvideo'];
 
         // Map MIME types to extensions
         const mimeToExt: Record<string, string> = {

@@ -3,8 +3,8 @@ import { eq, desc } from 'drizzle-orm';
 import { DrizzleService } from '../../database/drizzle.service';
 import { videos, categories, playlists } from '../../database/schema';
 import { StorageService } from '../storage/storage.service';
+import { SiteSettingsService } from '../site-settings/site-settings.service';
 
-const SITE_URL = 'https://gabong.net';
 const SITEMAP_R2_PREFIX = 'sitemaps';
 
 interface SitemapUrl {
@@ -33,6 +33,7 @@ export class SitemapService {
   constructor(
     private readonly drizzle: DrizzleService,
     private readonly storage: StorageService,
+    private readonly siteSettings: SiteSettingsService,
   ) {}
 
   /**
@@ -40,6 +41,8 @@ export class SitemapService {
    */
   async generatePagesSitemap(): Promise<string> {
     this.logger.log('Generating pages sitemap...');
+
+    const siteUrl = await this.siteSettings.getSetting<string>('site_url') || '';
 
     const urls: SitemapUrl[] = [
       { loc: '/', changefreq: 'daily', priority: 1.0 },
@@ -77,7 +80,7 @@ export class SitemapService {
       });
     }
 
-    const xml = this.buildSitemapXml(urls);
+    const xml = this.buildSitemapXml(urls, siteUrl);
     const key = `${SITEMAP_R2_PREFIX}/sitemap.xml`;
     
     await this.storage.uploadFile(Buffer.from(xml, 'utf-8'), key, 'application/xml');
@@ -92,10 +95,15 @@ export class SitemapService {
   async generateVideosSitemap(): Promise<string> {
     this.logger.log('Generating videos sitemap...');
 
+    // Get site settings
+    const siteUrl = await this.siteSettings.getSetting<string>('site_url') || '';
+    const siteName = await this.siteSettings.getSetting<string>('site_name') || '';
+
     const videosData = await this.drizzle.db
       .select({
-        slug: videos.slug,
+        id: videos.id,
         title: videos.title,
+        slug: videos.slug,
         description: videos.description,
         thumbnail_url: videos.thumbnail_url,
         duration: videos.duration,
@@ -113,17 +121,17 @@ export class SitemapService {
       changefreq: 'weekly' as const,
       priority: 0.8,
       video: {
-        thumbnail_loc: video.thumbnail_url || `${SITE_URL}/og-default.jpg`,
+        thumbnail_loc: video.thumbnail_url || `${siteUrl}/og-default.jpg`,
         title: video.title,
-        description: video.description || `Xem ${video.title} trên Gabong`,
-        player_loc: `${SITE_URL}/videos/${video.slug}`,
+        description: video.description || `Xem ${video.title} trên ${siteName}`,
+        player_loc: `${siteUrl}/videos/${video.slug}`,
         duration: video.duration,
         publication_date: video.created_at?.toISOString(),
         view_count: video.views,
       },
     }));
 
-    const xml = this.buildVideoSitemapXml(entries);
+    const xml = this.buildVideoSitemapXml(entries, siteUrl);
     const key = `${SITEMAP_R2_PREFIX}/sitemap-videos.xml`;
     
     await this.storage.uploadFile(Buffer.from(xml, 'utf-8'), key, 'application/xml');
@@ -168,10 +176,10 @@ export class SitemapService {
   /**
    * Build standard sitemap XML
    */
-  private buildSitemapXml(urls: SitemapUrl[]): string {
+  private buildSitemapXml(urls: SitemapUrl[], siteUrl: string): string {
     const urlEntries = urls
       .map((url) => {
-        let entry = `  <url>\n    <loc>${SITE_URL}${url.loc}</loc>`;
+        let entry = `  <url>\n    <loc>${siteUrl}${url.loc}</loc>`;
         if (url.lastmod) entry += `\n    <lastmod>${url.lastmod}</lastmod>`;
         if (url.changefreq) entry += `\n    <changefreq>${url.changefreq}</changefreq>`;
         if (url.priority !== undefined) entry += `\n    <priority>${url.priority}</priority>`;
@@ -189,11 +197,11 @@ ${urlEntries}
   /**
    * Build video sitemap XML with video-specific tags
    */
-  private buildVideoSitemapXml(entries: VideoSitemapEntry[]): string {
+  private buildVideoSitemapXml(entries: VideoSitemapEntry[], siteUrl: string): string {
     const urlEntries = entries
       .map((entry) => {
         let xml = `  <url>
-    <loc>${SITE_URL}${entry.loc}</loc>`;
+    <loc>${siteUrl}${entry.loc}</loc>`;
         
         if (entry.lastmod) xml += `\n    <lastmod>${entry.lastmod}</lastmod>`;
         if (entry.changefreq) xml += `\n    <changefreq>${entry.changefreq}</changefreq>`;

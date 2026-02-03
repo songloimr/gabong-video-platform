@@ -2,11 +2,15 @@ import { Controller, Get, Res, HttpStatus } from '@nestjs/common';
 import { Response } from 'express';
 import { SkipThrottle } from '@nestjs/throttler';
 import { SitemapService } from './sitemap.service';
+import { SiteSettingsService } from '../site-settings/site-settings.service';
 
 @Controller('sitemap')
 @SkipThrottle()
 export class SitemapController {
-  constructor(private readonly sitemapService: SitemapService) {}
+  constructor(
+    private readonly sitemapService: SitemapService,
+    private readonly siteSettings: SiteSettingsService,
+  ) {}
 
   /**
    * Generate sitemaps on demand (for admin/manual trigger)
@@ -72,11 +76,13 @@ export class SitemapController {
     // For now, we'll let the service handle the full generation
     await this.sitemapService.generatePagesSitemap();
     
+    const siteUrl = await this.siteSettings.getSetting<string>('site_url') || '';
+    
     // Return a redirect or proxy response in production
     // For now, generate inline
     return this.sitemapService['buildSitemapXml']([
       { loc: '/', changefreq: 'daily', priority: 1.0 },
-    ]);
+    ], siteUrl);
   }
 
   private async generateVideosSitemapContent(): Promise<string> {
