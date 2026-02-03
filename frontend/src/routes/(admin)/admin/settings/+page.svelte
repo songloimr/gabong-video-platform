@@ -12,14 +12,13 @@
         useTestR2Connection,
     } from "$lib/api/mutations/site-settings";
     import {
-        Settings,
-        Upload,
-        HardDrive,
-        Cog,
-        Zap,
-        Film,
-        Scale,
-    } from "@lucide/svelte";
+		Settings,
+		Upload,
+		HardDrive,
+		Cog,
+		Zap,
+		Film,
+	} from "@lucide/svelte";
 
     const settingsQuery = useAdminSiteSettings();
     const updateMutation = useUpdateSiteSettings();
@@ -89,7 +88,7 @@
 </script>
 
 <svelte:head>
-    <title>Settings - Gabong Admin</title>
+    <title>Settings - Admin Panel</title>
 </svelte:head>
 
 <div class="space-y-6">
@@ -536,86 +535,6 @@
                                 >Very Slow (highest quality)</option
                             >
                         </select>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Legal Settings -->
-            <div
-                class="bg-surface-900/50 border border-surface-700/50 rounded-sm p-6 space-y-6"
-            >
-                <div
-                    class="flex items-center gap-2.5 border-b border-surface-700/50 pb-4"
-                >
-                    <Scale size={18} class="text-tertiary-400" strokeWidth={2.5} />
-                    <h2 class="text-sm font-black text-surface-100">
-                        Legal Settings
-                    </h2>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div class="space-y-2 md:col-span-2">
-                        <label
-                            class="block text-xs font-bold text-surface-200"
-                            for="contact_email"
-                        >
-                            Contact Email (for legal inquiries)
-                        </label>
-                        <input
-                            id="contact_email"
-                            type="email"
-                            bind:value={formData.contact_email}
-                            placeholder="admin@gabong.net"
-                            class="w-full px-3 py-2 bg-surface-800 border border-surface-700 rounded-sm text-xs font-mono text-surface-100 placeholder-surface-500 focus:border-primary-500 focus:ring-1 focus:ring-primary-500/20"
-                        />
-                        <p class="text-xs text-surface-500">
-                            This email will be displayed on Terms of Service, Privacy Policy, and Cookie Policy pages.
-                        </p>
-                    </div>
-
-                    <div class="space-y-2">
-                        <label
-                            class="block text-xs font-bold text-surface-200"
-                            for="terms_updated_at"
-                        >
-                            Terms of Service Updated
-                        </label>
-                        <input
-                            id="terms_updated_at"
-                            type="date"
-                            bind:value={formData.terms_updated_at}
-                            class="w-full px-3 py-2 bg-surface-800 border border-surface-700 rounded-sm text-xs font-bold text-surface-100 focus:border-primary-500 focus:ring-1 focus:ring-primary-500/20"
-                        />
-                    </div>
-
-                    <div class="space-y-2">
-                        <label
-                            class="block text-xs font-bold text-surface-200"
-                            for="privacy_updated_at"
-                        >
-                            Privacy Policy Updated
-                        </label>
-                        <input
-                            id="privacy_updated_at"
-                            type="date"
-                            bind:value={formData.privacy_updated_at}
-                            class="w-full px-3 py-2 bg-surface-800 border border-surface-700 rounded-sm text-xs font-bold text-surface-100 focus:border-primary-500 focus:ring-1 focus:ring-primary-500/20"
-                        />
-                    </div>
-
-                    <div class="space-y-2">
-                        <label
-                            class="block text-xs font-bold text-surface-200"
-                            for="cookies_updated_at"
-                        >
-                            Cookie Policy Updated
-                        </label>
-                        <input
-                            id="cookies_updated_at"
-                            type="date"
-                            bind:value={formData.cookies_updated_at}
-                            class="w-full px-3 py-2 bg-surface-800 border border-surface-700 rounded-sm text-xs font-bold text-surface-100 focus:border-primary-500 focus:ring-1 focus:ring-primary-500/20"
-                        />
                     </div>
                 </div>
             </div>

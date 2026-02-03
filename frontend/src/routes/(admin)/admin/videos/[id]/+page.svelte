@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
   import { goto } from "$app/navigation";
   import { createQuery, createMutation, useQueryClient } from "@tanstack/svelte-query";
   import { api } from "$lib/api/client";
@@ -14,8 +14,8 @@
     Captions,
     Bookmark,
     Languages,
-    PlayCircle,
-    AlertTriangle,
+    CirclePlay,
+    TriangleAlert,
     X,
   } from "@lucide/svelte";
   import Modal from "$lib/components/ui/Modal.svelte";
@@ -23,7 +23,7 @@
   let videoId = $state("");
   
   $effect(() => {
-    videoId = $page.params.id || "";
+    videoId = page.params.id || "";
   });
 
   const queryClient = useQueryClient();
@@ -432,7 +432,7 @@
 </script>
 
 <svelte:head>
-  <title>Subtitles & Markups - Gabong Admin</title>
+  <title>Subtitles & Markups - Admin Panel</title>
 </svelte:head>
 
 <div class="space-y-4">
@@ -528,7 +528,7 @@
           {/each}
         {:else if markupsQuery.data?.length === 0}
           <div class="flex flex-col items-center justify-center py-8 text-surface-400">
-            <PlayCircle class="h-8 w-8 text-surface-500 mb-2" />
+            <CirclePlay class="h-8 w-8 text-surface-500 mb-2" />
             <p class="text-xs font-bold">No markups yet</p>
           </div>
         {:else}
@@ -762,7 +762,7 @@
 <Modal bind:open={showDeleteModal} title="Confirm Delete" size="sm">
   <div class="space-y-4">
     <div class="flex items-center gap-3 p-3 bg-red-500/10 border border-red-500/20 rounded-sm">
-      <AlertTriangle class="h-5 w-5 text-red-400 flex-shrink-0" />
+      <TriangleAlert class="h-5 w-5 text-red-400 flex-shrink-0" />
       <p class="text-sm text-surface-300">
         Are you sure you want to delete this <span class="font-bold text-surface-100">{deleteTarget?.type}</span>? This action cannot be undone.
       </p>

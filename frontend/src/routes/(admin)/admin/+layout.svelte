@@ -23,7 +23,7 @@
         </div>
         <span
           class="text-xs font-black uppercase tracking-widest text-surface-100"
-          >Gabong Admin</span
+          >Admin Panel</span
         >
       </div>
       <button

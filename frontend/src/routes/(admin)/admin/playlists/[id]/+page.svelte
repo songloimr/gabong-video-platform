@@ -111,7 +111,7 @@
 {/snippet}
 
 <svelte:head>
-	<title>Manage Playlist - Gabong Admin</title>
+	<title>Manage Playlist - Admin Panel</title>
 </svelte:head>
 
 <div class="space-y-4">

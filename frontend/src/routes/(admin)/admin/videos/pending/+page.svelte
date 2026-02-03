@@ -1,6 +1,5 @@
 <script lang="ts">
-	import { t } from "svelte-i18n";
-	import { page } from "$app/stores";
+	import { page } from "$app/state";
 	import { goto } from "$app/navigation";
 	import { useAdminVideos } from "$lib/api/queries/videos";
 	import { useApproveVideo, useRejectVideo } from "$lib/api/mutations/admin";
@@ -10,12 +9,6 @@
 	import VideoPreviewModal from "$lib/components/admin/VideoPreviewModal.svelte";
 	import { getAvatarUrl } from "$lib/utils/formatters";
 	import {
-		CheckCircle,
-		XCircle,
-		Trash2,
-		Search,
-		AlertCircle,
-		ExternalLink,
 		Clock,
 		Check,
 		X,
@@ -26,7 +19,7 @@
     import { PUBLIC_CDN_URL } from "$env/static/public";
 
 	const currentPage = $derived(
-		Math.max(1, Number($page.url.searchParams.get("page") || 1)),
+		Math.max(1, Number(page.url.searchParams.get("page") || 1)),
 	);
 
 	const videosQuery = useAdminVideos(() => ({
@@ -49,7 +42,7 @@
 	let videoForPreview: Video | null = $state(null);
 
 	function handlePageChange(newPage: number) {
-		const params = new URLSearchParams($page.url.searchParams);
+		const params = new URLSearchParams(page.url.searchParams);
 		params.set("page", String(newPage));
 		goto(`?${params.toString()}`);
 	}
@@ -147,7 +140,7 @@
 {/snippet}
 
 <svelte:head>
-	<title>Pending Approval - Gabong Admin</title>
+	<title>Pending Approval - Admin Panel</title>
 </svelte:head>
 
 <div class="space-y-4">

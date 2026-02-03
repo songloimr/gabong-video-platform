@@ -184,7 +184,7 @@
 {/snippet}
 
 <svelte:head>
-	<title>Playlists - Gabong Admin</title>
+	<title>Playlists - Admin Panel</title>
 </svelte:head>
 
 <div class="space-y-4">

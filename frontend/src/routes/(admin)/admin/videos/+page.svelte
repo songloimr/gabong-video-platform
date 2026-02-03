@@ -289,7 +289,7 @@
 {/snippet}
 
 <svelte:head>
-	<title>Videos - Gabong Admin</title>
+	<title>Videos - Admin Panel</title>
 </svelte:head>
 
 <div class="space-y-4">

@@ -1,5 +1,6 @@
 <script lang="ts">
   import { t } from "$lib/stores/i18n";
+  import { siteSettings } from "$lib/stores/site-settings.svelte";
   import {
     ThumbsUp,
     Calendar,
@@ -83,7 +84,7 @@
       </button>
 
       <a
-        href="mailto:admin@gabong.net?subject=Report Video: {video.title}&body=I would like to report this video: {browser
+        href="mailto:{siteSettings.contactEmail}?subject=Report Video: {video.title}&body=I would like to report this video: {browser
           ? window.location.href
           : ''}"
         class="flex items-center justify-center gap-1 py-2 rounded-md bg-surface-800 text-surface-300 hover:bg-red-900/40 hover:text-red-400 transition-all"

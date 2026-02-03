@@ -120,7 +120,7 @@
 </script>
 
 <svelte:head>
-    <title>Announcements - Gabong Admin</title>
+    <title>Announcements - Admin Panel</title>
 </svelte:head>
 
 <div class="space-y-6">

@@ -52,7 +52,7 @@
 </script>
 
 <svelte:head>
-    <title>Mass Notifications - Gabong Admin</title>
+    <title>Mass Notifications - Admin Panel</title>
 </svelte:head>
 
 <div class="space-y-6 max-w-3xl">

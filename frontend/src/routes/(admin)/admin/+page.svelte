@@ -14,7 +14,7 @@
 </script>
 
 <svelte:head>
-    <title>Dashboard - Gabong Admin</title>
+    <title>Dashboard - Admin Panel</title>
 </svelte:head>
 
 <div class="space-y-6">

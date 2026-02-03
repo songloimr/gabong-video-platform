@@ -184,7 +184,7 @@
 {/snippet}
 
 <svelte:head>
-	<title>Users - Gabong Admin</title>
+	<title>Users - Admin Panel</title>
 </svelte:head>
 
 <div class="space-y-4">

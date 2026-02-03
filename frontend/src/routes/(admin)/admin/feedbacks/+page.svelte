@@ -66,7 +66,7 @@
 </script>
 
 <svelte:head>
-    <title>Feedbacks - Gabong Admin</title>
+    <title>Feedbacks - Admin Panel</title>
 </svelte:head>
 
 <div class="space-y-6">

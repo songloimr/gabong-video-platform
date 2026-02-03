@@ -133,7 +133,7 @@
 {/snippet}
 
 <svelte:head>
-	<title>Categories - Gabong Admin</title>
+	<title>Categories - Admin Panel</title>
 </svelte:head>
 
 <div class="space-y-4">
