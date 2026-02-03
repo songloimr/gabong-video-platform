@@ -1,5 +1,5 @@
-export const SITE_NAME = 'Gabong';
-export const SITE_DESCRIPTION = 'Video streaming platform';
+// Site branding - now dynamic via site-settings store
+// Use: import { siteSettings } from '$lib/stores/site-settings.svelte';
 
 export const MAX_UPLOAD_FILES = 5;
 export const MAX_UPLOAD_SIZE = 500 * 1024 * 1024; // 500MB

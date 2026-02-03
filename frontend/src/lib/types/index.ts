@@ -195,6 +195,11 @@ export interface VideoListParams {
 }
 
 export interface SiteSettings {
+    // Branding settings
+    site_name: string;
+    site_tagline?: string;
+    site_url: string;
+    // General settings
     age_verification_enabled?: boolean;
     google_analytics_code?: string;
     custom_head_html?: string;
