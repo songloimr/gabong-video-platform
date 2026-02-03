@@ -6,23 +6,20 @@
   import Seo from "$lib/components/Seo.svelte";
   import { t } from "$lib/stores/i18n";
   import { goto } from "$app/navigation";
-  import { page } from "$app/stores";
-  import { Filter, Clock, Calendar, FolderOpen, Rss, LayoutGrid } from "@lucide/svelte";
+  import { page } from "$app/state";
+  import { Funnel, Calendar, FolderOpen, LayoutGrid } from "@lucide/svelte";
   import type { PageData } from "./$types";
   import { generateWebsiteJsonLd } from "$lib/utils/seo";
 
   let { data }: { data: PageData } = $props();
 
-  const currentDuration = $derived(
-    $page.url.searchParams.get("duration") || "all",
-  );
-  const currentYear = $derived($page.url.searchParams.get("year") || "all");
+  const currentYear = $derived(page.url.searchParams.get("year") || "all");
   const currentCategory = $derived(
-    $page.url.searchParams.get("category") || "all",
+    page.url.searchParams.get("category") || "all",
   );
 
   function updateFilters(key: string, value: string) {
-    const params = new URLSearchParams($page.url.searchParams);
+    const params = new URLSearchParams(page.url.searchParams);
 
     if (value === "all") {
       params.delete(key);
@@ -36,7 +33,7 @@
   }
 
   function handlePageChange(newPage: number) {
-    const params = new URLSearchParams($page.url.searchParams);
+    const params = new URLSearchParams(page.url.searchParams);
     if (newPage === 1) {
       params.delete("page");
     } else {
@@ -58,7 +55,7 @@
 <Seo
   title={$t("common.home")}
   canonical="/"
-  jsonLd={generateWebsiteJsonLd()}
+  jsonLd={generateWebsiteJsonLd(data.siteSettings.site_url, data.siteSettings.site_name)}
   {pagination}
 />
 
@@ -79,7 +76,7 @@
       <div
         class="flex items-center gap-2 text-surface-400 text-xs font-display font-semibold uppercase tracking-wider"
       >
-        <Filter size={14} strokeWidth={2.5} />
+        <Funnel size={14} strokeWidth={2.5} />
         <span>{$t("common.filters")}</span>
       </div>
 
@@ -181,7 +178,7 @@
     <div class="mt-8">
       <QueryError
         error={new Error($t(data.error))}
-        reset={() => goto($page.url.pathname)}
+        reset={() => goto(page.url.pathname)}
       />
     </div>
   {:else if data.videos}

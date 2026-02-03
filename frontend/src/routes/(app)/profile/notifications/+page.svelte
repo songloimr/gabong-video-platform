@@ -2,6 +2,7 @@
     import { t } from "$lib/stores/i18n";
     import { Bell } from "@lucide/svelte";
     import { useNotifications } from "$lib/api/queries/notifications";
+    import Seo from "$lib/components/Seo.svelte";
     import {
         useMarkAllAsRead,
         useDeleteNotification,
@@ -54,9 +55,7 @@
     }
 </script>
 
-<svelte:head>
-    <title>{$t("notifications.title")} - Gabong</title>
-</svelte:head>
+<Seo title={$t("notifications.title")} />
 
 <div class="max-w-4xl mx-auto space-y-6 px-4 py-8">
     <!-- Header -->

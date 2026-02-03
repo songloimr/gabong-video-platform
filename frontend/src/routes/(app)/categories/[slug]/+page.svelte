@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { t } from "$lib/stores/i18n";
 	import { goto } from "$app/navigation";
-	import { page } from "$app/stores";
+	import { page } from "$app/state";
 	import VideoGrid from "$lib/components/video/VideoGrid.svelte";
 	import QueryError from "$lib/components/ui/QueryError.svelte";
 	import AppPagination from "$lib/components/ui/AppPagination.svelte";
@@ -13,7 +13,7 @@
 	let { data }: { data: PageData } = $props();
 
 	function handlePageChange(newPage: number) {
-		const params = new URLSearchParams($page.url.searchParams);
+		const params = new URLSearchParams(page.url.searchParams);
 		if (newPage === 1) {
 			params.delete("page");
 		} else {
@@ -29,7 +29,7 @@
 	const canonical = $derived(`/categories/${data.slug}`);
 	const description = $derived(
 		truncateDescription(
-			`Xem các video ${categoryName} hay nhất trên Gabong. Cập nhật liên tục các video mới nhất.`
+			`Xem các video ${categoryName} hay nhất. Cập nhật liên tục các video mới nhất.`
 		)
 	);
 
@@ -43,12 +43,14 @@
 	});
 
 	const jsonLd = $derived.by(() => {
+		if (!data.siteSettings?.site_url) return undefined;
+		
 		const schemas: object[] = [
 			generateBreadcrumbJsonLd([
 				{ name: 'Trang chủ', url: '/' },
 				{ name: 'Danh mục', url: '/categories' },
 				{ name: categoryName, url: canonical }
-			])
+			], data.siteSettings.site_url)
 		];
 		
 		if (data.videos?.data?.length) {
@@ -56,7 +58,8 @@
 				generateVideoListJsonLd(
 					data.videos.data.map(v => ({ id: v.id, slug: v.slug, title: v.title, thumbnail_url: v.thumbnail_url })),
 					categoryName,
-					canonical
+					canonical,
+					data.siteSettings.site_url
 				)
 			);
 		}
@@ -73,7 +76,7 @@
 	{pagination}
 />
 
-<div class="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+<div class="max-w-480 mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
 	<div class="flex flex-col gap-6 sm:gap-10 mb-8 sm:mb-12">
 		<div class="space-y-1">
 			<div
@@ -100,7 +103,7 @@
 	{#if data.error}
 		<QueryError
 			error={new Error($t(data.error))}
-			reset={() => goto($page.url.pathname)}
+			reset={() => goto(page.url.pathname)}
 		/>
 	{:else if data.videos && data.videos.data.length > 0}
 		<VideoGrid videos={data.videos.data} />

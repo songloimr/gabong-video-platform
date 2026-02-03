@@ -4,15 +4,14 @@
   import { useUser } from "$lib/api/queries/users";
   import { auth } from "$lib/stores/auth.svelte";
   import { getAvatarUrl } from "$lib/utils/formatters";
+  import Seo from "$lib/components/Seo.svelte";
 
   const userQuery = useUser(page.params.username!);
 
   const isOwnProfile = $derived(auth.user?.username === page.params.username!);
 </script>
 
-<svelte:head>
-  <title>{userQuery.data?.username || $t("common.profile")} - Gabong</title>
-</svelte:head>
+<Seo title={userQuery.data?.username || $t("common.profile")} />
 
 <div class="container mx-auto px-4 py-6 md:py-8">
   {#if userQuery.isLoading}

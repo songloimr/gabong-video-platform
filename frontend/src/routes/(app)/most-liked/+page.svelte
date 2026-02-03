@@ -1,19 +1,19 @@
 <script lang="ts">
 	import { t } from "$lib/stores/i18n";
 	import { goto } from "$app/navigation";
-	import { page } from "$app/stores";
+	import { page } from "$app/state";
 	import VideoGrid from "$lib/components/video/VideoGrid.svelte";
 	import QueryError from "$lib/components/ui/QueryError.svelte";
 	import AppPagination from "$lib/components/ui/AppPagination.svelte";
 	import Seo from "$lib/components/Seo.svelte";
-	import { PlaySquare, Filter } from "@lucide/svelte";
+	import { SquarePlay, Funnel } from "@lucide/svelte";
 	import type { PageData } from "./$types";
 	import { generateVideoListJsonLd } from "$lib/utils/seo";
 
 	let { data }: { data: PageData } = $props();
 
 	function handlePageChange(newPage: number) {
-		const params = new URLSearchParams($page.url.searchParams);
+		const params = new URLSearchParams(page.url.searchParams);
 		if (newPage === 1) {
 			params.delete("page");
 		} else {
@@ -32,11 +32,12 @@
 	});
 
 	const jsonLd = $derived.by(() => {
-		if (!data.videos?.data?.length) return undefined;
+		if (!data.videos?.data?.length || !data.siteSettings?.site_url) return undefined;
 		return generateVideoListJsonLd(
 			data.videos.data.map(v => ({ id: v.id, slug: v.slug, title: v.title, thumbnail_url: v.thumbnail_url })),
 			'Video được yêu thích nhất',
-			'/most-liked'
+			'/most-liked',
+			data.siteSettings.site_url
 		);
 	});
 </script>
@@ -72,7 +73,7 @@
 			<button
 				class="flex items-center gap-2 px-4 py-2 bg-surface-800 rounded-lg text-[10px] font-black uppercase tracking-widest hover:bg-surface-700 transition-all border border-surface-700/50"
 			>
-				<Filter size={14} />
+				<Funnel size={14} />
 				<span>{$t("common.refine")}</span>
 			</button>
 		</div>
@@ -81,7 +82,7 @@
 	{#if data.error}
 		<QueryError
 			error={new Error($t(data.error))}
-			reset={() => goto($page.url.pathname)}
+			reset={() => goto(page.url.pathname)}
 		/>
 	{:else if data.videos && data.videos.data.length > 0}
 		<VideoGrid videos={data.videos.data} />
@@ -101,7 +102,7 @@
 				<div
 					class="w-16 h-16 bg-surface-900 rounded-full flex items-center justify-center mx-auto mb-4"
 				>
-					<PlaySquare size={28} class="text-surface-400" />
+					<SquarePlay size={28} class="text-surface-400" />
 				</div>
 				<p class="text-lg font-black text-surface-100">
 					{$t("common.noResults")}

@@ -1,16 +1,17 @@
 <script lang="ts">
     import { t } from "$lib/stores/i18n";
     import { goto } from "$app/navigation";
-    import { page } from "$app/stores";
+    import { page } from "$app/state";
     import QueryError from "$lib/components/ui/QueryError.svelte";
     import AppPagination from "$lib/components/ui/AppPagination.svelte";
+    import Seo from "$lib/components/Seo.svelte";
     import { Library } from "@lucide/svelte";
     import type { PageData } from "./$types";
 
     let { data }: { data: PageData } = $props();
 
     function handlePageChange(newPage: number) {
-      const params = new URLSearchParams($page.url.searchParams);
+      const params = new URLSearchParams(page.url.searchParams);
       if (newPage === 1) {
         params.delete("page");
       } else {
@@ -18,23 +19,23 @@
       }
       goto(`?${params.toString()}`);
     }
+
+    const pagination = $derived.by(() => {
+      if (!data.playlists?.pagination) return undefined;
+      const p = data.playlists.pagination;
+      return {
+        prev: p.page > 1 ? `?page=${p.page - 1}` : undefined,
+        next: p.has_next ? `?page=${p.page + 1}` : undefined,
+      };
+    });
 </script>
 
-<svelte:head>
-  <title>{$t("common.playlists")} - Gabong</title>
-  <meta
-    name="description"
-    content={$t("common.playlistsDescription")}
-  />
-  {#if data.playlists?.pagination}
-    {#if data.playlists.pagination.page > 1}
-      <link rel="prev" href="?page={data.playlists.pagination.page - 1}" />
-    {/if}
-    {#if data.playlists.pagination.has_next}
-      <link rel="next" href="?page={data.playlists.pagination.page + 1}" />
-    {/if}
-  {/if}
-</svelte:head>
+<Seo
+  title={$t("common.playlists")}
+  description={$t("common.playlistsDescription")}
+  canonical="/playlists"
+  {pagination}
+/>
 
 <div class="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
   <div class="flex flex-col gap-6 sm:gap-8 mb-8 sm:mb-10">
@@ -70,7 +71,7 @@
     <div class="py-12">
       <QueryError
         error={new Error($t(data.error))}
-        reset={() => goto($page.url.pathname)}
+        reset={() => goto(page.url.pathname)}
       />
     </div>
   {:else if data.playlists && data.playlists.data.length > 0}

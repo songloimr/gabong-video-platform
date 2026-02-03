@@ -2,6 +2,7 @@
   import { t } from "$lib/stores/i18n";
   import AuthGuard from "$lib/components/auth/AuthGuard.svelte";
   import TipTapEditor from "$lib/components/forms/TipTapEditor.svelte";
+  import Seo from "$lib/components/Seo.svelte";
   import { useUploadVideo } from "$lib/api/mutations/videos";
   import {
     TITLE_MIN_LENGTH,
@@ -31,8 +32,7 @@
   let { data }: PageProps = $props();
 
   // Check if user is admin
-  const isAdmin = $derived(auth.user?.role === 'admin');
-
+  const isAdmin = $derived(auth.user?.role === "admin");
 
   // Form state
   let title = $state("");
@@ -60,23 +60,26 @@
   const descriptionLength = $derived(getPlainTextLength(description));
   const descriptionError = $derived(
     descriptionLength > DESCRIPTION_MAX_LENGTH
-      ? $t("validation.descriptionTooLong", { values: { count: descriptionLength - DESCRIPTION_MAX_LENGTH } })
+      ? $t("validation.descriptionTooLong", {
+          values: { count: descriptionLength - DESCRIPTION_MAX_LENGTH },
+        })
       : null,
   );
 
   const uploadMutation = useUploadVideo();
 
-  const MAX_FILE_SIZE = data.siteSettings?.max_upload_size_mb!  * 1024 * 1024; // 500MB
-  const ALLOWED_TYPES = data.siteSettings?.allowed_video_formats!
+  const MAX_FILE_SIZE = data.siteSettings?.max_upload_size_mb! * 1024 * 1024; // 500MB
+  const ALLOWED_TYPES = data.siteSettings?.allowed_video_formats!;
 
   function handleFileSelect(e: Event) {
     const target = e.target as HTMLInputElement;
     if (target.files && target.files.length > 0) {
       const file = target.files[0];
 
-
       if (file.size > MAX_FILE_SIZE) {
-        error = $t("validation.fileTooLarge", { values: { max: data.siteSettings?.max_upload_size_mb } });
+        error = $t("validation.fileTooLarge", {
+          values: { max: data.siteSettings?.max_upload_size_mb },
+        });
         target.value = "";
         return;
       }
@@ -229,7 +232,6 @@
       });
 
       success = true;
-
     } catch (err: any) {
       const message = err.response?.data?.message || $t("video.uploadError");
       errorDialog.show($t("video.uploadFailedTitle"), message);
@@ -243,9 +245,7 @@
   }
 </script>
 
-<svelte:head>
-  <title>{$t("video.uploadTitle")} - Gabong</title>
-</svelte:head>
+<Seo title={$t("video.uploadTitle")} />
 
 <AuthGuard>
   <div class="min-h-[calc(100vh-64px)] bg-surface-950 py-8 sm:py-12">
@@ -261,7 +261,8 @@
         <h1
           class="text-3xl sm:text-4xl font-black tracking-tighter text-surface-100 uppercase"
         >
-          {$t("video.uploadTitlePart1")} <span class="text-primary-500">{$t("video.uploadTitlePart2")}</span>
+          {$t("video.uploadTitlePart1")}
+          <span class="text-primary-500">{$t("video.uploadTitlePart2")}</span>
         </h1>
         <p class="text-surface-400 mt-2 font-medium">
           {$t("video.uploadDescription")}
@@ -284,7 +285,9 @@
           <p class="text-surface-400 font-medium">
             {$t("video.uploadProcessingInfo")}
           </p>
-          <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <div
+            class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-4"
+          >
             <button
               type="button"
               onclick={() => {
@@ -302,11 +305,11 @@
               {$t("video.uploadAnother")}
             </button>
             <a
-               href="/"
-               class="w-full sm:w-auto px-6 py-3 bg-surface-800 hover:bg-surface-700 text-surface-100 rounded-xl font-bold transition-all text-center"
-             >
-               {$t("common.goHome")}
-             </a>
+              href="/"
+              class="w-full sm:w-auto px-6 py-3 bg-surface-800 hover:bg-surface-700 text-surface-100 rounded-xl font-bold transition-all text-center"
+            >
+              {$t("common.goHome")}
+            </a>
           </div>
         </div>
       {:else}
@@ -443,7 +446,9 @@
                       <div
                         class="flex justify-between text-xs font-bold uppercase tracking-wider"
                       >
-                        <span class="text-primary-400">{$t("uploadForm.uploading")}</span>
+                        <span class="text-primary-400"
+                          >{$t("uploadForm.uploading")}</span
+                        >
                         <span class="text-surface-400">{uploadProgress}%</span>
                       </div>
                       <Progress value={uploadProgress} max={100}>
@@ -565,7 +570,9 @@
                   <p class="text-sm font-bold text-surface-100">
                     {$t("uploadForm.thumbnailToggle")}
                   </p>
-                  <p class="text-xs text-surface-500">{$t("uploadForm.addThumbnail")}</p>
+                  <p class="text-xs text-surface-500">
+                    {$t("uploadForm.addThumbnail")}
+                  </p>
                 </div>
               </div>
               <Switch
@@ -583,15 +590,11 @@
               >
                 <Switch.Control
                   class="relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500/50
-                  {useCustomThumbnail
-                    ? 'bg-primary-500'
-                    : 'bg-surface-700'}"
+                  {useCustomThumbnail ? 'bg-primary-500' : 'bg-surface-700'}"
                 >
                   <Switch.Thumb
                     class="inline-block h-4 w-4 transform rounded-full bg-white shadow-lg transition-transform duration-200
-                    {useCustomThumbnail
-                      ? 'translate-x-6'
-                      : 'translate-x-1'}"
+                    {useCustomThumbnail ? 'translate-x-6' : 'translate-x-1'}"
                   />
                 </Switch.Control>
                 <Switch.HiddenInput />
@@ -599,7 +602,9 @@
             </div>
 
             {#if useCustomThumbnail}
-              <div class="space-y-6 p-6 bg-surface-900 border border-surface-800 rounded-xl animate-fade-in">
+              <div
+                class="space-y-6 p-6 bg-surface-900 border border-surface-800 rounded-xl animate-fade-in"
+              >
                 <div class="flex gap-4">
                   <button
                     type="button"
@@ -702,7 +707,8 @@
                 bind:value={categoryId}
                 class="w-full px-4 py-4 bg-surface-900 border border-surface-800 rounded-xl text-surface-100 font-medium focus:outline-none focus:ring-2 focus:ring-primary-500/50 focus:border-primary-500/50 appearance-none transition-all"
               >
-                <option value="">{$t("video.selectCategoryPlaceholder")}</option>
+                <option value="">{$t("video.selectCategoryPlaceholder")}</option
+                >
                 {#each data.categories as category}
                   <option value={category.id}>{category.name}</option>
                 {/each}

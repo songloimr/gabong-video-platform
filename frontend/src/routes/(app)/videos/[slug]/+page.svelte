@@ -16,7 +16,7 @@
 	import { onMount } from "svelte";
 	import type { PageProps } from "./$types";
 	import { PUBLIC_CDN_URL } from "$env/static/public";
-	import { generateVideoJsonLd, truncateDescription, SEO_CONFIG } from "$lib/utils/seo";
+	import { generateVideoJsonLd, truncateDescription } from "$lib/utils/seo";
 
 	// SSR Data
 	let { data }: PageProps = $props();
@@ -26,15 +26,15 @@
 	// SEO data
 	const seoTitle = $derived(video?.title || $t("video.defaultTitle"));
 	const seoDescription = $derived(
-		truncateDescription(video?.description) || `Xem ${video?.title} trên ${SEO_CONFIG.siteName}`
+		truncateDescription(video?.description) || `Xem ${video?.title} - Video thể thao chất lượng cao`
 	);
 	const seoKeywords = $derived(video?.tags?.map(t => t.name).join(', '));
 	const seoCanonical = $derived(video ? `/videos/${video.slug}` : undefined);
-	const jsonLd = $derived(video ? generateVideoJsonLd({
+	const jsonLd = $derived(video && data.siteSettings?.site_url && data.siteSettings?.site_name ? generateVideoJsonLd({
 		id: video.id,
 		slug: video.slug,
 		title: video.title,
-		description: video.description || "",
+		description: video.description!,
 		thumbnail_url: video.thumbnail_url,
 		video_url: video.video_url!,
 		duration: video.duration!,
@@ -44,7 +44,7 @@
 			username: video.user?.username!,
 		},
 		tags: video.tags,
-	}) : undefined);
+	}, data.siteSettings.site_url, data.siteSettings.site_name) : undefined);
 
 	// API Mutations
 	const likeMutation = useLikeVideo();
@@ -61,7 +61,7 @@
 
 	// Load isMuted from localStorage
 	onMount(() => {
-		const savedMuted = localStorage.getItem("gabong_video_muted");
+		const savedMuted = localStorage.getItem("video_player_muted");
 		if (savedMuted !== null) {
 			isMuted = savedMuted === "true";
 			isMuted ? player?.mute() : player?.unmute();
@@ -70,7 +70,7 @@
 
 	// Persist isMuted to localStorage
 	$effect(() => {
-		localStorage.setItem("gabong_video_muted", isMuted.toString());
+		localStorage.setItem("video_player_muted", isMuted.toString());
 	});
 
 	async function handleLike() {

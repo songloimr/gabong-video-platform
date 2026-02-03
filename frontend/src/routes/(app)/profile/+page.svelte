@@ -3,6 +3,7 @@
   import { auth } from "$lib/stores/auth.svelte";
   import { useUpdateProfile, useUpdateAvatar } from "$lib/api/mutations/users";
   import TipTapEditor from "$lib/components/forms/TipTapEditor.svelte";
+  import Seo from "$lib/components/Seo.svelte";
   import {
     User,
     Mail,
@@ -118,9 +119,7 @@
   }
 </script>
 
-<svelte:head>
-  <title>{$t("profile.title")} - Gabong</title>
-</svelte:head>
+<Seo title={$t("profile.title")} />
 
 {#if !auth.isAuthenticated && authChecked}
   <div class="min-h-[calc(100vh-120px)] flex items-center justify-center px-4">

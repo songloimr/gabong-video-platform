@@ -12,7 +12,7 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
 
     const params = new URLSearchParams();
     params.set('page', page.toString());
-    params.set('limit', '25');
+    params.set('limit', '24');
     params.set('sort', 'newest');
 
     if (duration !== 'all') {
@@ -40,7 +40,7 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
         const [videosResponse, categoriesResponse, featuredResponse] = await Promise.all([
             fetch(`${apiUrl}/api/videos?${params.toString()}`),
             fetch(`${apiUrl}/api/categories`),
-            fetch(`${apiUrl}/api/videos/featured?limit=10`),
+            fetch(`${apiUrl}/api/videos/featured?limit=4`),
         ]);
 
         const videos: PaginatedResponse<Video> = videosResponse.ok ? await videosResponse.json() : null;

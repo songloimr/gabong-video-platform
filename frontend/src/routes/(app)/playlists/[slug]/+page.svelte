@@ -1,38 +1,43 @@
 <script lang="ts">
 	import { t } from "$lib/stores/i18n";
 	import { page } from "$app/state";
-	import { usePlaylist } from "$lib/api/queries/playlists";
 	import VideoGrid from "$lib/components/video/VideoGrid.svelte";
 	import Seo from "$lib/components/Seo.svelte";
-	import { PlaySquare, Calendar, Library, ArrowLeft } from "@lucide/svelte";
+	import { SquarePlay, Calendar, Library, ArrowLeft } from "@lucide/svelte";
 	import moment from "moment";
-	import { generatePlaylistJsonLd, truncateDescription } from "$lib/utils/seo";
+	import {
+		generatePlaylistJsonLd,
+		truncateDescription,
+	} from "$lib/utils/seo";
+	import type { PageProps } from "./$types";
+
+	let { data }: PageProps = $props();
 
 	const slug = $derived(page.params.slug || "");
-	const playlistQuery = usePlaylist(() => slug);
 
-	const playlist = $derived(playlistQuery.data);
-	const isLoading = $derived(playlistQuery.isLoading);
-	const error = $derived(playlistQuery.error);
+	const playlist = $derived(data.playlist);
 
 	const seoTitle = $derived(
-		playlist ? `${playlist.title} - ${$t("common.playlists")}` : $t("common.playlists")
+		playlist
+			? `${playlist.title} - ${$t("common.playlists")}`
+			: $t("common.playlists"),
 	);
 
 	const seoDescription = $derived(
-		truncateDescription(playlist?.description) || `Playlist trên Gabong`
+		truncateDescription(playlist?.description) || `${playlist?.title} - Bộ sưu tập video thể thao`,
 	);
 
 	const jsonLd = $derived.by(() => {
-		if (!playlist) return undefined;
+		if (!playlist || !data.siteSettings?.site_url) return undefined;
 		return generatePlaylistJsonLd(
 			{ name: playlist.title, slug },
-			(playlist.videos || []).map(v => ({
+			(playlist.videos || []).map((v) => ({
 				id: v.id,
 				slug: v.slug,
 				title: v.title,
 				thumbnail_url: v.thumbnail_url,
-			}))
+			})),
+			data.siteSettings.site_url,
 		);
 	});
 </script>
@@ -60,51 +65,7 @@
 		</a>
 	</div>
 
-	{#if isLoading}
-		<div class="space-y-8 animate-pulse">
-			<div class="flex flex-col md:flex-row gap-6">
-				<div
-					class="w-full md:w-96 h-54 rounded-3xl bg-surface-800"
-				></div>
-				<div class="flex-1 space-y-4 pt-4">
-					<div class="h-10 bg-surface-800 rounded-xl w-1/2"></div>
-					<div class="h-4 bg-surface-800 rounded-lg w-3/4"></div>
-					<div class="h-12 bg-surface-800 rounded-xl w-1/4"></div>
-				</div>
-			</div>
-			<div
-				class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 sm:gap-4 lg:gap-5 pt-8"
-			>
-				{#each Array(10) as _, i}
-					<div class="space-y-3" style="animation-delay: {i * 50}ms">
-						<div
-							class="aspect-video bg-surface-800 rounded-xl"
-						></div>
-						<div class="h-4 bg-surface-800 rounded-lg w-3/4"></div>
-					</div>
-				{/each}
-			</div>
-		</div>
-	{:else if error}
-		<div class="text-center py-20">
-			<div class="max-w-md mx-auto space-y-4">
-				<div
-					class="w-16 h-16 bg-red-500/10 rounded-full flex items-center justify-center mx-auto"
-				>
-					<Library size={28} class="text-red-400" />
-				</div>
-				<p class="text-lg font-black text-surface-100">
-					{$t("errors.loadFailed")}
-				</p>
-				<button
-					onclick={() => playlistQuery.refetch()}
-					class="px-6 py-3 bg-primary-600 text-white rounded-xl font-bold hover:bg-primary-500 transition-all"
-				>
-					{$t("common.retry")}
-				</button>
-			</div>
-		</div>
-	{:else if playlist}
+	{#if playlist}
 		<!-- Playlist Header -->
 		<div class="mb-12">
 			<div class="flex flex-col md:flex-row gap-8 lg:gap-12">
@@ -175,7 +136,7 @@
 							<div
 								class="w-8 h-8 rounded-lg bg-primary-500/10 flex items-center justify-center border border-primary-500/20"
 							>
-								<PlaySquare
+								<SquarePlay
 									size={16}
 									class="text-primary-400"
 								/>
@@ -239,7 +200,7 @@
 						<div
 							class="w-20 h-20 bg-surface-800 rounded-full flex items-center justify-center mx-auto ring-8 ring-surface-800/30"
 						>
-							<PlaySquare size={32} class="text-surface-500" />
+							<SquarePlay size={32} class="text-surface-500" />
 						</div>
 						<div class="space-y-2">
 							<p

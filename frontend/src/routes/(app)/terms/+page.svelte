@@ -1,12 +1,13 @@
 <script lang="ts">
 	import { t, currentLocale } from '$lib/stores/i18n';
-	import { page } from '$app/stores';
+	import { page } from '$app/state';
 	import type { SiteSettings } from '$lib/types';
+	import Seo from '$lib/components/Seo.svelte';
 
-	const siteSettings = $derived($page.data?.siteSettings as SiteSettings | undefined);
+	const siteSettings = $derived(page.data?.siteSettings as SiteSettings);
 
-	const contactEmail = $derived(siteSettings?.contact_email || 'admin@gabong.net');
-	const updatedAt = $derived(siteSettings?.terms_updated_at);
+	const contactEmail = $derived(siteSettings.contact_email );
+	const updatedAt = $derived(siteSettings.terms_updated_at);
 
 	const formattedDate = $derived.by(() => {
 		if (!updatedAt) return '';
@@ -45,10 +46,7 @@
 	}
 </script>
 
-<svelte:head>
-	<title>{$t('legal.termsTitle')} | Gabong</title>
-	<meta name="description" content={$t('legal.termsTitle')} />
-</svelte:head>
+<Seo title={$t('legal.termsTitle')} description={$t('legal.termsTitle')} />
 
 <div class="container mx-auto max-w-4xl px-4 py-8">
 	<!-- Header -->

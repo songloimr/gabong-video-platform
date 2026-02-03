@@ -1,15 +1,13 @@
 <script lang="ts">
-  import { page } from "$app/stores";
   import { t } from "$lib/stores/i18n";
   import { useCategories } from "$lib/api/queries/categories";
   import QueryError from "$lib/components/ui/QueryError.svelte";
+  import Seo from "$lib/components/Seo.svelte";
 
   const categoriesQuery = useCategories();
 </script>
 
-<svelte:head>
-  <title>{$t("common.categories")} - Gabong</title>
-</svelte:head>
+<Seo title={$t("common.categories")} />
 
 <div class="container mx-auto px-4 py-6 md:py-8">
   <h1 class="text-2xl md:text-3xl font-display font-bold text-surface-100 mb-8">
