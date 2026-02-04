@@ -1,14 +1,14 @@
 import { createMutation, useQueryClient } from '@tanstack/svelte-query';
 import { api } from '../client';
-import type { ApiError, ApiResponse } from '$lib/types';
+import type { User, ApiResponse } from '$lib/types';
 
 export function useUpdateProfile() {
   const queryClient = useQueryClient();
 
   return createMutation(() => ({
     mutationFn: async (data: { email?: string; bio?: string }) => {
-      const { data: response } = await api.put('/api/profile', data);
-      return response;
+      const { data: response } = await api.put<ApiResponse<User>>('/api/profile', data);
+      return response.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['profile'] });

@@ -41,10 +41,10 @@
     <main class="flex-1 overflow-x-hidden relative">
       <!-- Background Decorative Element -->
       <div
-        class="absolute top-0 right-0 w-[500px] h-[500px] bg-primary-500/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none"
+        class="absolute top-0 right-0 w-125 h-125 bg-primary-500/5 blur-[120px] rounded-full -translate-y-1/2 translate-x-1/2 pointer-events-none"
       ></div>
 
-      <div class="relative p-4 lg:p-6 max-w-[1600px] mx-auto w-full">
+      <div class="relative p-4 lg:p-6 max-w-400 mx-auto w-full">
         {@render children()}
       </div>
     </main>

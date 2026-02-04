@@ -17,9 +17,8 @@ export function useRegister() {
 export function useLogin() {
   return createMutation(() => ({
     mutationFn: async (payload: { username: string; password: string; remember_me?: boolean }) => {
-      const { data } = await api.post<AuthResponse>('/api/auth/login', payload);
-      auth.setAuth(data.data);
-      return data.data;
+      const { data: response } = await api.post<AuthResponse>('/api/auth/login', payload);
+      return response.data;
     },
   }));
 }

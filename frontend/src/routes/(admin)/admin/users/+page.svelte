@@ -121,7 +121,7 @@
 		/>
 	{:else}
 		<div
-			class="w-8 h-8 rounded-full bg-gradient-to-br from-primary-600 to-secondary-600 flex items-center justify-center text-white font-bold text-xs ring-2 ring-surface-800/50 shadow-sm"
+			class="w-8 h-8 rounded-full bg-linear-to-br from-primary-600 to-secondary-600 flex items-center justify-center text-white font-bold text-xs ring-2 ring-surface-800/50 shadow-sm"
 		>
 			{user.username.charAt(0).toUpperCase()}
 		</div>
@@ -311,7 +311,7 @@
 								{@render roleBadge(user.role)}
 							</td>
 							<td class="px-3 py-2">
-								{@render statusBadge(user.status)}
+								{@render statusBadge(user.status ?? '')}
 							</td>
 							<td class="px-3 py-2 text-surface-400">
 								{moment(user.created_at).format("MMM D, YYYY")}

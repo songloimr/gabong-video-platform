@@ -1,6 +1,5 @@
 <script lang="ts">
     import { page } from "$app/state";
-    import type { SiteSettings } from "$lib/types";
     import {
         LayoutDashboard,
         Video,
@@ -19,11 +18,10 @@
     } from "@lucide/svelte";
 
     interface Props {
-        settings: SiteSettings;
         isOpen?: boolean;
     }
 
-    let { isOpen = $bindable(false), settings }: Props = $props();
+    let { isOpen = $bindable(false) }: Props = $props();
 
     const adminNavItems = [
         { href: "/admin", icon: LayoutDashboard, label: "Dashboard" },
@@ -116,7 +114,7 @@
                 <h2
                     class="text-xs font-black uppercase tracking-widest text-surface-100"
                 >
-                    {settings.site_name}
+                    site_name
                 </h2>
                 <p
                     class="text-[9px] font-bold text-primary-400 uppercase tracking-widest"

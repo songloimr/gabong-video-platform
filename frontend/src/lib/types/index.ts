@@ -5,7 +5,7 @@ export interface User {
   role: 'user' | 'admin';
   avatar_url: string | null;
   bio: string | null;
-  status: 'active' | 'suspended' | 'banned';
+  status?: 'active' | 'suspended' | 'banned';
   created_at: string;
   last_ip?: string | null;
 }
