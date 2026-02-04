@@ -29,7 +29,8 @@ export class CommentRateLimitGuard implements CanActivate {
       throw new HttpException('Authentication required', HttpStatus.UNAUTHORIZED);
     }
 
-    if (user.roles?.includes(Role.Admin)) {
+    // Bypass for Admin users and SSR requests from frontend server
+    if (user.roles?.includes(Role.Admin) || request.headers['ssr']) {
       return true;
     }
 

@@ -27,31 +27,6 @@ export const UPLOAD_CONSTANTS = {
  * Pagination-related constants
  */
 export const PAGINATION_CONSTANTS = {
-  DEFAULT_PAGE_SIZE: 25,
-  MAX_PAGE_SIZE: 100,
-  DEFAULT_PAGE: 1,
-} as const;
-
-/**
- * Rate limiting constants for auth endpoints
- */
-export const RATE_LIMIT_CONSTANTS = {
-  AUTH: {
-    LOGIN_LIMIT: 5,
-    LOGIN_TTL: 60000, // 1 minute
-    REGISTER_LIMIT: 3,
-    REGISTER_TTL: 60000, // 1 minute
-  },
-  GLOBAL: {
-    LIMIT: 100,
-    TTL: 60000, // 1 minute
-  },
-} as const;
-
-/**
- * Video-related constants
- */
-export const VIDEO_CONSTANTS = {
   STATUSES: ['pending_approval', 'pending_processing', 'processing', 'approved', 'rejected'] as const,
   SORT_OPTIONS: ['newest', 'oldest', 'popular', 'views'] as const,
 } as const;

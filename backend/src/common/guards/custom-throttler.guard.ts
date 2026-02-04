@@ -6,7 +6,6 @@ import { Role } from '../../constants/role.enum';
 import { Request } from 'express';
 import { JwtPayload } from '../../types';
 
-
 @Injectable()
 export class CustomThrottlerGuard extends ThrottlerGuard {
   constructor(
@@ -26,7 +25,8 @@ export class CustomThrottlerGuard extends ThrottlerGuard {
     
     const user = request.user;
 
-    if (user?.roles?.includes(Role.Admin) || request.headers["ssr"]) {
+    // Bypass for Admin users and SSR requests from frontend server
+    if (user?.roles?.includes(Role.Admin) || request.headers['ssr']) {
       return true;
     }
 
@@ -37,13 +37,15 @@ export class CustomThrottlerGuard extends ThrottlerGuard {
     const limit = await this.siteSettingsService.getSetting<number>(
       'global_rate_limit_requests',
     );
-    return limit;
+    
+    return limit
   }
 
   protected async getTtl(context: ExecutionContext): Promise<number> {
     const ttlSeconds = await this.siteSettingsService.getSetting<number>(
       'global_rate_limit_seconds',
     );
-    return (ttlSeconds) * 1000;
+    
+    return ttlSeconds * 1000;
   }
 }
