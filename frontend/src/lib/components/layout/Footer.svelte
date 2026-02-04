@@ -1,15 +1,22 @@
 <script lang="ts">
   import { t } from "$lib/stores/i18n";
+  import type { SiteSettings } from "$lib/types";
+
+  interface Props {
+    settings: SiteSettings;
+  }
+
+  let { settings }: Props = $props();
 </script>
 
 <footer
   class="hidden md:block bg-surface-950/30 border-t border-surface-800/50 pt-16 pb-8 mt-12 transition-all duration-300"
 >
-  <div class="max-w-[1920px] mx-auto px-6 sm:px-8 lg:px-12">
+  <div class="max-w-480 mx-auto px-6 sm:px-8 lg:px-12">
     <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
       <div class="space-y-6">
         <div class="text-3xl font-black tracking-tighter text-gradient">
-          Gabong
+          {settings.site_name}
         </div>
         <p
           class="text-sm font-medium text-surface-400 leading-relaxed max-w-xs"
@@ -109,7 +116,8 @@
       class="flex flex-col md:flex-row justify-between items-center gap-6 pt-8 border-t border-surface-800/50"
     >
       <div class="text-xs font-bold text-surface-500">
-        &copy; {new Date().getFullYear()} Gabong Video Platform. {$t("footer.copyright")}
+        &copy; {new Date().getFullYear()}
+        {settings.site_name}. {$t("footer.copyright")}
       </div>
       <div class="flex items-center gap-6">
         <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>

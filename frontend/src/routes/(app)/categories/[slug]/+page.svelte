@@ -7,10 +7,14 @@
 	import AppPagination from "$lib/components/ui/AppPagination.svelte";
 	import Seo from "$lib/components/Seo.svelte";
 	import { FolderOpen } from "@lucide/svelte";
-	import type { PageData } from "./$types";
-	import { generateVideoListJsonLd, generateBreadcrumbJsonLd, truncateDescription } from "$lib/utils/seo";
+	import type { PageProps } from "./$types";
+	import {
+		generateVideoListJsonLd,
+		generateBreadcrumbJsonLd,
+		truncateDescription,
+	} from "$lib/utils/seo";
 
-	let { data }: { data: PageData } = $props();
+	let { data }: PageProps = $props();
 
 	function handlePageChange(newPage: number) {
 		const params = new URLSearchParams(page.url.searchParams);
@@ -25,12 +29,12 @@
 	const categoryName = $derived(
 		data.category?.name || (data.slug || "").replace(/-/g, " "),
 	);
-	
+
 	const canonical = $derived(`/categories/${data.slug}`);
 	const description = $derived(
 		truncateDescription(
-			`Xem các video ${categoryName} hay nhất. Cập nhật liên tục các video mới nhất.`
-		)
+			`Xem các video ${categoryName} hay nhất. Cập nhật liên tục các video mới nhất.`,
+		),
 	);
 
 	const pagination = $derived.by(() => {
@@ -44,31 +48,41 @@
 
 	const jsonLd = $derived.by(() => {
 		if (!data.siteSettings?.site_url) return undefined;
-		
+
 		const schemas: object[] = [
-			generateBreadcrumbJsonLd([
-				{ name: 'Trang chủ', url: '/' },
-				{ name: 'Danh mục', url: '/categories' },
-				{ name: categoryName, url: canonical }
-			], data.siteSettings.site_url)
+			generateBreadcrumbJsonLd(
+				[
+					{ name: "Trang chủ", url: "/" },
+					{ name: "Danh mục", url: "/categories" },
+					{ name: categoryName, url: canonical },
+				],
+				data.siteSettings.site_url,
+			),
 		];
-		
+
 		if (data.videos?.data?.length) {
 			schemas.push(
 				generateVideoListJsonLd(
-					data.videos.data.map(v => ({ id: v.id, slug: v.slug, title: v.title, thumbnail_url: v.thumbnail_url })),
+					data.videos.data.map((v) => ({
+						id: v.id,
+						slug: v.slug,
+						title: v.title,
+						thumbnail_url: v.thumbnail_url,
+					})),
 					categoryName,
 					canonical,
-					data.siteSettings.site_url
-				)
+					data.siteSettings.site_url,
+				),
 			);
 		}
-		
+
 		return schemas;
 	});
 </script>
 
 <Seo
+	siteName={data.siteSettings.site_name}
+	siteUrl={data.siteSettings.site_url}
 	title={categoryName}
 	{description}
 	{canonical}
@@ -94,7 +108,14 @@
 				<p
 					class="text-xs text-surface-500 font-bold uppercase tracking-widest mt-3"
 				>
-					{$t("common.totalVideos", { values: { count: data.videos.pagination.total } })} • {$t("common.pageOf", { values: { current: data.videos.pagination.page, total: data.videos.pagination.total_pages } })}
+					{$t("common.totalVideos", {
+						values: { count: data.videos.pagination.total },
+					})} • {$t("common.pageOf", {
+						values: {
+							current: data.videos.pagination.page,
+							total: data.videos.pagination.total_pages,
+						},
+					})}
 				</p>
 			{/if}
 		</div>

@@ -4,21 +4,19 @@
   import VideoCard from "$lib/components/video/VideoCard.svelte";
   import Seo from "$lib/components/Seo.svelte";
   import { Search, SlidersHorizontal } from "@lucide/svelte";
-  import type { PageData } from "./$types";
+  import type { PageProps } from "./$types";
 
-  let { data: pageData }: { data: PageData } = $props();
+  let { data }: PageProps = $props();
 
-  const { videos: videosData } = pageData;
+  const searchQuery = $derived(data.searchQuery);
+  const totalResults = $derived(data.videos?.pagination.total ?? 0);
 
-  const searchQuery = pageData.searchQuery || "";
-  const totalResults = videosData?.pagination?.total ?? 0;
-  
   const pageTitle = $derived(
     searchQuery
       ? `${$t("common.search")}: "${searchQuery}"`
-      : $t("common.search")
+      : $t("common.search"),
   );
-  
+
   const pageDescription = $derived(
     searchQuery
       ? $t("common.searchResultsDescription", {
@@ -27,27 +25,32 @@
             query: searchQuery,
           },
         })
-      : $t("common.searchDescription")
+      : $t("common.searchDescription"),
   );
 
   const canonical = $derived(
-    searchQuery ? `/search?q=${encodeURIComponent(searchQuery)}` : undefined
+    searchQuery ? `/search?q=${encodeURIComponent(searchQuery)}` : undefined,
   );
 
-  const nextPageParams = new URLSearchParams();
-  nextPageParams.set("q", searchQuery);
-  nextPageParams.set("page", `${videosData!.pagination!.page + 1}`);
-  nextPageParams.set("sort", pageData.sort || "");
+  let nextPageParams: URLSearchParams = $state(new URLSearchParams());
+
+  $effect(() => {
+    nextPageParams.set("q", searchQuery);
+    nextPageParams.set("page", `${data.currentPage + 1}`);
+    nextPageParams.set("sort", data.sort || "");
+  });
 </script>
 
 <Seo
+  siteName={data.siteSettings.site_name}
+  siteUrl={data.siteSettings.site_url}
   title={pageTitle}
   description={pageDescription}
   {canonical}
   robots="index, follow"
 />
 
-<div class="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+<div class="max-w-480 mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
   <div
     class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-8"
   >
@@ -76,7 +79,7 @@
     </button>
   </div>
 
-  {#if pageData.error}
+  {#if data.error}
     <div class="py-12">
       <div class="text-center">
         <p class="text-lg font-black text-red-500">{$t("errors.loadFailed")}</p>
@@ -88,16 +91,16 @@
         </a>
       </div>
     </div>
-  {:else if videosData?.data && videosData.data.length > 0}
+  {:else if data.videos?.data && data.videos.data.length > 0}
     <div
       class="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-3 sm:gap-4 lg:gap-5"
     >
-      {#each videosData.data as video (video.id)}
+      {#each data.videos.data as video (video.id)}
         <VideoCard {video} showStats={true} />
       {/each}
     </div>
 
-    {#if videosData.pagination?.has_next}
+    {#if data.videos.pagination.has_next}
       <div class="flex justify-center mt-10">
         <a
           href={`?${nextPageParams.toString()}`}

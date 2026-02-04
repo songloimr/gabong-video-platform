@@ -1,43 +1,45 @@
 <script lang="ts">
-    import { t } from "$lib/stores/i18n";
-    import { goto } from "$app/navigation";
-    import { page } from "$app/state";
-    import QueryError from "$lib/components/ui/QueryError.svelte";
-    import AppPagination from "$lib/components/ui/AppPagination.svelte";
-    import Seo from "$lib/components/Seo.svelte";
-    import { Library } from "@lucide/svelte";
-    import type { PageData } from "./$types";
+  import { t } from "$lib/stores/i18n";
+  import { goto } from "$app/navigation";
+  import { page } from "$app/state";
+  import QueryError from "$lib/components/ui/QueryError.svelte";
+  import AppPagination from "$lib/components/ui/AppPagination.svelte";
+  import Seo from "$lib/components/Seo.svelte";
+  import { Library } from "@lucide/svelte";
+  import type { PageProps } from "./$types";
 
-    let { data }: { data: PageData } = $props();
+  let { data }: PageProps = $props();
 
-    function handlePageChange(newPage: number) {
-      const params = new URLSearchParams(page.url.searchParams);
-      if (newPage === 1) {
-        params.delete("page");
-      } else {
-        params.set("page", String(newPage));
-      }
-      goto(`?${params.toString()}`);
+  function handlePageChange(newPage: number) {
+    const params = new URLSearchParams(page.url.searchParams);
+    if (newPage === 1) {
+      params.delete("page");
+    } else {
+      params.set("page", String(newPage));
     }
+    goto(`?${params.toString()}`);
+  }
 
-    const pagination = $derived.by(() => {
-      if (!data.playlists?.pagination) return undefined;
-      const p = data.playlists.pagination;
-      return {
-        prev: p.page > 1 ? `?page=${p.page - 1}` : undefined,
-        next: p.has_next ? `?page=${p.page + 1}` : undefined,
-      };
-    });
+  const pagination = $derived.by(() => {
+    if (!data.playlists?.pagination) return undefined;
+    const p = data.playlists.pagination;
+    return {
+      prev: p.page > 1 ? `?page=${p.page - 1}` : undefined,
+      next: p.has_next ? `?page=${p.page + 1}` : undefined,
+    };
+  });
 </script>
 
 <Seo
+  siteName={data.siteSettings.site_name}
+  siteUrl={data.siteSettings.site_url}
   title={$t("common.playlists")}
   description={$t("common.playlistsDescription")}
   canonical="/playlists"
   {pagination}
 />
 
-<div class="max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
+<div class="max-w-480 mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10">
   <div class="flex flex-col gap-6 sm:gap-8 mb-8 sm:mb-10">
     <div class="space-y-3">
       <div
@@ -53,14 +55,21 @@
       </h1>
       {#if data.playlists?.pagination}
         <div class="flex items-center gap-4 flex-wrap">
-          <p
-            class="text-sm text-surface-400 font-display font-medium"
-          >
-            <span class="text-surface-200 font-semibold">{$t("common.playlistCount", { values: { count: data.playlists.pagination.total } })}</span>
+          <p class="text-sm text-surface-400 font-display font-medium">
+            <span class="text-surface-200 font-semibold"
+              >{$t("common.playlistCount", {
+                values: { count: data.playlists.pagination.total },
+              })}</span
+            >
           </p>
           <div class="w-1 h-1 rounded-full bg-surface-700"></div>
           <p class="text-sm text-surface-400 font-display font-medium">
-            {$t("common.pageOf", { values: { current: data.playlists.pagination.page, total: data.playlists.pagination.total_pages } })}
+            {$t("common.pageOf", {
+              values: {
+                current: data.playlists.pagination.page,
+                total: data.playlists.pagination.total_pages,
+              },
+            })}
           </p>
         </div>
       {/if}
@@ -93,20 +102,28 @@
               />
             {:else}
               <div
-                class="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary-500/10 to-primary-600/20"
+                class="w-full h-full flex items-center justify-center bg-linear-to-br from-primary-500/10 to-primary-600/20"
               >
-                <Library size={40} strokeWidth={1.5} class="text-primary-500/40" />
+                <Library
+                  size={40}
+                  strokeWidth={1.5}
+                  class="text-primary-500/40"
+                />
               </div>
             {/if}
 
             <div
-              class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent"
+              class="absolute inset-0 bg-linear-to-t from-black/90 via-black/30 to-transparent"
             ></div>
 
             <!-- Video count badge -->
-            <div class="absolute top-3 right-3 bg-black/70 backdrop-blur-sm px-2.5 py-1 rounded flex items-center gap-1.5">
+            <div
+              class="absolute top-3 right-3 bg-black/70 backdrop-blur-sm px-2.5 py-1 rounded flex items-center gap-1.5"
+            >
               <Library size={12} strokeWidth={2} class="text-primary-400" />
-              <span class="text-xs font-display font-semibold text-white">{playlist.video_count}</span>
+              <span class="text-xs font-display font-semibold text-white"
+                >{playlist.video_count}</span
+              >
             </div>
 
             <div class="absolute bottom-0 left-0 right-0 p-4">

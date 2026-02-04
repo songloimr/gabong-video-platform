@@ -2,10 +2,9 @@ import { PUBLIC_VITE_API_URL } from "$env/static/public";
 import type { PageServerLoad } from "./$types";
 import type { Category, ApiResponse } from '$lib/types';
 
-export const load: PageServerLoad = async ({ params, fetch }) => {
+export const load: PageServerLoad = async ({ fetch }) => {
     const baseResponse = {
-        categories: [] as Category[],
-        // settings: {} as SiteSettings,
+        categories: [] as Category[]
     }
     try {
         const [categoriesResponse] = await Promise.all([

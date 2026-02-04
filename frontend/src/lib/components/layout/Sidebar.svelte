@@ -11,6 +11,14 @@
     X,
     ThumbsUp,
   } from "@lucide/svelte";
+    import type { SiteSettings } from "$lib/types";
+
+  interface Props {
+    settings: SiteSettings;
+    isOpen?: boolean;
+  }
+
+  let { isOpen = $bindable(false), settings }: Props = $props();
 
   const navItems = [
     { href: "/", icon: Home, label: "common.home" },
@@ -36,7 +44,7 @@
 {/if}
 
 <aside
-  class="fixed lg:sticky top-14 lg:top-[57px] left-0 z-40 lg:z-30 w-64 h-[calc(100dvh-theme(spacing.14)*2)] lg:h-[calc(100vh-57px)] bg-surface-950 lg:bg-transparent border-r lg:border-r-0 border-surface-800/50 transition-transform duration-300 transform {sidebarState.isOpen
+  class="fixed lg:sticky top-14 lg:top-14.25 left-0 z-40 lg:z-30 w-64 h-[calc(100dvh-(--spacing(14))*2)] lg:h-[calc(100vh-57px)] bg-surface-950 lg:bg-transparent border-r lg:border-r-0 border-surface-800/50 transition-transform duration-300 transform {sidebarState.isOpen
     ? 'translate-x-0'
     : '-translate-x-full lg:translate-x-0'}"
 >
@@ -48,7 +56,7 @@
       class="flex lg:hidden items-center justify-between px-4 h-14 border-b border-surface-800/50"
     >
       <span class="text-xl font-black tracking-tighter text-gradient"
-        >Gabong</span
+        >{settings.site_name}</span
       >
       <button
         onclick={() => sidebarState.close()}

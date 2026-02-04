@@ -8,10 +8,10 @@
   import { goto } from "$app/navigation";
   import { page } from "$app/state";
   import { Funnel, Calendar, FolderOpen, LayoutGrid } from "@lucide/svelte";
-  import type { PageData } from "./$types";
+  import type { PageProps } from "./$types";
   import { generateWebsiteJsonLd } from "$lib/utils/seo";
 
-  let { data }: { data: PageData } = $props();
+  let { data }: PageProps = $props();
 
   const currentYear = $derived(page.url.searchParams.get("year") || "all");
   const currentCategory = $derived(
@@ -53,9 +53,14 @@
 </script>
 
 <Seo
+  siteName={data.siteSettings.site_name}
+  siteUrl={data.siteSettings.site_url}
   title={$t("common.home")}
   canonical="/"
-  jsonLd={generateWebsiteJsonLd(data.siteSettings.site_url, data.siteSettings.site_name)}
+  jsonLd={generateWebsiteJsonLd(
+    data.siteSettings.site_url,
+    data.siteSettings.site_name,
+  )}
   {pagination}
 />
 
@@ -92,7 +97,6 @@
         <div
           class="flex items-center gap-3 overflow-x-auto pb-2 scrollbar-hide flex-nowrap"
         >
-
           <!-- Year Filter -->
           <div class="relative shrink-0">
             <div
@@ -192,7 +196,9 @@
           <LayoutGrid size={20} class="text-green-400" fill="currentColor" />
         </div>
         <div>
-          <h2 class="text-xl sm:text-2xl font-black tracking-tight text-surface-50">
+          <h2
+            class="text-xl sm:text-2xl font-black tracking-tight text-surface-50"
+          >
             {$t("common.latestVideos")}
           </h2>
         </div>

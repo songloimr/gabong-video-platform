@@ -22,21 +22,28 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
         q = ''; // Clear suspicious queries
     }
 
-    const page = Math.max(1, Math.min(100, Number(url.searchParams.get('page')) || 1));
-    const sort = ['newest', 'views', 'likes'].includes(url.searchParams.get('sort') || '')
-        ? url.searchParams.get('sort')
+    const sortParam = url.searchParams.get('sort') || '';
+    const pageParam = url.searchParams.get('page') || '1';
+
+    const page = Math.max(1, Math.min(100, Number(pageParam) || 1));
+    const sort = ['newest', 'views', 'likes'].includes(sortParam)
+        ? sortParam
         : 'newest';
 
     // Build query params
     const params = new URLSearchParams();
     params.set('page', page.toString());
-    params.set('limit', '25');
+    params.set('limit', '24');
     params.set('sort', sort!);
     if (q) params.set('search', q);
 
-    const defaultResponse = {
-        videos: null,
-        error: null,
+    const defaultResponse: {
+        videos?: PaginatedResponse<Video>;
+        error?: string;
+        searchQuery: string;
+        currentPage: number;
+        sort: string;
+    } = {
         searchQuery: q,
         currentPage: page,
         sort,

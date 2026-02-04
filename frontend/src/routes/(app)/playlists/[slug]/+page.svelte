@@ -43,6 +43,8 @@
 </script>
 
 <Seo
+	siteName={data.siteSettings.site_name}
+	siteUrl={data.siteSettings.site_url}
 	title={seoTitle}
 	description={seoDescription}
 	canonical={playlist ? `/playlists/${slug}` : undefined}

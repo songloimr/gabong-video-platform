@@ -26,25 +26,34 @@
 	// SEO data
 	const seoTitle = $derived(video?.title || $t("video.defaultTitle"));
 	const seoDescription = $derived(
-		truncateDescription(video?.description) || `Xem ${video?.title} - Video thể thao chất lượng cao`
+		truncateDescription(video?.description) ||
+			`Xem ${video?.title} - Video thể thao chất lượng cao`,
 	);
-	const seoKeywords = $derived(video?.tags?.map(t => t.name).join(', '));
+	const seoKeywords = $derived(video?.tags?.map((t) => t.name).join(", "));
 	const seoCanonical = $derived(video ? `/videos/${video.slug}` : undefined);
-	const jsonLd = $derived(video && data.siteSettings?.site_url && data.siteSettings?.site_name ? generateVideoJsonLd({
-		id: video.id,
-		slug: video.slug,
-		title: video.title,
-		description: video.description!,
-		thumbnail_url: video.thumbnail_url,
-		video_url: video.video_url!,
-		duration: video.duration!,
-		created_at: video.published_at!,
-		updated_at: video.published_at!,
-		uploader: {
-			username: video.user?.username!,
-		},
-		tags: video.tags,
-	}, data.siteSettings.site_url, data.siteSettings.site_name) : undefined);
+	const jsonLd = $derived(
+		video
+			? generateVideoJsonLd(
+					{
+						id: video.id,
+						slug: video.slug,
+						title: video.title,
+						description: video.description!,
+						thumbnail_url: video.thumbnail_url,
+						video_url: video.video_url!,
+						duration: video.duration!,
+						created_at: video.published_at!,
+						updated_at: video.published_at!,
+						uploader: {
+							username: video.user?.username!,
+						},
+						tags: video.tags,
+					},
+					data.siteSettings.site_url,
+					data.siteSettings.site_name,
+				)
+			: undefined,
+	);
 
 	// API Mutations
 	const likeMutation = useLikeVideo();
@@ -106,6 +115,8 @@
 </script>
 
 <Seo
+	siteName={data.siteSettings.site_name}
+	siteUrl={data.siteSettings.site_url}
 	title={seoTitle}
 	description={seoDescription}
 	keywords={seoKeywords}
@@ -131,7 +142,9 @@
 	<div class="max-w-480 mx-auto px-4 sm:px-6 lg:px-8 py-4 md:py-6">
 		<div class="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-6">
 			<!-- Main Content -->
-			<div class="lg:col-span-8 flex flex-col gap-4 pb-6 lg:pb-0 border-b lg:border-b-0 border-surface-800/50">
+			<div
+				class="lg:col-span-8 flex flex-col gap-4 pb-6 lg:pb-0 border-b lg:border-b-0 border-surface-800/50"
+			>
 				<h1
 					class="text-xl sm:text-2xl font-black tracking-tighter text-surface-50 leading-tight font-heading uppercase"
 				>
@@ -140,7 +153,8 @@
 				<div class="player-container">
 					<VideoPlayer
 						videoUrl={video.video_url || ""}
-						thumbnailUrl={video.thumbnail_url || `${PUBLIC_CDN_URL}/${video.video_key}/thumbnail.jpg`}
+						thumbnailUrl={video.thumbnail_url ||
+							`${PUBLIC_CDN_URL}/${video.video_key}/thumbnail.jpg`}
 						points={data.markups}
 						subtitles={data.subtitles}
 						bind:this={player}
@@ -219,16 +233,21 @@
 			<div class="lg:col-span-4 flex flex-col gap-6">
 				<div class="lg:sticky lg:top-20">
 					<VideoInfo
-					{video}
-					onLike={handleLike}
-					onWatchLater={handleWatchLater}
-					{isLiked}
-					{isSaved}
-					onShare={handleShare}
-				/>
+						{video}
+						onLike={handleLike}
+						onWatchLater={handleWatchLater}
+						{isLiked}
+						{isSaved}
+						onShare={handleShare}
+					/>
 				</div>
-				<div class="border-t lg:border-t-0 border-surface-800/50 pt-6 lg:pt-0">
-					<CommentSection videoId={video.id} onSeek={handleSeekToTime} />
+				<div
+					class="border-t lg:border-t-0 border-surface-800/50 pt-6 lg:pt-0"
+				>
+					<CommentSection
+						videoId={video.id}
+						onSeek={handleSeekToTime}
+					/>
 				</div>
 			</div>
 		</div>

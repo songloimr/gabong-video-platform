@@ -16,8 +16,9 @@
 
     onMount(() => {
         if (browser) {
-            const isVerified = localStorage.getItem('age_verified') === 'true';
-            const isEnabled = data.siteSettings?.age_verification_enabled ?? false;
+            const isVerified = localStorage.getItem("age_verified") === "true";
+            const isEnabled =
+                data.siteSettings?.age_verification_enabled ?? false;
             showAgeVerification = isEnabled && !isVerified;
         }
     });
@@ -43,19 +44,22 @@
     ></div>
 </div>
 
-<Header />
+<Header settings={data.siteSettings} />
 
 <div
     class="flex-1 flex flex-col lg:flex-row max-w-480 mx-auto w-full relative z-10"
 >
-    <Sidebar />
+    <Sidebar settings={data.siteSettings} />
     <main class="flex-1 pb-20 lg:pb-6">
         {@render children()}
     </main>
 </div>
 
-<Footer />
+<Footer settings={data.siteSettings} />
 <BottomNav />
 
-<AgeVerificationPopup bind:open={showAgeVerification} onConfirm={handleAgeConfirm} />
+<AgeVerificationPopup
+    bind:open={showAgeVerification}
+    onConfirm={handleAgeConfirm}
+/>
 <FeedbackModal />

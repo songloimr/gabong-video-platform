@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { page } from "$app/state";
   import { goto } from "$app/navigation";
   import { auth } from "$lib/stores/auth.svelte";
   import { loginModal } from "$lib/stores/loginModal.svelte";
@@ -18,11 +17,17 @@
     ChevronDown,
     Home,
     PlaySquare,
-    Clock,
     X,
     MessageSquare,
   } from "@lucide/svelte";
   import { useLogout } from "$lib/api/mutations/auth";
+    import type { SiteSettings } from "$lib/types";
+
+  interface Props {
+    settings: SiteSettings;
+  }
+
+  let { settings }: Props = $props();
 
   const logoutMutation = useLogout();
 
@@ -40,7 +45,7 @@
   class="sticky top-0 z-50 transition-all duration-300 border-b border-surface-800/50 pt-safe"
 >
   <div class="absolute inset-0 glass z-[-1]"></div>
-  <div class="max-w-[1920px] mx-auto">
+  <div class="max-w-480 mx-auto">
     <div class="px-3 sm:px-6 lg:px-8">
       <!-- Main Row -->
       <div
@@ -65,7 +70,7 @@
             href="/"
             class="text-xl sm:text-2xl font-display font-black tracking-tighter text-gradient hover:opacity-80 transition-opacity"
           >
-            Gabong
+            {settings.site_name}
           </a>
 
           <!-- Desktop Navigation -->
@@ -136,7 +141,7 @@
                       />
                     {:else}
                       <div
-                        class="w-8 h-8 rounded-lg bg-gradient-to-br from-surface-700 to-surface-800 flex items-center justify-center ring-2 ring-surface-800/50 shadow-sm group-hover:ring-primary-500 transition-all"
+                        class="w-8 h-8 rounded-lg bg-linear-to-br from-surface-700 to-surface-800 flex items-center justify-center ring-2 ring-surface-800/50 shadow-sm group-hover:ring-primary-500 transition-all"
                       >
                         <User size={18} class="text-surface-400" />
                       </div>

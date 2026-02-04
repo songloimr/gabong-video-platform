@@ -1,5 +1,6 @@
 <script lang="ts">
     import { page } from "$app/state";
+    import type { SiteSettings } from "$lib/types";
     import {
         LayoutDashboard,
         Video,
@@ -9,7 +10,6 @@
         CheckSquare,
         Play,
         Library,
-        Menu,
         X,
         Settings,
         Megaphone,
@@ -18,7 +18,12 @@
         MessageSquareText,
     } from "@lucide/svelte";
 
-    let { isOpen = $bindable(false) } = $props();
+    interface Props {
+        settings: SiteSettings;
+        isOpen?: boolean;
+    }
+
+    let { isOpen = $bindable(false), settings }: Props = $props();
 
     const adminNavItems = [
         { href: "/admin", icon: LayoutDashboard, label: "Dashboard" },
@@ -111,7 +116,7 @@
                 <h2
                     class="text-xs font-black uppercase tracking-widest text-surface-100"
                 >
-                    Gabong
+                    {settings.site_name}
                 </h2>
                 <p
                     class="text-[9px] font-bold text-primary-400 uppercase tracking-widest"

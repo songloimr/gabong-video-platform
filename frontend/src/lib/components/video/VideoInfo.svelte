@@ -1,6 +1,5 @@
 <script lang="ts">
   import { t } from "$lib/stores/i18n";
-  import { siteSettings } from "$lib/stores/site-settings.svelte";
   import {
     ThumbsUp,
     Calendar,
@@ -14,6 +13,8 @@
   import { requireAuth } from "$lib/utils/requireAuth";
   import { browser } from "$app/environment";
   import { getAvatarUrl } from "$lib/utils/formatters";
+  import { page } from "$app/state";
+  import type { PageData } from "../../../routes/(app)/$types";
 
   let {
     video,
@@ -30,6 +31,8 @@
     isLiked?: boolean;
     isSaved?: boolean;
   } = $props();
+
+  const { siteSettings } = $derived(page.data as PageData);
 
   function formatDate(dateString: string): string {
     return moment(dateString).fromNow();
@@ -84,7 +87,7 @@
       </button>
 
       <a
-        href="mailto:{siteSettings.contactEmail}?subject=Report Video: {video.title}&body=I would like to report this video: {browser
+        href="mailto:{siteSettings.contact_email}?subject=Report Video: {video.title}&body=I would like to report this video: {browser
           ? window.location.href
           : ''}"
         class="flex items-center justify-center gap-1 py-2 rounded-md bg-surface-800 text-surface-300 hover:bg-red-900/40 hover:text-red-400 transition-all"
@@ -119,7 +122,7 @@
         {/if}
         <div class="flex flex-col">
           <span
-            class="text-[10px] font-black text-surface-200 uppercase tracking-wide truncate max-w-[120px]"
+            class="text-[10px] font-black text-surface-200 uppercase tracking-wide truncate max-w-30"
           >
             {video.user?.username || $t("video.anonymous")}
           </span>

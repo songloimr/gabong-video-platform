@@ -204,10 +204,10 @@ export interface SiteSettings {
     google_analytics_code?: string;
     custom_head_html?: string;
     custom_body_html?: string;
-    max_upload_size_mb?: number;
-    max_video_duration?: number;
+    max_upload_size_mb: number;
+    max_video_duration: number;
     max_files_per_upload?: number;
-    allowed_video_formats?: string[];
+    allowed_video_formats: string[];
     r2_account_id?: string;
     r2_access_key_id?: string;
     r2_secret_access_key?: string;

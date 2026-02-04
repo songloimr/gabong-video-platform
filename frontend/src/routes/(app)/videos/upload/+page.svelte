@@ -68,8 +68,8 @@
 
   const uploadMutation = useUploadVideo();
 
-  const MAX_FILE_SIZE = data.siteSettings?.max_upload_size_mb! * 1024 * 1024; // 500MB
-  const ALLOWED_TYPES = data.siteSettings?.allowed_video_formats!;
+  const MAX_FILE_SIZE = $derived(data.siteSettings.max_upload_size_mb * 1024 * 1024); // 500MB
+  const ALLOWED_TYPES = $derived(data.siteSettings.allowed_video_formats);
 
   function handleFileSelect(e: Event) {
     const target = e.target as HTMLInputElement;
@@ -245,7 +245,11 @@
   }
 </script>
 
-<Seo title={$t("video.uploadTitle")} />
+<Seo
+  siteName={data.siteSettings.site_name}
+  siteUrl={data.siteSettings.site_url}
+  title={$t("video.uploadTitle")}
+/>
 
 <AuthGuard>
   <div class="min-h-[calc(100vh-64px)] bg-surface-950 py-8 sm:py-12">

@@ -7,10 +7,10 @@
 	import AppPagination from "$lib/components/ui/AppPagination.svelte";
 	import Seo from "$lib/components/Seo.svelte";
 	import { SquarePlay, Funnel } from "@lucide/svelte";
-	import type { PageData } from "./$types";
+	import type { PageProps } from "./$types";
 	import { generateVideoListJsonLd } from "$lib/utils/seo";
 
-	let { data }: { data: PageData } = $props();
+	let { data }: PageProps = $props();
 
 	function handlePageChange(newPage: number) {
 		const params = new URLSearchParams(page.url.searchParams);
@@ -32,17 +32,25 @@
 	});
 
 	const jsonLd = $derived.by(() => {
-		if (!data.videos?.data?.length || !data.siteSettings?.site_url) return undefined;
+		if (!data.videos?.data?.length || !data.siteSettings?.site_url)
+			return undefined;
 		return generateVideoListJsonLd(
-			data.videos.data.map(v => ({ id: v.id, slug: v.slug, title: v.title, thumbnail_url: v.thumbnail_url })),
-			'Video được yêu thích nhất',
-			'/most-liked',
-			data.siteSettings.site_url
+			data.videos.data.map((v) => ({
+				id: v.id,
+				slug: v.slug,
+				title: v.title,
+				thumbnail_url: v.thumbnail_url,
+			})),
+			"Video được yêu thích nhất",
+			"/most-liked",
+			data.siteSettings.site_url,
 		);
 	});
 </script>
 
 <Seo
+	siteName={data.siteSettings.site_name}
+	siteUrl={data.siteSettings.site_url}
 	title={$t("common.mostLiked")}
 	description={$t("common.mostLikedDescription")}
 	canonical="/most-liked"
@@ -64,7 +72,14 @@
 				<p
 					class="text-xs text-surface-500 font-bold uppercase tracking-widest mt-2"
 				>
-					{$t("common.totalVideos", { values: { count: data.videos.pagination.total } })} • {$t("common.pageOf", { values: { current: data.videos.pagination.page, total: data.videos.pagination.total_pages } })}
+					{$t("common.totalVideos", {
+						values: { count: data.videos.pagination.total },
+					})} • {$t("common.pageOf", {
+						values: {
+							current: data.videos.pagination.page,
+							total: data.videos.pagination.total_pages,
+						},
+					})}
 				</p>
 			{/if}
 		</div>

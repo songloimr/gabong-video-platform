@@ -1,7 +1,8 @@
 <script lang="ts">
-	import { SEO_CONFIG } from '$lib/utils/seo';
 
 	interface Props {
+		siteName: string;
+		siteUrl: string;
 		title: string;
 		description?: string;
 		canonical?: string;
@@ -15,19 +16,23 @@
 	}
 
 	let {
+		siteName,
+		siteUrl,
 		title,
-		description = SEO_CONFIG.defaultDescription,
+		description,
 		canonical,
 		robots,
 		keywords,
 		jsonLd,
-		pagination
+		pagination,
 	}: Props = $props();
 
-	const fullTitle = $derived(`${title} | ${SEO_CONFIG.siteName}`);
-	const canonicalUrl = $derived(canonical ? `${SEO_CONFIG.siteUrl}${canonical}` : undefined);
+	const fullTitle = $derived(`${title} | ${siteName}`);
+	const canonicalUrl = $derived(
+		canonical && siteUrl ? `${siteUrl}${canonical}` : undefined,
+	);
 	const jsonLdScripts = $derived(
-		jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : []
+		jsonLd ? (Array.isArray(jsonLd) ? jsonLd : [jsonLd]) : [],
 	);
 </script>
 

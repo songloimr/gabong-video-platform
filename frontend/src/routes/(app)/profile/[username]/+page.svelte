@@ -5,13 +5,20 @@
   import { auth } from "$lib/stores/auth.svelte";
   import { getAvatarUrl } from "$lib/utils/formatters";
   import Seo from "$lib/components/Seo.svelte";
+  import type { PageData } from "./$types";
+
+  let { siteSettings } = $derived(page.data as PageData);
 
   const userQuery = useUser(page.params.username!);
 
   const isOwnProfile = $derived(auth.user?.username === page.params.username!);
 </script>
 
-<Seo title={userQuery.data?.username || $t("common.profile")} />
+<Seo
+  siteName={siteSettings.site_name}
+  siteUrl={siteSettings.site_url}
+  title={userQuery.data?.username || $t("common.profile")}
+/>
 
 <div class="container mx-auto px-4 py-6 md:py-8">
   {#if userQuery.isLoading}
@@ -33,7 +40,7 @@
           />
         {:else}
           <div
-            class="w-24 h-24 rounded-full bg-gradient-to-br from-primary-600 to-secondary-600 flex items-center justify-center text-white text-3xl font-bold ring-4 ring-surface-800/50 shadow-lg"
+            class="w-24 h-24 rounded-full bg-linear-to-br from-primary-600 to-secondary-600 flex items-center justify-center text-white text-3xl font-bold ring-4 ring-surface-800/50 shadow-lg"
           >
             {userQuery.data.username.charAt(0).toUpperCase()}
           </div>
@@ -49,7 +56,11 @@
             </p>
           {/if}
           <p class="text-sm text-surface-500">
-            {$t("profile.joined", { values: { date: new Date(userQuery.data.created_at).toLocaleDateString() } })}
+            {$t("profile.joined", {
+              values: {
+                date: new Date(userQuery.data.created_at).toLocaleDateString(),
+              },
+            })}
           </p>
           {#if isOwnProfile}
             <a href="/profile" class="text-primary-400 hover:underline">

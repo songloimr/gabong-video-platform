@@ -4,11 +4,14 @@ import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params, fetch }) => {
     const baseUrl = `${PUBLIC_VITE_API_URL}/api`
-    const baseResponse = {
-        markups: [] as VideoMarkup[],
-        subtitles: [] as VideoSubtitle[],
-        video: null,
-        error: null,
+    const baseResponse: {
+        markups: VideoMarkup[],
+        subtitles: VideoSubtitle[],
+        video?: Video,
+        error?: string,
+    } = {
+        markups: [],
+        subtitles: []
     }
 
     try {
@@ -20,13 +23,11 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
                 error: videoResponse.status === 404 ? 'errors.notFound' : 'errors.loadFailed'
             };
         }
-        const { data }: ApiResponse<Video> = await videoResponse.json();
-
-        console.log(data)
+        const { data: video }: ApiResponse<Video> = await videoResponse.json();
 
         const [markupsResponse, subtitlesResponse] = await Promise.all([
-            fetch(baseUrl + `/videos/${data.id}/markups`),
-            fetch(baseUrl + `/videos/${data.id}/subtitles`),
+            fetch(baseUrl + `/videos/${video.id}/markups`),
+            fetch(baseUrl + `/videos/${video.id}/subtitles`),
         ]);
 
         const [{ data: markups }, { data: subtitles }] = await Promise.all([
@@ -36,7 +37,7 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 
         return {
             ...baseResponse,
-            video: data,
+            video,
             markups,
             subtitles,
         };

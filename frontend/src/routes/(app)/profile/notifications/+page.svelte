@@ -2,7 +2,6 @@
     import { t } from "$lib/stores/i18n";
     import { Bell } from "@lucide/svelte";
     import { useNotifications } from "$lib/api/queries/notifications";
-    import Seo from "$lib/components/Seo.svelte";
     import {
         useMarkAllAsRead,
         useDeleteNotification,
@@ -11,17 +10,14 @@
     import { toaster } from "$lib/toaster";
     import AppPagination from "$lib/components/ui/AppPagination.svelte";
 
+
     let currentTab = $state<"all" | "unread" | "read">("all");
     let currentPage = $state(1);
     const limit = 25;
 
     // Query notifications based on tab
     const isReadParam = $derived(
-        currentTab === "all"
-            ? undefined
-            : currentTab === "unread"
-              ? false
-              : true,
+        currentTab === "all" ? undefined : !(currentTab === "unread"),
     );
 
     const notificationsQuery = $derived(
@@ -38,12 +34,12 @@
         markAllMutation.mutate(undefined, {
             onSuccess: () => {
                 toaster.success({
-                    title: $t("notifications.allMarkedRead")
+                    title: $t("notifications.allMarkedRead"),
                 });
             },
             onError: () => {
                 toaster.error({
-                    title: $t("notifications.markReadFailed")
+                    title: $t("notifications.markReadFailed"),
                 });
             },
         });
@@ -54,8 +50,6 @@
         window.scrollTo({ top: 0, behavior: "smooth" });
     }
 </script>
-
-<Seo title={$t("notifications.title")} />
 
 <div class="max-w-4xl mx-auto space-y-6 px-4 py-8">
     <!-- Header -->
@@ -77,7 +71,9 @@
                 disabled={markAllMutation.isPending}
                 class="px-4 py-2 bg-primary-500/10 hover:bg-primary-500/20 border border-primary-500/30 text-primary-400 font-bold text-xs rounded-sm transition-colors disabled:opacity-50"
             >
-                {markAllMutation.isPending ? $t("notifications.marking") : $t("notifications.markAllRead")}
+                {markAllMutation.isPending
+                    ? $t("notifications.marking")
+                    : $t("notifications.markAllRead")}
             </button>
         {/if}
     </div>
