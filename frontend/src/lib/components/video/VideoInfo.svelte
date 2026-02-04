@@ -14,7 +14,7 @@
   import { browser } from "$app/environment";
   import { getAvatarUrl } from "$lib/utils/formatters";
   import { page } from "$app/state";
-  import type { PageData } from "../../../routes/(app)/$types";
+  import type { LayoutData } from "../../../routes/(app)/$types";
 
   let {
     video,
@@ -32,7 +32,7 @@
     isSaved?: boolean;
   } = $props();
 
-  const { siteSettings } = $derived(page.data as PageData);
+  const { siteSettings } = $derived(page.data as LayoutData);
 
   function formatDate(dateString: string): string {
     return moment(dateString).fromNow();

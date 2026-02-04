@@ -1,12 +1,9 @@
 <script lang="ts">
+  import { page } from "$app/state";
   import { t } from "$lib/stores/i18n";
-  import type { SiteSettings } from "$lib/types";
+  import type { LayoutData } from "../../../routes/(app)/$types";
 
-  interface Props {
-    settings: SiteSettings;
-  }
-
-  let { settings }: Props = $props();
+  const { siteSettings } = $derived(page.data as LayoutData);
 </script>
 
 <footer
@@ -16,7 +13,7 @@
     <div class="grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
       <div class="space-y-6">
         <div class="text-3xl font-black tracking-tighter text-gradient">
-          {settings.site_name}
+          {siteSettings.site_name}
         </div>
         <p
           class="text-sm font-medium text-surface-400 leading-relaxed max-w-xs"
@@ -117,7 +114,7 @@
     >
       <div class="text-xs font-bold text-surface-500">
         &copy; {new Date().getFullYear()}
-        {settings.site_name}. {$t("footer.copyright")}
+        {siteSettings.site_name}. {$t("footer.copyright")}
       </div>
       <div class="flex items-center gap-6">
         <span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>

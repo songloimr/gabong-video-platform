@@ -44,18 +44,18 @@
     ></div>
 </div>
 
-<Header settings={data.siteSettings} />
+<Header />
 
 <div
     class="flex-1 flex flex-col lg:flex-row max-w-480 mx-auto w-full relative z-10"
 >
-    <Sidebar settings={data.siteSettings} />
+    <Sidebar />
     <main class="flex-1 pb-20 lg:pb-6">
         {@render children()}
     </main>
 </div>
 
-<Footer settings={data.siteSettings} />
+<Footer />
 <BottomNav />
 
 <AgeVerificationPopup

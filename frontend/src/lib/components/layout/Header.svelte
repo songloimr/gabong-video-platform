@@ -15,19 +15,14 @@
     User,
     LogOut,
     ChevronDown,
-    Home,
-    PlaySquare,
     X,
     MessageSquare,
   } from "@lucide/svelte";
   import { useLogout } from "$lib/api/mutations/auth";
-    import type { SiteSettings } from "$lib/types";
+  import type { LayoutData } from "../../../routes/(app)/$types";
+  import { page } from "$app/state";
 
-  interface Props {
-    settings: SiteSettings;
-  }
-
-  let { settings }: Props = $props();
+  const { siteSettings } = $derived(page.data as LayoutData);
 
   const logoutMutation = useLogout();
 
@@ -56,7 +51,9 @@
           <button
             onclick={() => sidebarState.toggle()}
             class="lg:hidden p-2 text-surface-400 hover:bg-surface-800 rounded-lg transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-500"
-            aria-label={sidebarState.isOpen ? $t("common.closeMenu") : $t("common.openMenu")}
+            aria-label={sidebarState.isOpen
+              ? $t("common.closeMenu")
+              : $t("common.openMenu")}
             aria-expanded={sidebarState.isOpen}
           >
             {#if sidebarState.isOpen}
@@ -70,7 +67,7 @@
             href="/"
             class="text-xl sm:text-2xl font-display font-black tracking-tighter text-gradient hover:opacity-80 transition-opacity"
           >
-            {settings.site_name}
+            {siteSettings.site_name}
           </a>
 
           <!-- Desktop Navigation -->

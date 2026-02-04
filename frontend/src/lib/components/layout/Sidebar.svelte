@@ -3,25 +3,24 @@
   import { sidebarState } from "$lib/stores/sidebar.svelte";
   import { t } from "$lib/stores/i18n";
   import {
-    Home,
-    PlaySquare,
+    House,
     FolderOpen,
     Clock,
     Library,
     X,
     ThumbsUp,
   } from "@lucide/svelte";
-    import type { SiteSettings } from "$lib/types";
+    import type { LayoutData } from "../../../routes/(app)/$types";
 
   interface Props {
-    settings: SiteSettings;
     isOpen?: boolean;
   }
 
-  let { isOpen = $bindable(false), settings }: Props = $props();
+  let { isOpen = $bindable(false) }: Props = $props();
+  const { siteSettings } = $derived(page.data as LayoutData);
 
   const navItems = [
-    { href: "/", icon: Home, label: "common.home" },
+    { href: "/", icon: House, label: "common.home" },
     { href: "/most-liked", icon: ThumbsUp, label: "common.mostLiked" },
     { href: "/categories", icon: FolderOpen, label: "common.categories" },
     { href: "/watch-later", icon: Clock, label: "common.watchLater" },
@@ -56,7 +55,7 @@
       class="flex lg:hidden items-center justify-between px-4 h-14 border-b border-surface-800/50"
     >
       <span class="text-xl font-black tracking-tighter text-gradient"
-        >{settings.site_name}</span
+        >{siteSettings.site_name}</span
       >
       <button
         onclick={() => sidebarState.close()}
@@ -90,7 +89,11 @@
                 strokeWidth={isActive(item.href) ? 2.5 : 2}
                 class="transition-transform group-hover:scale-110"
               />
-              <span>{item.label.startsWith('common.') ? $t(item.label) : item.label}</span>
+              <span
+                >{item.label.startsWith("common.")
+                  ? $t(item.label)
+                  : item.label}</span
+              >
             </a>
           {/each}
         </nav>
@@ -118,7 +121,11 @@
                 strokeWidth={isActive(item.href) ? 2.5 : 2}
                 class="transition-transform group-hover:scale-110"
               />
-              <span>{item.label.startsWith('common.') ? $t(item.label) : item.label}</span>
+              <span
+                >{item.label.startsWith("common.")
+                  ? $t(item.label)
+                  : item.label}</span
+              >
             </a>
           {/each}
         </nav>
