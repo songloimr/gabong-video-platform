@@ -11,9 +11,6 @@ import { Role } from '../../constants/role.enum';
 import Redis from 'ioredis';
 import { REDIS_CLIENT } from '../redis';
 
-const DEFAULT_COOLDOWN_SECONDS = 30;
-const DEFAULT_DAILY_LIMIT = 30;
-
 @Injectable()
 export class CommentRateLimitGuard implements CanActivate {
   constructor(
@@ -39,8 +36,8 @@ export class CommentRateLimitGuard implements CanActivate {
       'comment_daily_limit',
     ]);
 
-    const cooldownSeconds = settings.comment_cooldown_seconds ?? DEFAULT_COOLDOWN_SECONDS;
-    const dailyLimit = settings.comment_daily_limit ?? DEFAULT_DAILY_LIMIT;
+    const cooldownSeconds = settings.comment_cooldown_seconds
+    const dailyLimit = settings.comment_daily_limit
 
     await this.checkCooldown(user.sub, cooldownSeconds);
     await this.checkDailyLimit(user.sub, dailyLimit);

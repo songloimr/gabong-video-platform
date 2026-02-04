@@ -45,17 +45,14 @@ import databaseConfig from './config/database.config';
 import jwtConfig from './config/jwt.config';
 import cloudflareConfig from './config/cloudflare.config';
 import redisConfig from './config/redis.config';
-import { ExpressAdapter } from "@bull-board/express";
-import { BullBoardModule } from "@bull-board/nestjs";
-import { PrometheusModule } from "@willsoto/nestjs-prometheus";
+import rateLimitConfig from './config/rate-limit.config';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      load: [databaseConfig, jwtConfig, cloudflareConfig, redisConfig],
+      load: [databaseConfig, jwtConfig, cloudflareConfig, redisConfig, rateLimitConfig],
     }),
-    // PrometheusModule.register(),
     BullModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => ({
@@ -82,15 +79,10 @@ import { PrometheusModule } from "@willsoto/nestjs-prometheus";
         };
       },
     }),
-    BullBoardModule.forRoot({
-      route: '/queues',
-      adapter: ExpressAdapter // Or FastifyAdapter from `@bull-board/fastify`
-    }),
-
     ThrottlerModule.forRoot([
       {
-        ttl: 60000,
-        limit: 15,
+        ttl: 1000,
+        limit: 1,
       },
     ]),
     DrizzleModule,

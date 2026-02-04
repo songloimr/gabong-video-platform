@@ -9,26 +9,31 @@ import {
 import { Role } from '../../constants/role.enum';
 import Redis from 'ioredis';
 import { REDIS_CLIENT } from '../redis';
+import { ConfigService } from '@nestjs/config';
 
-const DAILY_LIMIT = 2;
 
 @Injectable()
 export class FeedbackRateLimitGuard implements CanActivate {
-  constructor(@Inject(REDIS_CLIENT) private readonly redis: Redis) {}
+  constructor(
+    @Inject(REDIS_CLIENT) private readonly redis: Redis,
+    private readonly configService: ConfigService,
+  ) { }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
     const user = request.user;
 
-    // Admin bypass
-    if (user?.roles?.includes(Role.Admin)) {
+    // Bypass for Admin users and SSR requests from frontend server
+    if (user?.roles?.includes(Role.Admin) || request.headers['ssr']) {
       return true;
     }
 
     // Identifier: user_id if logged in, IP if guest
     const identifier = user?.sub || this.getClientIp(request);
 
-    await this.checkDailyLimit(identifier);
+    const dailyLimit = this.configService.get<number>('rateLimit.feedback.dailyLimit')
+
+    await this.checkDailyLimit(identifier, dailyLimit);
 
     return true;
   }
@@ -43,18 +48,18 @@ export class FeedbackRateLimitGuard implements CanActivate {
     );
   }
 
-  private async checkDailyLimit(identifier: string): Promise<void> {
+  private async checkDailyLimit(identifier: string, dailyLimit: number): Promise<void> {
     const today = new Date().toISOString().split('T')[0];
     const dailyKey = `feedback_daily:${identifier}:${today}`;
 
     const currentCount = await this.redis.get(dailyKey);
     const count = parseInt(currentCount || '0', 10);
 
-    if (count >= DAILY_LIMIT) {
+    if (count >= dailyLimit) {
       throw new HttpException(
         {
           statusCode: HttpStatus.TOO_MANY_REQUESTS,
-          message: `Bạn đã đạt giới hạn ${DAILY_LIMIT} feedback/ngày`,
+          message: `Bạn đã đạt giới hạn ${dailyLimit} feedback/ngày`,
           error: 'Too Many Requests',
         },
         HttpStatus.TOO_MANY_REQUESTS,

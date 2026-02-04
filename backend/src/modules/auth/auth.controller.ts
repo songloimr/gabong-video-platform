@@ -7,36 +7,29 @@ import {
   HttpStatus,
   Ip,
 } from '@nestjs/common';
-import { Throttle } from '@nestjs/throttler';
+import { Throttle, SkipThrottle } from '@nestjs/throttler';
+import { ConfigService } from '@nestjs/config';
 import { AuthService } from './auth.service';
 import { RegisterDto, LoginDto, RefreshTokenDto } from './dto';
 import { Roles, User } from '../../common/decorators';
 import { JwtPayload } from '../../types';
-import { RATE_LIMIT_CONSTANTS } from '../../constants';
 import { Role } from '../../constants/role.enum';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) { }
+
+  constructor(
+    private readonly authService: AuthService
+  ) { }
 
   @Post('register')
-  @Throttle({
-    default: {
-      limit: RATE_LIMIT_CONSTANTS.AUTH.REGISTER_LIMIT,
-      ttl: RATE_LIMIT_CONSTANTS.AUTH.REGISTER_TTL,
-    },
-  })
+  @Throttle({ default: { limit: 3, ttl: 60000 } })
   async register(@Body() dto: RegisterDto) {
     return this.authService.register(dto);
   }
 
   @Post('login')
-  @Throttle({
-    default: {
-      limit: RATE_LIMIT_CONSTANTS.AUTH.LOGIN_LIMIT,
-      ttl: RATE_LIMIT_CONSTANTS.AUTH.LOGIN_TTL,
-    },
-  })
+  @Throttle({ default: { limit: 5, ttl: 60000 } })
   @HttpCode(HttpStatus.OK)
   async login(@Body() dto: LoginDto, @Ip() ip: string) {
     return this.authService.login(dto, ip);
