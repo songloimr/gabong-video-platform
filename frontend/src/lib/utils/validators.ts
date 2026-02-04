@@ -1,33 +1,37 @@
 import { get } from 'svelte/store';
 import { t } from '$lib/stores/i18n';
+import { USERNAME_MIN_LENGTH, USERNAME_MAX_LENGTH, USERNAME_PATTERN } from './validation';
 
-export function validateUsername(username: string): boolean {
-  return /^[a-zA-Z0-9_]{3,50}$/.test(username);
+export function validateUsername(username: string): string | null {
+    const $t = get(t);
+    if (!username) return $t('validation.usernameRequired');
+    if (username.length < USERNAME_MIN_LENGTH) return $t('validation.usernameMin', { values: { min: USERNAME_MIN_LENGTH } });
+    if (username.length > USERNAME_MAX_LENGTH) return $t('validation.usernameMax', { values: { max: USERNAME_MAX_LENGTH } });
+    if (!USERNAME_PATTERN.test(username)) return $t('validation.usernamePattern');
+    return null;
 }
 
-export function validatePassword(password: string): boolean {
-  return password.length >= 8;
+export function validatePassword(password: string): string | null {
+    const $t = get(t);
+    if (!password) return $t('validation.passwordRequired');
+    if (password.length < 6) return $t('validation.passwordMin', { values: { min: 6 } });
+    if (password.length > 25) return $t('validation.passwordMax', { values: { max: 25 } });
+    if (!/^(?=.*[a-zA-Z])(?=.*\d).+$/.test(password)) return $t('validation.passwordPattern');
+    return null;
 }
 
-export function validateEmail(email: string): boolean {
-  return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+export function validateTitle(title: string): string | null {
+    const $t = get(t);
+    if (!title) return $t('validation.titleRequired');
+    if (title.length < 2) return $t('validation.titleMin', { values: { min: 2 } });
+    if (title.length > 60) return $t('validation.titleMax', { values: { max: 60 } });
+    return null;
 }
 
-export function validateFileSize(size: number, maxSize: number = 500 * 1024 * 1024): boolean {
-  return size <= maxSize;
-}
-
-export function validateVideoFile(file: File): { valid: boolean; error?: string } {
-  const $t = get(t);
-  if (!file.type.startsWith('video/')) {
-    return { valid: false, error: $t('validation.fileMustBeVideo') };
-  }
-  if (!validateFileSize(file.size)) {
-    return { valid: false, error: $t('validation.fileTooLarge', { values: { limit: '500MB' } }) };
-  }
-  return { valid: true };
-}
-
-export function validateSlug(slug: string): boolean {
-  return /^[a-z0-9-]+$/.test(slug);
+export function validateSlug(slug: string): string | null {
+    const $t = get(t);
+    if (!slug) return $t('validation.slugRequired');
+    if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(slug)) return $t('validation.slugPattern');
+    if (slug.length > 200) return $t('validation.slugMax', { values: { max: 200 } });
+    return null;
 }

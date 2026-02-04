@@ -6,6 +6,8 @@ export function useAddComment() {
 
   return createMutation(() => ({
     mutationFn: async ({ videoId, content, parentId }: { videoId: string; content: string; parentId?: string }) => {
+      if (content.length > 2000) throw new Error('Comment must be at most 2000 characters');
+      if (content.length < 1) throw new Error('Comment content is required');
       const { data } = await api.post(`/api/videos/${videoId}/comments`, { content, parent_id: parentId });
       return data;
     },
