@@ -304,8 +304,7 @@ export class VideosService {
     }
     if (["pending_approval", "pending_processing", "rejected"].includes(deletedVideo.status)) {
       try {
-        console.log(deletedVideo.local_path)
-        fs.rmdirSync(path.dirname(deletedVideo.local_path));
+        fs.rmSync(path.dirname(deletedVideo.local_path), { recursive: true, force: true });
       } catch (error) {
         this.logger.error(`Error cleaning up local path ${deletedVideo.local_path}: ${error.message}`);
       }
@@ -546,6 +545,12 @@ export class VideosService {
       })
       .where(eq(videos.id, id))
       .returning();
+
+    try {
+      fs.rmSync(path.dirname(video.local_path), { recursive: true, force: true });
+    } catch (error) {
+      this.logger.error(`Error cleaning up local path ${video.local_path}: ${error.message}`);
+    }
 
     return video;
   }
