@@ -127,7 +127,7 @@
     "registrationFailedDesc": "Registration failed. Please try again.",
     "loginFailedTitle": "Login Failed",
     "loginFailedDesc": "Login failed. Please check your credentials.",
-    "rememberMeText": "Stay logged in for 30 days",
+    "rememberMeText": "Stay logged in",
     "minChars": "minimum {min} characters",
     "usernamePlaceholder": "username",
     "emailPlaceholder": "your.email@example.com",

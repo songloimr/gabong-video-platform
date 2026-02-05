@@ -127,7 +127,7 @@
     "registrationFailedDesc": "Đăng ký thất bại. Vui lòng thử lại.",
     "loginFailedTitle": "Đăng nhập thất bại",
     "loginFailedDesc": "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin.",
-    "rememberMeText": "Duy trì đăng nhập trong 30 ngày",
+    "rememberMeText": "Duy trì đăng nhập",
     "minChars": "tối thiểu {min} ký tự",
     "usernamePlaceholder": "tên đăng nhập",
     "emailPlaceholder": "email.cua.ban@example.com",

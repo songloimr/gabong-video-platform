@@ -4,6 +4,7 @@ src/database/migrations/*
 /dist
 /node_modules
 /build
+/test
 
 # Logs
 logs
