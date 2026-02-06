@@ -5,10 +5,6 @@ import { defineConfig } from 'vite';
 export default defineConfig(({ mode }) => ({
     plugins: [tailwindcss(), sveltekit()],
     
-    server: {
-        allowedHosts: ["dev.khosachviet.online"]
-    },
-    
     build: {
         // Disable source maps in production
         sourcemap: mode === 'development',
