@@ -4,7 +4,7 @@ import { DrizzleService } from '../../database/drizzle.service';
 import { users } from '../../database/schema';
 import { UpdateProfileDto, UserFilterDto } from './dto';
 import { PaginationParams } from '../../types';
-import sharp = require('sharp');
+import { Jimp } from 'jimp';
 import { StorageService } from '../storage/storage.service';
 
 import {
@@ -74,10 +74,9 @@ export class UsersService {
   }
 
   async updateAvatar(userId: string, avatarFile: Express.Multer.File) {
-    const jpgBuffer = await sharp(avatarFile.buffer)
-      .resize(200, 200)
-      .jpeg({ quality: 80 })
-      .toBuffer();
+    const image = await Jimp.read(avatarFile.buffer);
+    image.resize({ w: 200, h: 200 });
+    const jpgBuffer = await image.getBuffer('image/jpeg', { quality: 80 });
 
     const key = `avatars/${userId}.jpg`;
     await this.storageService.uploadFile(jpgBuffer, key, 'image/jpeg');

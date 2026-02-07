@@ -9,7 +9,7 @@ import path = require('path');
 import fs = require('fs');
 import { v4 as uuidv4 } from 'uuid';
 import { VideoSourceType } from '../../types/video.types';
-import sharp = require('sharp');
+import { Jimp } from 'jimp';
 import { HttpService } from '@nestjs/axios';
 import { firstValueFrom } from 'rxjs';
 import { createWriteStream } from 'fs';
@@ -125,9 +125,12 @@ export class UploadService {
         const thumbPath = path.join(videoTempDir, `thumbnail.jpg`);
 
         if (thumbExt !== '.jpg') {
-          await sharp(thumbnailFile.buffer).jpeg().toFile(thumbPath)
+          const image = await Jimp.read(thumbnailFile.buffer);
+          const jpgBuffer = await image.getBuffer('image/jpeg');
+          fs.writeFileSync(thumbPath, jpgBuffer);
+        } else {
+          fs.writeFileSync(thumbPath, thumbnailFile.buffer);
         }
-        fs.writeFileSync(thumbPath, thumbnailFile.buffer);
       }
 
       // Create video record with status 'pending_approval' including metadata

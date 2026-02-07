@@ -7,7 +7,7 @@ import {
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import sharp = require('sharp');
+import { Jimp } from 'jimp';
 import { eq } from 'drizzle-orm';
 import { DrizzleService } from '../../database/drizzle.service';
 import { users, refreshTokens } from '../../database/schema';
@@ -46,9 +46,8 @@ export class AuthService {
     const pngBuffer = Buffer.from(await response.arrayBuffer());
 
     // Convert to JPG
-    const jpgBuffer = await sharp(pngBuffer)
-      .jpeg({ quality: 85 })
-      .toBuffer();
+    const image = await Jimp.read(pngBuffer);
+    const jpgBuffer = await image.getBuffer('image/jpeg', { quality: 85 });
 
     // Upload to R2
     const key = `avatars/${userId}.jpg`;
