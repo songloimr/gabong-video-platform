@@ -1,4 +1,4 @@
-import { PUBLIC_VITE_API_URL } from '$env/static/public';
+import { API_URL } from '$env/static/private';
 import type { ApiResponse, SiteSettings } from '$lib/types';
 import type { LayoutServerLoad } from './$types';
 
@@ -16,12 +16,11 @@ export interface Announcement {
 
 
 export const load: LayoutServerLoad = async ({ fetch }) => {
-    const apiUrl = PUBLIC_VITE_API_URL;
 
     try {
         const [announcementsResponse, settingsResponse] = await Promise.all([
-            fetch(`${apiUrl}/api/announcements?position=header_bar`),
-            fetch(`${apiUrl}/api/site-settings/public`),
+            fetch(`${API_URL}/api/announcements?position=header_bar`),
+            fetch(`${API_URL}/api/site-settings/public`),
         ]);
 
         const { data: announcements }: ApiResponse<Announcement[]> = announcementsResponse.ok

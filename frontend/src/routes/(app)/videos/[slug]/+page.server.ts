@@ -1,9 +1,9 @@
-import { PUBLIC_VITE_API_URL } from '$env/static/public';
+import { API_URL } from '$env/static/private';
 import type { ApiResponse, Video, VideoMarkup, VideoSubtitle } from '$lib/types';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params, fetch }) => {
-    const baseUrl = `${PUBLIC_VITE_API_URL}/api`
+    const baseUrl = `${API_URL}/api`
     const baseResponse: {
         markups: VideoMarkup[],
         subtitles: VideoSubtitle[],

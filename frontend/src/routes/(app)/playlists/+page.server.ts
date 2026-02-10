@@ -1,9 +1,8 @@
 import type { PageServerLoad } from './$types';
 import type { Playlist, PaginatedResponse } from '$lib/types';
-import { PUBLIC_VITE_API_URL } from '$env/static/public';
+import { API_URL } from '$env/static/private';
 
 export const load: PageServerLoad = async ({ url, fetch }) => {
-    const apiUrl = PUBLIC_VITE_API_URL;
 
     const page = Math.max(1, Math.min(100, Number(url.searchParams.get('page')) || 1));
 
@@ -19,7 +18,7 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
     };
 
     try {
-        const response = await fetch(`${apiUrl}/api/playlists?${params.toString()}`);
+        const response = await fetch(`${API_URL}/api/playlists?${params.toString()}`);
 
         if (!response.ok) {
             return {

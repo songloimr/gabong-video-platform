@@ -1,9 +1,8 @@
 import type { PageServerLoad } from './$types';
 import type { Video, PaginatedResponse, Category } from '$lib/types';
-import { PUBLIC_VITE_API_URL } from '$env/static/public';
+import { API_URL } from '$env/static/private';
 
 export const load: PageServerLoad = async ({ url, fetch, params }) => {
-    const apiUrl = PUBLIC_VITE_API_URL;
     const { slug } = params;
 
     const page = Math.max(1, Math.min(100, Number(url.searchParams.get('page')) || 1));
@@ -25,8 +24,8 @@ export const load: PageServerLoad = async ({ url, fetch, params }) => {
     try {
         // Fetch videos and category info in parallel
         const [videosResponse, categoryResponse] = await Promise.all([
-            fetch(`${apiUrl}/api/videos?${queryParams.toString()}`),
-            fetch(`${apiUrl}/api/categories/${slug}`),
+            fetch(`${API_URL}/api/videos?${queryParams.toString()}`),
+            fetch(`${API_URL}/api/categories/${slug}`),
         ]);
 
         if (!videosResponse.ok) {

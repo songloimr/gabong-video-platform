@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { PUBLIC_CDN_URL, PUBLIC_VITE_API_URL } from '$env/static/public';
+import { PUBLIC_CDN_URL } from '$env/static/public';
 
 
 export function formatDate(date: string | Date): string {

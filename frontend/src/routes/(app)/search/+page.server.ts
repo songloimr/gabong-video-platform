@@ -1,6 +1,6 @@
 import type { PageServerLoad } from './$types';
 import type { Video, PaginatedResponse } from '$lib/types';
-import { PUBLIC_VITE_API_URL } from '$env/static/public';
+import { API_URL } from '$env/static/private';
 
 // Validation constants (keep in sync with backend)
 const SEARCH_MAX_LENGTH = 50;
@@ -9,7 +9,6 @@ const SEARCH_MAX_LENGTH = 50;
 const SECURITY_PATTERN = /('|"|--|;|\/\*|\*\/|union\s+select|drop\s+table|<script|javascript:)/i;
 
 export const load: PageServerLoad = async ({ url, fetch }) => {
-    const apiUrl = PUBLIC_VITE_API_URL
 
     // Get and validate search query
     let q = url.searchParams.get('q') || '';
@@ -50,7 +49,7 @@ export const load: PageServerLoad = async ({ url, fetch }) => {
     };
 
     try {
-        const response = await fetch(`${apiUrl}/api/videos?${params.toString()}`);
+        const response = await fetch(`${API_URL}/api/videos?${params.toString()}`);
 
         if (!response.ok) {
             return {

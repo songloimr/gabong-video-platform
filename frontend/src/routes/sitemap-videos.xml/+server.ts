@@ -1,10 +1,10 @@
+import { API_URL } from '$env/static/private';
 import type { RequestHandler } from './$types';
-import { PUBLIC_VITE_API_URL } from '$env/static/public';
 
 export const GET: RequestHandler = async ({ fetch }) => {
   try {
     // Proxy video sitemap from backend
-    const response = await fetch(`${PUBLIC_VITE_API_URL}/api/sitemap/sitemap-videos.xml`);
+    const response = await fetch(`${API_URL}/api/sitemap/sitemap-videos.xml`);
     
     if (!response.ok) {
       throw new Error(`Backend returned ${response.status}`);

@@ -1,12 +1,11 @@
-import { PUBLIC_VITE_API_URL } from "$env/static/public"
+import { API_URL } from "$env/static/private"
 import type { Category, PaginatedResponse } from "$lib/types"
 import type { PageServerLoad } from "./$types"
 
 export const load: PageServerLoad = async ({ fetch }) => {
-    const apiUrl = PUBLIC_VITE_API_URL
     let categories = [] as Category[]
 
-    const response = await fetch(`${apiUrl}/categories`);
+    const response = await fetch(`${API_URL}/categories`);
 
     if (response.ok) {
         const { data }: PaginatedResponse<Category> = await response.json();

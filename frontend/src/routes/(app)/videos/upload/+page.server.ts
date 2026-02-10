@@ -1,6 +1,6 @@
-import { PUBLIC_VITE_API_URL } from "$env/static/public";
 import type { PageServerLoad } from "./$types";
 import type { Category, ApiResponse } from '$lib/types';
+import { API_URL } from "$env/static/private";
 
 export const load: PageServerLoad = async ({ fetch }) => {
     const baseResponse = {
@@ -8,7 +8,7 @@ export const load: PageServerLoad = async ({ fetch }) => {
     }
     try {
         const [categoriesResponse] = await Promise.all([
-            fetch(`${PUBLIC_VITE_API_URL}/api/categories`),
+            fetch(`${API_URL}/api/categories`),
         ])
 
         if (categoriesResponse.ok) {

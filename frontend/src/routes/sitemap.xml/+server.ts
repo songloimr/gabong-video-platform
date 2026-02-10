@@ -1,10 +1,11 @@
-import type { RequestHandler } from './$types';
+import { API_URL } from '$env/static/private';
 import { PUBLIC_VITE_API_URL } from '$env/static/public';
+import type { RequestHandler } from './$types';
 
 export const GET: RequestHandler = async ({ fetch }) => {
   try {
     // Proxy sitemap from backend
-    const response = await fetch(`${PUBLIC_VITE_API_URL}/api/sitemap/sitemap.xml`);
+    const response = await fetch(`${API_URL}/api/sitemap/sitemap.xml`);
 
     if (!response.ok) {
       throw new Error(`Backend returned ${response.status}`);
