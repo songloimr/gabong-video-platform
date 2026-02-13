@@ -5,13 +5,11 @@ import type { PageServerLoad } from "./$types"
 export const load: PageServerLoad = async ({ fetch }) => {
     let categories = [] as Category[]
 
-    const response = await fetch(`${API_URL}/categories`);
+    const response = await fetch(`${API_URL}/api/categories`);
 
     if (response.ok) {
         const { data }: PaginatedResponse<Category> = await response.json();
         categories = data || [];
-
-        console.info(categories)
     }
 
     return {
