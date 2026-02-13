@@ -2,6 +2,8 @@ import {
   Controller,
   Get,
   Header,
+  HttpCode,
+  HttpStatus,
   NotFoundException,
   Param,
   Query,
@@ -34,7 +36,8 @@ export class VideosController {
   }
 
   @Get(':slug')
-  async findBySlug(@Param('slug', ValidateIdentifierPipe) slug: string) {
+  @HttpCode(HttpStatus.OK)
+  async findBySlug(@Param('slug') slug: string) {
     return this.videosService.findBySlug(slug);
   }
 

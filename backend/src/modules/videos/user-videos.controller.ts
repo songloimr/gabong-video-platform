@@ -1,4 +1,4 @@
-import { Controller, Body, Param, Post, HttpStatus, HttpCode } from "@nestjs/common";
+import { Controller, Body, Param, Post, Get, HttpStatus, HttpCode } from "@nestjs/common";
 import { VideosService } from "./videos.service";
 import { Role } from "../../constants/role.enum";
 import { Roles, User } from "../../common/decorators";
@@ -10,6 +10,15 @@ import { JwtPayload } from "../../types";
 @Roles(Role.User, Role.Admin)
 export class VideosUserController {
     constructor(private readonly videosService: VideosService) { }
+
+    @Get(':id/interaction-status')
+    @HttpCode(HttpStatus.OK)
+    async getInteractionStatus(
+        @Param('id', ValidateIdentifierPipe) id: string,
+        @User() user: JwtPayload
+    ) {
+        return this.videosService.getInteractionStatus(id, user.sub);
+    }
 
     @Post(':id/view')
     @HttpCode(HttpStatus.NO_CONTENT)

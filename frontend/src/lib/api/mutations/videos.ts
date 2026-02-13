@@ -1,6 +1,7 @@
 import { createMutation, useQueryClient } from '@tanstack/svelte-query';
 import { api } from '../client';
 import { videoKeys } from '../queries/videos';
+import type { ApiResponse } from '$lib/types';
 
 export function useLikeVideo() {
   const queryClient = useQueryClient();
@@ -72,7 +73,8 @@ export function useSaveToWatchLater() {
 
   return createMutation(() => ({
     mutationFn: async (videoId: string) => {
-      await api.post(`/api/watch-later/${videoId}`);
+      const { data: response } = await api.post<ApiResponse<{ is_saved: boolean }>>(`/api/watch-later/${videoId}`);
+      return response.data;
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['watch-later'] });

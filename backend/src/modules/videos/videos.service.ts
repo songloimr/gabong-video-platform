@@ -135,7 +135,7 @@ export class VideosService {
    * Get video details by slug
    * Uses LEFT JOIN to fetch user and category in a single query
    */
-  async findBySlug(slug: string, userId?: string): Promise<VideoDetailResponse> {
+  async findBySlug(slug: string): Promise<VideoDetailResponse> {
 
     const [result] = await this.drizzle.db
       .select({
@@ -171,30 +171,24 @@ export class VideosService {
           name: categories.name,
           slug: categories.slug,
         },
-        // tags: {
-        //   id: tags.id,
-        //   name: tags.name,
-        //   slug: tags.slug,
-        // },
       })
       .from(videos)
       .leftJoin(users, eq(videos.user_id, users.id))
       .leftJoin(categories, eq(videos.category_id, categories.id))
-      // .leftJoin(vt, eq(videos.id, vt.video_id))
-      // .leftJoin(tags, eq(vt.tag_id, tags.id))
       .where(eq(videos.slug, slug));
 
     if (!result) {
       throw new NotFoundException('Video not found');
     }
 
-    // Fetch tags and watch_position in parallel
-    const [tagData] = await Promise.all([
-      this.fetchVideoTags(result.id),
-      // userId ? this.getWatchPosition(result.id, userId) : 0,
-    ]);
+    // Fetch tags
+    const tagData = await this.fetchVideoTags(result.id);
 
-    return { ...result, tags: tagData, watch_position: 0 };
+    return {
+      ...result,
+      tags: tagData,
+      watch_position: 0
+    };
   }
 
   /**
@@ -331,39 +325,54 @@ export class VideosService {
 
     if (existingLike) {
       // Unlike: delete and decrement
-      const [, updatedLikeCount] = await Promise.all([
+      const [, [updateResult]] = await Promise.all([
         this.drizzle.db.delete(likes).where(eq(likes.id, existingLike.id)),
         this.drizzle.db
           .update(videos)
           .set({ likes_count: sql`GREATEST(${videos.likes_count} - 1, 0)` })
-          .where(eq(videos.id, id)),
+          .where(eq(videos.id, id)).returning({ likes_count: videos.likes_count }),
       ]);
-
-      console.log({ updatedLikeCount })
-
-      const [video] = await this.drizzle.db
-        .select({ likes_count: videos.likes_count })
-        .from(videos)
-        .where(eq(videos.id, id));
-
-      return { is_liked: false, likes_count: video?.likes_count ?? 0 };
+      return { is_liked: false, likes_count: updateResult.likes_count ?? 0 };
     }
 
     // Like: insert and increment
-    await Promise.all([
+    const [, [updateResult]] = await Promise.all([
       this.drizzle.db.insert(likes).values({ video_id: id, user_id: userId }),
       this.drizzle.db
         .update(videos)
         .set({ likes_count: sql`${videos.likes_count} + 1` })
-        .where(eq(videos.id, id)),
+        .where(eq(videos.id, id)).returning({ likes_count: videos.likes_count }),
+    ]);
+    return { is_liked: true, likes_count: updateResult.likes_count ?? 0 };
+  }
+
+  /**
+   * Get user interaction status with a video (like + saved)
+   */
+  async getInteractionStatus(videoId: string, userId: string) {
+    const [likeData, savedData, video] = await Promise.all([
+      this.drizzle.db
+        .select({ id: likes.id })
+        .from(likes)
+        .where(and(eq(likes.video_id, videoId), eq(likes.user_id, userId)))
+        .limit(1),
+      this.drizzle.db
+        .select({ id: watchLater.id })
+        .from(watchLater)
+        .where(and(eq(watchLater.video_id, videoId), eq(watchLater.user_id, userId)))
+        .limit(1),
+      this.drizzle.db
+        .select({ likes_count: videos.likes_count })
+        .from(videos)
+        .where(eq(videos.id, videoId))
+        .limit(1),
     ]);
 
-    const [video] = await this.drizzle.db
-      .select({ likes_count: videos.likes_count })
-      .from(videos)
-      .where(eq(videos.id, id));
-
-    return { is_liked: true, likes_count: video?.likes_count ?? 0 };
+    return {
+      is_liked: likeData.length > 0,
+      is_saved: savedData.length > 0,
+      likes_count: video[0]?.likes_count ?? 0,
+    };
   }
 
   /**

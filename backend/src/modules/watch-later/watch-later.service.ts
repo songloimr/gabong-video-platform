@@ -69,9 +69,38 @@ export class WatchLaterService {
     };
   }
 
-  async add(userId: string, videoId: string) {
+  async toggle(userId: string, videoId: string): Promise<{ is_saved: boolean }> {
+    // Check if already saved
+    const [existing] = await this.drizzle.db
+      .select({ id: watchLater.id })
+      .from(watchLater)
+      .where(
+        and(eq(watchLater.user_id, userId), eq(watchLater.video_id, videoId)),
+      )
+      .limit(1);
 
-    const [result] = await this.drizzle.db
+    if (existing) {
+      // Remove if exists
+      await this.drizzle.db
+        .delete(watchLater)
+        .where(eq(watchLater.id, existing.id));
+      return { is_saved: false };
+    } else {
+      // Add if not exists
+      await this.drizzle.db
+        .insert(watchLater)
+        .values({
+          user_id: userId,
+          video_id: videoId,
+          watch_position: 0,
+        });
+      return { is_saved: true };
+    }
+  }
+
+  async add(userId: string, videoId: string): Promise<{ is_saved: boolean }> {
+
+    await this.drizzle.db
       .insert(watchLater)
       .values({
         user_id: userId,
@@ -83,15 +112,14 @@ export class WatchLaterService {
         set: {
           updated_at: new Date(),
         },
-      })
-      .returning();
+      });
 
-    return result;
+    return { is_saved: true };
   }
 
-  async updatePosition(userId: string, videoId: string, watchPosition: number) {
+  async updatePosition(userId: string, videoId: string, watchPosition: number): Promise<{ watch_position: number }> {
     // Use upsert to handle case where watch_later entry doesn't exist yet
-    const [result] = await this.drizzle.db
+    await this.drizzle.db
       .insert(watchLater)
       .values({
         user_id: userId,
@@ -104,10 +132,9 @@ export class WatchLaterService {
           watch_position: watchPosition,
           updated_at: new Date(),
         },
-      })
-      .returning();
+      });
 
-    return result;
+    return { watch_position: watchPosition };
   }
 
   async remove(userId: string, videoId: string) {

@@ -33,12 +33,11 @@ export class WatchLaterController {
 
   @Post(':videoId')
   @Roles(Role.User, Role.Admin)
-  @HttpCode(HttpStatus.CREATED)
-  async add(
+  async toggle(
     @Param('videoId') videoId: string,
     @User() user: JwtPayload,
   ) {
-    return this.watchLaterService.add(user.sub, videoId);
+    return this.watchLaterService.toggle(user.sub, videoId);
   }
 
   @Put(':videoId')

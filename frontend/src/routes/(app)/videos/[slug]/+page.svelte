@@ -5,6 +5,8 @@
 		useSaveToWatchLater,
 		useTrackView,
 	} from "$lib/api/mutations/videos";
+	import { api } from "$lib/api/client";
+	import { auth } from "$lib/stores/auth.svelte";
 	import VideoPlayer from "$lib/components/video/VideoPlayer.svelte";
 	import VideoControls from "$lib/components/video/VideoControls.svelte";
 	import VideoDescription from "$lib/components/video/VideoDescription.svelte";
@@ -17,6 +19,7 @@
 	import type { PageProps } from "./$types";
 	import { PUBLIC_CDN_URL } from "$env/static/public";
 	import { generateVideoJsonLd, truncateDescription } from "$lib/utils/seo";
+    import type { ApiResponse } from "$lib/types";
 
 	// SSR Data
 	let { data }: PageProps = $props();
@@ -69,12 +72,25 @@
 	let player = $state<VideoPlayer | null>(null);
 
 	// Load isMuted from localStorage
-	onMount(() => {
+	onMount(async () => {
 		const savedMuted = localStorage.getItem("video_player_muted");
 		if (savedMuted !== null) {
 			isMuted = savedMuted === "true";
 			isMuted ? player?.mute() : player?.unmute();
 		}
+
+	// Fetch user-specific states if authenticated
+	if (auth.isAuthenticated && video) {
+		try {
+			// Fetch interaction status (is_liked, is_saved, likes_count) from single endpoint
+			const { data: response } = await api.get<ApiResponse<{ is_liked: boolean; is_saved: boolean; likes_count: number }>>(`/api/videos/${video.id}/interaction-status`);
+			isLiked = response.data.is_liked;
+			isSaved = response.data.is_saved;
+			video.likes_count = response.data.likes_count;
+		} catch (error) {
+			console.error("Failed to fetch interaction status:", error);
+		}
+	}
 	});
 
 	// Persist isMuted to localStorage
@@ -87,6 +103,7 @@
 		try {
 			const result = await likeMutation.mutateAsync(video.id);
 			isLiked = result.is_liked;
+			video.likes_count = result.likes_count;
 		} catch (error) {
 			console.error("Failed to like video:", error);
 		}
@@ -95,10 +112,10 @@
 	async function handleWatchLater() {
 		if (!video) return;
 		try {
-			await watchLaterMutation.mutateAsync(video.id);
-			isSaved = !isSaved;
+			const result = await watchLaterMutation.mutateAsync(video.id);
+			isSaved = result.is_saved;
 		} catch (error) {
-			console.error("Failed to save to watch later:", error);
+			console.error("Failed to toggle watch later:", error);
 		}
 	}
 
