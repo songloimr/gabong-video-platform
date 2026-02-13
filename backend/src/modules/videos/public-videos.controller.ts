@@ -8,6 +8,7 @@ import {
   Param,
   Query,
   Res,
+  UseInterceptors,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { VideosService } from './videos.service';
@@ -15,6 +16,8 @@ import { VideoListParams } from './dto';
 import { ValidateIdentifierPipe } from '../../common/pipes';
 import { SubtitlesService } from '../subtitles/subtitles.service';
 import { VideoMarkupsService } from '../video-markups/video-markups.service';
+import { HttpCacheInterceptor } from '../../common/interceptors/http-cache.interceptor';
+import { CacheTTL } from '../../common/decorators';
 
 @Controller('videos')
 export class VideosController {
@@ -25,18 +28,24 @@ export class VideosController {
   ) {}
 
   @Get()
+  @UseInterceptors(HttpCacheInterceptor)
+  @CacheTTL(30)
   async findAll(@Query() params: VideoListParams) {
     const { page = 1, limit = 25, ...filters } = params;
     return this.videosService.findAll({ page, limit }, filters);
   }
 
   @Get('featured')
+  @UseInterceptors(HttpCacheInterceptor)
+  @CacheTTL(60)
   async getFeatured(@Query('limit') limit?: string) {
     return this.videosService.getFeaturedVideos(limit ? parseInt(limit, 10) : 10);
   }
 
   @Get(':slug')
   @HttpCode(HttpStatus.OK)
+  @UseInterceptors(HttpCacheInterceptor)
+  @CacheTTL(5)
   async findBySlug(@Param('slug') slug: string) {
     return this.videosService.findBySlug(slug);
   }

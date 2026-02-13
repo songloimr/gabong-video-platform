@@ -1,5 +1,7 @@
-import { Controller, Get, Query } from '@nestjs/common';
+import { Controller, Get, Query, UseInterceptors } from '@nestjs/common';
 import { VideosService } from '../videos/videos.service';
+import { CacheTTL } from '../../common/decorators';
+import { HttpCacheInterceptor } from '../../common/interceptors/http-cache.interceptor';
 
 class SearchQueryDto {
   q: string;
@@ -15,6 +17,8 @@ export class SearchController {
   constructor(private readonly videosService: VideosService) { }
 
   @Get()
+  @UseInterceptors(HttpCacheInterceptor)
+  @CacheTTL(2) // 2 minutes
   async search(@Query() query: SearchQueryDto) {
     const { q, category, tag, sort, page = 1, limit = 25 } = query;
 

@@ -8,9 +8,17 @@ import { SubtitlesModule } from '../subtitles/subtitles.module';
 import { VideoMarkupsModule } from '../video-markups/video-markups.module';
 import { VideoProcessingModule } from '../video-processing/video-processing.module';
 import { StorageModule } from '../storage/storage.module';
+import { SiteSettingsModule } from '../site-settings/site-settings.module';
 
 @Module({
-  imports: [DrizzleModule, SubtitlesModule, VideoMarkupsModule, forwardRef(() => VideoProcessingModule), StorageModule],
+  imports: [
+    DrizzleModule,
+    SubtitlesModule,
+    VideoMarkupsModule,
+    forwardRef(() => VideoProcessingModule),
+    StorageModule,
+    SiteSettingsModule
+  ],
   controllers: [VideosController, VideosUserController, VideosAdminController],
   providers: [VideosService],
   exports: [VideosService],

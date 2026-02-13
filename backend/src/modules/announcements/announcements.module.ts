@@ -5,9 +5,10 @@ import {
     AdminAnnouncementsController,
 } from './announcements.controller';
 import { DrizzleModule } from '../../database/drizzle.module';
+import { SiteSettingsModule } from '../site-settings/site-settings.module';
 
 @Module({
-    imports: [DrizzleModule],
+    imports: [DrizzleModule, SiteSettingsModule],
     controllers: [AnnouncementsController, AdminAnnouncementsController],
     providers: [AnnouncementsService],
     exports: [AnnouncementsService],

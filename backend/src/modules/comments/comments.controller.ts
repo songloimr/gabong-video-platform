@@ -12,20 +12,24 @@ import {
   UseGuards,
   HttpCode,
   HttpStatus,
+  UseInterceptors,
 } from '@nestjs/common';
 import { CommentsService } from './comments.service';
 import { CreateCommentDto, HideCommentDto } from './dto';
-import { JwtAuthGuard, CommentRateLimitGuard } from '../../common/guards';
-import { Roles } from '../../common/decorators';
+import { CommentRateLimitGuard } from '../../common/guards';
+import { Roles, CacheTTL } from '../../common/decorators';
 import { User } from '../../common/decorators';
 import { JwtPayload } from '../../types';
 import { Role } from '../../constants/role.enum';
+import { HttpCacheInterceptor } from '../../common/interceptors/http-cache.interceptor';
 
 @Controller('videos/:videoId/comments')
 export class CommentsController {
   constructor(private readonly commentsService: CommentsService) { }
 
   @Get()
+  @UseInterceptors(HttpCacheInterceptor)
+  @CacheTTL(3)
   async findByVideoId(
     @Param('videoId') videoId: string,
     @Query('parent_id') parentId: string | null = null,

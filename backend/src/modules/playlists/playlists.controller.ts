@@ -11,17 +11,21 @@ import {
   ParseIntPipe,
   HttpCode,
   HttpStatus,
+  UseInterceptors,
 } from '@nestjs/common';
 import { PlaylistsService } from './playlists.service';
 import { CreatePlaylistDto, UpdatePlaylistDto, AddVideosDto } from './dto';
-import { Roles } from '../../common/decorators';
+import { Roles, CacheTTL } from '../../common/decorators';
 import { Role } from '../../constants/role.enum';
+import { HttpCacheInterceptor } from '../../common/interceptors/http-cache.interceptor';
 
 @Controller('playlists')
 export class PlaylistsController {
   constructor(private readonly playlistsService: PlaylistsService) { }
 
   @Get()
+  @UseInterceptors(HttpCacheInterceptor)
+  @CacheTTL(60) // 60 minutes
   async findAll(
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(25), ParseIntPipe) limit: number,

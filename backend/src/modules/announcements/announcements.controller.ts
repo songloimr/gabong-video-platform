@@ -10,21 +10,25 @@ import {
     DefaultValuePipe,
     ParseIntPipe,
     UseGuards,
+    UseInterceptors,
 } from '@nestjs/common';
 import { AnnouncementsService } from './announcements.service';
 import {
     CreateAnnouncementDto,
     UpdateAnnouncementDto,
 } from './dto/announcement.dto';
-import { Roles, User } from '../../common/decorators';
+import { Roles, User, CacheTTL } from '../../common/decorators';
 import { Role } from '../../constants/role.enum';
 import { JwtPayload } from '../../types';
+import { HttpCacheInterceptor } from '../../common/interceptors/http-cache.interceptor';
 
 @Controller('announcements')
 export class AnnouncementsController {
     constructor(private readonly announcementsService: AnnouncementsService) { }
 
     @Get()
+    @UseInterceptors(HttpCacheInterceptor)
+    @CacheTTL(60) // 60 minutes
     async getActiveAnnouncements(@Query('position') position?: string) {
         return this.announcementsService.findActive(position);
     }
